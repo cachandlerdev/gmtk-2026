@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbow0weapon0scn"]
+[gd_scene format=3 uid="uid://db51jt005nv26"]
 
-[ext_resource type="Script" path="res://scenes/weapons/bow.gd" id="1_bow"]
+[ext_resource type="Script" uid="uid://41xseku7tw25" path="res://scripts/bow.gd" id="1_bow"]
 [ext_resource type="PackedScene" uid="uid://qb172ohoprer" path="res://scenes/player/arrow.tscn" id="2_arrow"]
 
 [node name="Bow" type="Node2D"]

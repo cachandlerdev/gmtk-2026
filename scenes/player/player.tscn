@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cbiwligtyk4rw"]
 
 [ext_resource type="Script" uid="uid://bepu8d2b7xgem" path="res://scripts/player.gd" id="1_8afob"]
+[ext_resource type="PackedScene" uid="uid://db51jt005nv26" path="res://scenes/player/bow.tscn" id="2_dovo2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c5ll8"]
 radius = 14.0
@@ -8,6 +9,8 @@ radius = 14.0
 [node name="Player" type="CharacterBody2D" unique_id=1441560064]
 z_index = 5
 script = ExtResource("1_8afob")
+
+[node name="Bow" parent="." unique_id=466650387 instance=ExtResource("2_dovo2")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
