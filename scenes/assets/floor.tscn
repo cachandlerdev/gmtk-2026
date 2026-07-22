@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dflaegho8tscr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c5ll8"]
+size = Vector2(818, 102)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c5ll8"]
+
+[node name="Floor" type="StaticBody2D" unique_id=26143825]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=755531683]
+shape = SubResource("RectangleShape2D_c5ll8")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=108930077]
+scale = Vector2(1.6, 0.2)
+texture = SubResource("NoiseTexture2D_c5ll8")

@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://5vx46auayvpk"]
+
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_yautc"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_fr1um"]
+
+[node name="TestLevel" type="Node2D" unique_id=762406808]
+
+[node name="Player" parent="." unique_id=1441560064 instance=ExtResource("1_yautc")]
+
+[node name="Floor" parent="." unique_id=26143825 instance=ExtResource("2_fr1um")]
+position = Vector2(12, 66)
+scale = Vector2(3.84, 1)
+
+[node name="Floor2" parent="." unique_id=70600583 instance=ExtResource("2_fr1um")]
+position = Vector2(203.00002, -104.000015)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor5" parent="." unique_id=848233767 instance=ExtResource("2_fr1um")]
+position = Vector2(377, -82)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor6" parent="." unique_id=151796353 instance=ExtResource("2_fr1um")]
+position = Vector2(698, -83)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor7" parent="." unique_id=1701311185 instance=ExtResource("2_fr1um")]
+position = Vector2(1118, -65)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor8" parent="." unique_id=1908965042 instance=ExtResource("2_fr1um")]
+position = Vector2(1419, -63)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor3" parent="." unique_id=1005267999 instance=ExtResource("2_fr1um")]
+position = Vector2(-154.00002, -53)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor4" parent="." unique_id=44249401 instance=ExtResource("2_fr1um")]
+position = Vector2(-409, -51.000004)
+scale = Vector2(0.079999164, 0.1599999)
+
+[node name="Floor11" parent="." unique_id=335102092 instance=ExtResource("2_fr1um")]
+position = Vector2(-1022.00006, -208)
+scale = Vector2(0.079999164, 4.560001)
+
+[node name="Floor13" parent="." unique_id=881042792 instance=ExtResource("2_fr1um")]
+position = Vector2(-744.00006, -317)
+scale = Vector2(0.079999164, 4.560001)
+
+[node name="Floor12" parent="." unique_id=723876858 instance=ExtResource("2_fr1um")]
+position = Vector2(-1229.0001, -422)
+scale = Vector2(0.4954827, 0.3499207)
