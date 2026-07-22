@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://qb172ohoprer"]
+
+[ext_resource type="Script" path="res://scenes/player/arrow.gd" id="1_arrow"]
+
+[sub_resource type="RectangleShape2D" id="Shape_arrow"]
+size = Vector2(34, 6)
+
+[node name="Arrow" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_arrow")
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(0.827451, 0.6, 0.301961, 1)
+polygon = PackedVector2Array(-17, -1.5, 6, -1.5, 6, -6, 17, 0, 6, 6, 6, 1.5, -17, 1.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_arrow")
