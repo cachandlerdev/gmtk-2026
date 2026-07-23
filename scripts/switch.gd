@@ -14,7 +14,7 @@ var is_on := false
 
 var _locked := false
 
-@onready var _lever_arm: Node2D = $LeverArm
+@onready var _sprite: Sprite2D = $Visual
 
 
 func _ready() -> void:
@@ -43,8 +43,8 @@ func _apply_to_targets() -> void:
 
 
 func _update_visual() -> void:
-    if _lever_arm:
-        _lever_arm.rotation_degrees = 35.0 if is_on else -35.0
+    if _sprite:
+        _sprite.frame = 1 if is_on else 0
 
 
 func _on_hit_area_body_entered(body: Node2D) -> void:

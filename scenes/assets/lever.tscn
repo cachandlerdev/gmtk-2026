@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://btwhex02s54fl"]
+[gd_scene load_steps=5 format=3 uid="uid://btwhex02s54fl"]
 
 [ext_resource type="Script" path="res://scripts/switch.gd" id="1_switch"]
+[ext_resource type="Texture2D" uid="uid://wkra75dtuhnh" path="res://assets/sprites/switch_sheet_16x16.png" id="2_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
 size = Vector2(48, 48)
@@ -11,21 +12,13 @@ size = Vector2(16, 28)
 [node name="Switch" type="Node2D"]
 script = ExtResource("1_switch")
 
-[node name="Base" type="Polygon2D" parent="."]
-color = Color(0.35, 0.32, 0.28, 1)
-polygon = PackedVector2Array(-10, 0, 10, 0, 8, -8, -8, -8)
-
-[node name="LeverArm" type="Node2D" parent="."]
-position = Vector2(0, -8)
-
-[node name="ArmVisual" type="Polygon2D" parent="LeverArm"]
-color = Color(0.75, 0.55, 0.25, 1)
-polygon = PackedVector2Array(-3, 0, 3, 0, 2, -22, -2, -22)
-
-[node name="Knob" type="Polygon2D" parent="LeverArm"]
-position = Vector2(0, -22)
-color = Color(0.9, 0.35, 0.25, 1)
-polygon = PackedVector2Array(-5, -5, 5, -5, 5, 5, -5, 5)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+offset = Vector2(-8, -16)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tex")
+hframes = 2
 
 [node name="InteractArea" type="Area2D" parent="."]
 collision_layer = 8
