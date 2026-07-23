@@ -5,7 +5,7 @@ extends Toggleable
 
 @onready var _hurt_area: Area2D = $HurtArea
 @onready var _collision: CollisionShape2D = $HurtArea/CollisionShape2D
-@onready var _visual: Polygon2D = $Visual
+@onready var _visual: AnimatedSprite2D = $Visual
 
 
 func _on_activation_changed(active: bool) -> void:
