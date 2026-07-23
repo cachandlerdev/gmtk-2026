@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://dvq7uq48qs07d"]
+
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_floor"]
+[ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="3_enemy"]
+[ext_resource type="PackedScene" uid="uid://cshieldbearer0scn" path="res://scenes/assets/shieldbearer.tscn" id="4_shield"]
+[ext_resource type="PackedScene" uid="uid://d047j530r088n" path="res://scenes/assets/projectile_thrower.tscn" id="5_thrower"]
+[ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="6_switch"]
+
+[node name="EnemyTestLevel" type="Node2D"]
+
+[node name="GroundMain" parent="." instance=ExtResource("2_floor")]
+position = Vector2(700, 200)
+scale = Vector2(2.7, 1)
+
+[node name="WallLeft" parent="." instance=ExtResource("2_floor")]
+position = Vector2(20, 90)
+scale = Vector2(0.06, 2)
+
+[node name="WallDivider" parent="." instance=ExtResource("2_floor")]
+position = Vector2(700, 118)
+scale = Vector2(0.06, 1.15)
+
+[node name="WallRight" parent="." instance=ExtResource("2_floor")]
+position = Vector2(1400, 90)
+scale = Vector2(0.06, 2)
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(90, 100)
+
+[node name="Patrol1" parent="." instance=ExtResource("3_enemy")]
+position = Vector2(220, 100)
+
+[node name="Patrol2" parent="." instance=ExtResource("3_enemy")]
+position = Vector2(420, 100)
+
+[node name="Patrol3" parent="." instance=ExtResource("3_enemy")]
+position = Vector2(600, 100)
+
+[node name="Shieldbearer" parent="." instance=ExtResource("4_shield")]
+position = Vector2(1000, 100)
+
+[node name="ProjectileThrower" parent="." instance=ExtResource("5_thrower")]
+position = Vector2(1220, 149)
+scale = Vector2(-1, 1)
+starts_activated = false
+
+[node name="SwitchPlatform" parent="." instance=ExtResource("2_floor")]
+position = Vector2(1000, 66)
+scale = Vector2(0.14, 0.28)
+
+[node name="Switch" parent="." instance=ExtResource("6_switch")]
+position = Vector2(1000, 51)
+targets = [NodePath("../ProjectileThrower")]

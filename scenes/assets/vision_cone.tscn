@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://taik04v2aqhd"]
+
+[ext_resource type="Script" path="res://scripts/vision_cone.gd" id="1_vision"]
+
+[node name="VisionCone" type="Node2D"]
+script = ExtResource("1_vision")
