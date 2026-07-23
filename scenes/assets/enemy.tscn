@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://bpna2cn0m2djl"]
+
+[ext_resource type="Script" path="res://scripts/patrol_enemy.gd" id="1_enemy"]
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(36, 44)
+
+[sub_resource type="RectangleShape2D" id="Shape_hit"]
+size = Vector2(40, 48)
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 1
+script = ExtResource("1_enemy")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.45, 0.18, 0.5, 1)
+polygon = PackedVector2Array(-18, 22, 18, 22, 18, -12, 8, -22, -8, -22, -18, -12)
+
+[node name="Eye" type="Polygon2D" parent="Visual"]
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(4, -14, 14, -14, 14, -4, 4, -4)
+
+[node name="Pupil" type="Polygon2D" parent="Visual"]
+color = Color(0.05, 0.05, 0.05, 1)
+polygon = PackedVector2Array(9, -12, 13, -12, 13, -6, 9, -6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_body")
+
+[node name="LedgeRay" type="RayCast2D" parent="."]
+position = Vector2(20, 0)
+target_position = Vector2(0, 34)
+collision_mask = 1
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 7
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("Shape_hit")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

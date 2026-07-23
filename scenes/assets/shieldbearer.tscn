@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=3 uid="uid://cshieldbearer0scn"]
+
+[ext_resource type="Script" path="res://scripts/shieldbearer.gd" id="1_shield"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(32, 52)
+
+[sub_resource type="RectangleShape2D" id="Shape_hit"]
+size = Vector2(40, 56)
+
+[node name="Shieldbearer" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 1
+script = ExtResource("1_shield")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.4, 0.42, 0.48, 1)
+polygon = PackedVector2Array(-15, 26, 15, 26, 15, -18, 7, -26, -7, -26, -15, -18)
+
+[node name="Visor" type="Polygon2D" parent="Visual"]
+color = Color(0.08, 0.08, 0.1, 1)
+polygon = PackedVector2Array(-8, -20, 8, -20, 8, -14, -8, -14)
+
+[node name="Shield" type="Polygon2D" parent="Visual"]
+color = Color(0.32, 0.26, 0.2, 1)
+polygon = PackedVector2Array(16, -22, 24, -22, 27, 0, 24, 22, 16, 22)
+
+[node name="ShieldBoss" type="Polygon2D" parent="Visual"]
+color = Color(0.82, 0.7, 0.32, 1)
+polygon = PackedVector2Array(20, -6, 24, 0, 20, 6, 17, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_body")
+
+[node name="LedgeRay" type="RayCast2D" parent="."]
+position = Vector2(18, 0)
+target_position = Vector2(0, 40)
+collision_mask = 1
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 7
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("Shape_hit")
+
+[node name="VisionCone" parent="." instance=ExtResource("2_vision")]
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

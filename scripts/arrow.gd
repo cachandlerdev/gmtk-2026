@@ -13,9 +13,14 @@ extends CharacterBody2D
 var _bounces: int = 0
 var _stopped: bool = false
 
+@onready var _collision: CollisionShape2D = $CollisionShape2D
+
 func _ready() -> void:
 	# Switches (and similar) listen for this group on body/area enter.
 	add_to_group("projectile")
+	# Distinguishes the player's arrows from trap bolts so enemies only take
+	# damage from shots the player fired.
+	add_to_group("player_projectile")
 	# Failsafe cleanup for arrows that never come to rest on screen.
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 
@@ -41,3 +46,6 @@ func _ricochet(normal: Vector2) -> void:
 func _stop() -> void:
 	_stopped = true
 	velocity = Vector2.ZERO
+	# Once at rest the arrow is inert: turn its collider off so it no longer
+	# registers as a projectile against enemies, switches, or anything else.
+	_collision.set_deferred("disabled", true)
