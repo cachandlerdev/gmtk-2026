@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://behe8u4nr8h0h"]
+
+[ext_resource type="Script" path="res://scripts/spikes.gd" id="1_spikes"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_spikes"]
+size = Vector2(48, 20)
+
+[node name="Spikes" type="Node2D"]
+script = ExtResource("1_spikes")
+starts_activated = true
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(0.75, 0.2, 0.22, 1)
+polygon = PackedVector2Array(-24, 0, -16, -20, -8, 0, 0, -20, 8, 0, 16, -20, 24, 0)
+
+[node name="HurtArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 3
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea"]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_spikes")
+
+[connection signal="body_entered" from="HurtArea" to="." method="_on_hurt_area_body_entered"]

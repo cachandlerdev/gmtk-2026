@@ -8,6 +8,6 @@ extends Toggleable
 
 
 func _on_activation_changed(active: bool) -> void:
-    # Active = open (passable). Inactive = closed (blocking).
+    # Active = open. Inactive = closed.
     _collision.set_deferred("disabled", active)
     _visual.modulate.a = 0.25 if active else 1.0

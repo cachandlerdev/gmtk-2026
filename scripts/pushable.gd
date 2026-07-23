@@ -10,6 +10,7 @@ const GRAVITY_FACTOR := 2.0
 @export var friction := 1400.0
 
 var _pushed_this_frame := false
+var _surface_mods := SurfaceModifiers.new()
 
 
 func _physics_process(delta: float) -> void:
@@ -19,13 +20,16 @@ func _physics_process(delta: float) -> void:
 		velocity.y = 0.0
 
 	if not _pushed_this_frame:
-		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
+		velocity.x = move_toward(
+			velocity.x, 0.0, friction * _surface_mods.friction_factor * delta
+		)
 	_pushed_this_frame = false
 
 	move_and_slide()
+	_surface_mods = SurfaceModifiers.from_floor(self)
 
 
 ## Called by the player when walking into this box from the side.
 func apply_push(direction: float) -> void:
-	velocity.x = direction * max_push_speed
+	velocity.x = direction * max_push_speed * _surface_mods.speed_factor
 	_pushed_this_frame = true

@@ -23,7 +23,7 @@ func _ready() -> void:
     _apply_to_targets()
 
 
-## Flip the switch. Safe to call from interact, arrows, or other gameplay.
+## Flip the switch. Call from interact, arrows, or other gameplay elements.
 func activate() -> void:
     if _locked:
         return
