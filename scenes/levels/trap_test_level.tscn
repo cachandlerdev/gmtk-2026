@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cenujnewt3jyt"]
+
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_floor"]
+[ext_resource type="PackedScene" uid="uid://spikes01hazard" path="res://scenes/assets/spikes.tscn" id="3_spikes"]
+[ext_resource type="PackedScene" uid="uid://thrower01trap" path="res://scenes/assets/projectile_thrower.tscn" id="4_thrower"]
+[ext_resource type="PackedScene" uid="uid://sticky01surface" path="res://scenes/assets/sticky_surface.tscn" id="5_sticky"]
+[ext_resource type="PackedScene" uid="uid://sliding01surface" path="res://scenes/assets/sliding_surface.tscn" id="6_sliding"]
+[ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="7_switch"]
+
+[node name="TrapTestLevel" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+position = Vector2(40, 0)
+
+[node name="FloorStart" parent="." instance=ExtResource("2_floor")]
+position = Vector2(40, 66)
+scale = Vector2(0.35, 1)
+
+[node name="StickySurface" parent="." instance=ExtResource("5_sticky")]
+position = Vector2(220, 23)
+
+[node name="FloorMid" parent="." instance=ExtResource("2_floor")]
+position = Vector2(320, 66)
+scale = Vector2(0.12, 1)
+
+[node name="SlidingSurface" parent="." instance=ExtResource("6_sliding")]
+position = Vector2(420, 23)
+
+[node name="FloorSpikes" parent="." instance=ExtResource("2_floor")]
+position = Vector2(620, 66)
+scale = Vector2(0.45, 1)
+
+[node name="Spikes" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(560, 15)
+
+[node name="Spikes2" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(620, 15)
+
+[node name="RetractableSpikes" parent="." instance=ExtResource("3_spikes")]
+position = Vector2(120, 15)
+
+[node name="SpikeSwitch" parent="." instance=ExtResource("7_switch")]
+position = Vector2(60, 15)
+targets = [NodePath("../RetractableSpikes")]
+starts_on = true
+
+[node name="ProjectileThrower" parent="." instance=ExtResource("4_thrower")]
+position = Vector2(780, 15)
+scale = Vector2(-1, 1)
+
+[node name="FloorEnd" parent="." instance=ExtResource("2_floor")]
+position = Vector2(860, 66)
+scale = Vector2(0.3, 1)

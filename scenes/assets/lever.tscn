@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://btwhex02s54fl"]
+
+[ext_resource type="Script" path="res://scripts/switch.gd" id="1_switch"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
+size = Vector2(48, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(16, 28)
+
+[node name="Switch" type="Node2D"]
+script = ExtResource("1_switch")
+
+[node name="Base" type="Polygon2D" parent="."]
+color = Color(0.35, 0.32, 0.28, 1)
+polygon = PackedVector2Array(-10, 0, 10, 0, 8, -8, -8, -8)
+
+[node name="LeverArm" type="Node2D" parent="."]
+position = Vector2(0, -8)
+
+[node name="ArmVisual" type="Polygon2D" parent="LeverArm"]
+color = Color(0.75, 0.55, 0.25, 1)
+polygon = PackedVector2Array(-3, 0, 3, 0, 2, -22, -2, -22)
+
+[node name="Knob" type="Polygon2D" parent="LeverArm"]
+position = Vector2(0, -22)
+color = Color(0.9, 0.35, 0.25, 1)
+polygon = PackedVector2Array(-5, -5, 5, -5, 5, 5, -5, 5)
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_interact")
+
+[node name="HitArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 5
+monitoring = true
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_hit")
+
+[connection signal="area_entered" from="HitArea" to="." method="_on_hit_area_area_entered"]
+[connection signal="body_entered" from="HitArea" to="." method="_on_hit_area_body_entered"]
