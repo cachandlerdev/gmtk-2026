@@ -16,7 +16,7 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 
 @export_group("Aim")
 @export var aim_speed: float = 2.5          ## radians per second
-@export var max_aim_angle: float = 80.0     ## degrees up/down from horizontal
+@export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
 
 @export_group("Input Actions")
@@ -41,9 +41,11 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if auto_facing:
-		var move := Input.get_axis(move_left_action, move_right_action)
-		if move != 0.0:
-			facing = 1 if move > 0.0 else -1
+		# TODO: Figure out how this would work if we have an enemy archer
+		var mouse_location := get_global_mouse_position()
+		var player_location := global_position
+		var x_diff: float = mouse_location.x - player_location.x
+		facing = 1 if x_diff >= 0.0 else -1
 
 	_handle_bow(delta)
 	queue_redraw()
@@ -61,15 +63,15 @@ func _handle_bow(delta: float) -> void:
 		var limit := deg_to_rad(max_aim_angle)
 		if is_player:
 			# Get angle between mouse cursor and the bow's location
-			var mouse_location := get_viewport().get_mouse_position()
+			var mouse_location := get_global_mouse_position()
 			var player_location := global_position
-			var x_diff: float = abs(player_location.x - mouse_location.x)
-			var y_diff: float = abs(player_location.y - mouse_location.y)
 			print(player_location)
-			print("X: " + str(x_diff) + ", Y: " + str(y_diff))
+			var x_diff: float = abs(mouse_location.x - player_location.x)
+			var y_diff: float = player_location.y - mouse_location.y
 			aim_input = atan2(y_diff, x_diff)
-			#_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
-			_aim_angle = aim_input
+
+			var new_aim_angle = lerp(_aim_angle, aim_input, aim_speed * delta)
+			_aim_angle = clampf(new_aim_angle, -limit, limit)
 		else:
 			# TODO: Figure out how this will work if enemies are carrying bows
 			aim_input = Input.get_axis(aim_down_action, aim_up_action)

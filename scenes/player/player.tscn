@@ -16,6 +16,7 @@ script = ExtResource("1_8afob")
 [node name="Bow" parent="." unique_id=466650387 instance=ExtResource("2_dovo2")]
 position = Vector2(0, -16)
 is_player = true
+aim_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
