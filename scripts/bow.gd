@@ -6,6 +6,8 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var arrow_scene: PackedScene
 @export var active: bool = true
 @export var auto_facing: bool = true
+# If this is true, we use the player's mouse for input.
+@export var is_player: bool = false
 
 @export_group("Power")
 @export var min_arrow_speed: float = 400.0
@@ -54,9 +56,25 @@ func _handle_bow(delta: float) -> void:
 
 	if _charging:
 		_charge = minf(_charge + delta, max_charge_time)
-		var aim_input := Input.get_axis(aim_down_action, aim_up_action)
+
+		var aim_input: float = 0.0
 		var limit := deg_to_rad(max_aim_angle)
-		_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
+		if is_player:
+			# Get angle between mouse cursor and the bow's location
+			var mouse_location := get_viewport().get_mouse_position()
+			var player_location := global_position
+			var x_diff: float = abs(player_location.x - mouse_location.x)
+			var y_diff: float = abs(player_location.y - mouse_location.y)
+			print(player_location)
+			print("X: " + str(x_diff) + ", Y: " + str(y_diff))
+			aim_input = atan2(y_diff, x_diff)
+			#_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
+			_aim_angle = aim_input
+		else:
+			# TODO: Figure out how this will work if enemies are carrying bows
+			aim_input = Input.get_axis(aim_down_action, aim_up_action)
+			_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
+
 
 	charge_ratio = _charge / max_charge_time
 

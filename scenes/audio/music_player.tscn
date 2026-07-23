@@ -15,7 +15,6 @@ clip_1/auto_advance = 0
 clip_2/name = &"battle1_layer2"
 clip_2/stream = ExtResource("3_cktme")
 clip_2/auto_advance = 0
-initial_clip = 1
 _transitions = {
 Vector2i(-1, 0): {
 "fade_beats": 1.0,
@@ -55,7 +54,6 @@ Vector2i(2, 2): {
 }
 }
 
-[node name="MusicPlayer" type="AudioStreamPlayer2D" unique_id=1702332758]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" unique_id=1450982905]
 stream = SubResource("AudioStreamInteractive_uo026")
 autoplay = true
-bus = &"Music"
