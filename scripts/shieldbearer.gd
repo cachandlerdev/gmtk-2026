@@ -12,49 +12,16 @@ extends EnemyBase
 
 @export var patrol_speed: float = 55.0
 @export var chase_speed: float = 95.0
-## How long it keeps chasing after losing sight of the player.
-@export var alert_linger: float = 1.5
 ## Speed a blocked arrow keeps when it bounces off the shield.
 @export var block_bounce: float = 0.7
 
-var _alerted: bool = false
-var _lost_time: float = 0.0
 
-@onready var _vision: VisionCone = $VisionCone
-
-
-func _behaviour(delta: float) -> void:
-	_update_alert(delta)
-	if _alerted:
-		_chase()
+func _behaviour(_delta: float) -> void:
+	# is_alerted is driven by the base's VisionCone perception.
+	if is_alerted:
+		chase_step(chase_speed)
 	else:
-		_patrol()
-
-
-func _update_alert(delta: float) -> void:
-	if _vision.can_see_player:
-		_alerted = true
-		_lost_time = 0.0
-	elif _alerted:
-		_lost_time += delta
-		if _lost_time >= alert_linger:
-			_alerted = false
-
-
-func _patrol() -> void:
-	if is_on_floor() and (is_on_wall() or not has_ground_ahead()):
-		set_facing(-facing)
-	velocity.x = facing * patrol_speed
-
-
-func _chase() -> void:
-	var player := get_player()
-	if player != null:
-		set_facing(1 if player.global_position.x >= global_position.x else -1)
-	if has_ground_ahead() and not is_on_wall():
-		velocity.x = facing * chase_speed
-	else:
-		velocity.x = 0.0
+		patrol_step(patrol_speed)
 
 
 ## The shield blocks shots into its front. A hit lands from behind, or from a

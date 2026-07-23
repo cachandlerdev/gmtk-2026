@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bpna2cn0m2djl"]
 
 [ext_resource type="Script" path="res://scripts/patrol_enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(36, 44)
@@ -43,5 +44,7 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("Shape_hit")
+
+[node name="VisionCone" parent="." instance=ExtResource("2_vision")]
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
