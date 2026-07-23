@@ -16,11 +16,8 @@ var _stopped: bool = false
 @onready var _collision: CollisionShape2D = $CollisionShape2D
 
 func _ready() -> void:
-	# Switches (and similar) listen for this group on body/area enter.
+	# Switches, enemies, and similar listen for this group on body/area enter.
 	add_to_group("projectile")
-	# Distinguishes the player's arrows from trap bolts so enemies only take
-	# damage from shots the player fired.
-	add_to_group("player_projectile")
 	# Failsafe cleanup for arrows that never come to rest on screen.
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 
