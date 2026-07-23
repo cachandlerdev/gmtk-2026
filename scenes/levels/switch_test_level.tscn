@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://dciedoi22457y"]
+
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_floor"]
+[ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="3_switch"]
+[ext_resource type="PackedScene" uid="uid://door01toggleable" path="res://scenes/assets/door.tscn" id="4_door"]
+[ext_resource type="PackedScene" uid="uid://bridge01toggleable" path="res://scenes/assets/bridge.tscn" id="5_bridge"]
+[ext_resource type="PackedScene" uid="uid://pushablebox01" path="res://scenes/assets/pushable_box.tscn" id="6_box"]
+
+[node name="SwitchTestLevel" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_player")]
+
+[node name="Floor" parent="." instance=ExtResource("2_floor")]
+position = Vector2(200, 66)
+scale = Vector2(5.5, 1)
+
+[node name="Door" parent="." instance=ExtResource("4_door")]
+position = Vector2(160, 15)
+
+[node name="Bridge" parent="." instance=ExtResource("5_bridge")]
+position = Vector2(280, -20)
+
+[node name="Switch" parent="." instance=ExtResource("3_switch")]
+position = Vector2(80, 15)
+targets = [NodePath("../Door"), NodePath("../Bridge")]
+
+[node name="PushableBoxHeight" parent="." instance=ExtResource("6_box")]
+position = Vector2(450, 15)
+
+[node name="HighLedge" parent="." instance=ExtResource("2_floor")]
+position = Vector2(560, -94)
+scale = Vector2(0.25, 0.12)
+
+[node name="PushableBoxBlocker" parent="." instance=ExtResource("6_box")]
+position = Vector2(720, 15)
+
+[node name="CorridorLeftWall" parent="." instance=ExtResource("2_floor")]
+position = Vector2(680, -40)
+scale = Vector2(0.05, 1.1)
+
+[node name="CorridorRightWall" parent="." instance=ExtResource("2_floor")]
+position = Vector2(800, -40)
+scale = Vector2(0.05, 1.1)

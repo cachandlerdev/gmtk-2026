@@ -31,6 +31,7 @@ const COYOTE_FRAMES = 6
 
 @onready var left_ray_cast = $LeftRayCast
 @onready var right_ray_cast = $RightRayCast
+@onready var interact_range: Area2D = $InteractRange
 
 # Controls whether the character can dash again
 var _is_dashing = false
@@ -52,6 +53,11 @@ var _can_melee_attack = true
 # Handles temporary hovering while aiming to shot
 var _is_hover_aiming = false
 var _can_hover_aim = true
+
+func _ready() -> void:
+    # Add the player to the player group
+    add_to_group("player")
+
 
 func _physics_process(delta: float) -> void: 
     # Take care of gravity
@@ -77,10 +83,29 @@ func _physics_process(delta: float) -> void:
     if Input.is_action_just_released("aim"): 
         # this might be a release arrow? not sure
         stop_aiming()
+    if Input.is_action_just_pressed("interact"):
+        _try_interact()
     
     _update_jump_count()
     _update_player_sprite()
     _update_player_movement(delta)
+
+
+## Activates the nearest interactable currently overlapping the player's interactablerange.
+func _try_interact() -> void:
+    var nearest_node: Node2D = null
+    var nearest_distance_squared := INF
+    for area in interact_range.get_overlapping_areas():
+        var target := area.get_parent()
+        if target == null or not target.has_method("activate"):
+            continue
+        # Get the nearest interactable to the player
+        var distance_squared := global_position.distance_squared_to(target.global_position)
+        if distance_squared < nearest_distance_squared:
+            nearest_distance_squared = distance_squared
+            nearest_node = target
+    if nearest_node:
+        nearest_node.activate()
 
 
 ## Handles updating the player's jump count.
@@ -207,6 +232,26 @@ func _update_player_movement(delta: float) -> void:
         velocity.x = target_velocity
 
     move_and_slide()
+    _push_colliding_objects() # Maybe we make it so we need to press a button to push objects instead?
+
+
+## Shove any Pushable boxes the player is walking into from the side.
+func _push_colliding_objects() -> void:
+    if _direction == 0.0:
+        return
+    for i in get_slide_collision_count():
+        var collision := get_slide_collision(i)
+        var collider := collision.get_collider()
+        if collider == null or not collider.has_method("apply_push"):
+            continue
+        var normal := collision.get_normal()
+        # Side contact only — ignore standing on top or hitting the underside.
+        if absf(normal.y) > 0.3:
+            continue
+        # Must be moving into the object.
+        if signf(_direction) != -signf(normal.x):
+            continue
+        collider.apply_push(_direction)
 
 
 ## Let the player dash forward

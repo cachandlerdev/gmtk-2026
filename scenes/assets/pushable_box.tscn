@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://e5yv2wd1vgyy"]
+
+[ext_resource type="Script" path="res://scripts/pushable.gd" id="1_pushable"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(40, 40)
+
+[node name="PushableBox" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+floor_stop_on_slope = true
+script = ExtResource("1_pushable")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(0.62, 0.42, 0.22, 1)
+polygon = PackedVector2Array(-20, 0, 20, 0, 20, -40, -20, -40)
+
+[node name="Detail" type="Polygon2D" parent="."]
+color = Color(0.45, 0.3, 0.15, 1)
+polygon = PackedVector2Array(-16, -8, 16, -8, 16, -12, -16, -12)
