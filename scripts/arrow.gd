@@ -14,6 +14,8 @@ var _bounces: int = 0
 var _stopped: bool = false
 
 func _ready() -> void:
+	# Switches (and similar) listen for this group on body/area enter.
+	add_to_group("projectile")
 	# Failsafe cleanup for arrows that never come to rest on screen.
 	get_tree().create_timer(lifetime).timeout.connect(queue_free)
 
