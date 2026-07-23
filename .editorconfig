@@ -2,3 +2,7 @@ root = true
 
 [*]
 charset = utf-8
+
+# GDScript and Godot scene/resource files use tabs (Godot editor default).
+[*.{gd,tscn,tres,godot}]
+indent_style = tab
