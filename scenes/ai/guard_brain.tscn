@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cguardbrain0scn"]
+[gd_scene load_steps=9 format=3 uid="uid://cguardbrain0scn"]
 
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_tree"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_selector"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://scripts/ai/is_alerted_condition.gd" id="4_alerted"]
 [ext_resource type="Script" path="res://scripts/ai/chase_action.gd" id="5_chase"]
 [ext_resource type="Script" path="res://scripts/ai/patrol_action.gd" id="6_patrol"]
+[ext_resource type="Script" path="res://scripts/ai/can_attack_condition.gd" id="7_can_attack"]
+[ext_resource type="Script" path="res://scripts/ai/attack_action.gd" id="8_attack"]
 
 [node name="BeehaveTree" type="Node"]
 script = ExtResource("1_tree")
@@ -13,6 +15,18 @@ process_thread = 2
 
 [node name="SelectorReactive" type="Node" parent="."]
 script = ExtResource("2_selector")
+
+[node name="AttackBranch" type="Node" parent="SelectorReactive"]
+script = ExtResource("3_sequence")
+
+[node name="IsAlerted" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("4_alerted")
+
+[node name="CanAttack" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("7_can_attack")
+
+[node name="Attack" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("8_attack")
 
 [node name="ChaseBranch" type="Node" parent="SelectorReactive"]
 script = ExtResource("3_sequence")
