@@ -1,12 +1,15 @@
 extends CharacterBody2D
 
+signal health_changed(current_hearts: int, max_hearts: int)
+signal died
+
 @export_group("Movement")
 ## Controls movement speed
 @export var SPEED: float = 500.0
 ## Controls jump strength. The smaller the number, the higher the player jumps.
 @export var JUMP_VELOCITY: float = -650.0
 ## Custom gravity multiplier to improve player movement
-@export var GRAVITY_FACTOR: float = 2 
+@export var GRAVITY_FACTOR: float = 2
 ## How much faster the player moves while dashing. Separate for air or else op.
 @export var GROUND_DASH_FACTOR: float = 2.5
 @export var AIR_DASH_FACTOR: float = 2.0
@@ -19,6 +22,12 @@ extends CharacterBody2D
 ## How much gravity gets applied while hover aiming.
 @export var HOVER_AIM_GRAVITY_FACTOR: float = 0.7
 
+const COYOTE_FRAMES = 6
+const MAX_HEARTS = 3
+
+## World Y past which the player is considered out of bounds (falling).
+@export var fall_death_y: float = 500.0
+
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var temp_sprite = $TempSprite
 
@@ -29,10 +38,12 @@ extends CharacterBody2D
 @onready var wall_jump_timer = $Timers/WallJumpTimer
 @onready var hover_aim_duration_timer = $Timers/HoverAimDurationTimer
 @onready var hover_aim_cooldown_timer = $Timers/HoverAimCooldownTimer
+@onready var invulnerability_timer = $Timers/InvulnerabilityTimer
 
 @onready var left_ray_cast = $LeftRayCast
 @onready var right_ray_cast = $RightRayCast
 @onready var interact_range: Area2D = $InteractRange
+@onready var hearts_hud = $HeartsHUD
 
 # Controls whether the character can dash again
 var _is_dashing: bool = false
@@ -61,12 +72,22 @@ var _can_hover_aim: bool = true
 # Floor surface modifiers (sticky / sliding), refreshed after move_and_slide
 var _surface_mods: SurfaceModifiers = SurfaceModifiers.new()
 
+var _hearts: int = MAX_HEARTS
+var _is_dead: bool = false
+
+
 func _ready() -> void:
 	# Add the player to the player group
 	add_to_group("player")
+	_hearts = MAX_HEARTS
+	hearts_hud.setup(MAX_HEARTS)
+	health_changed.emit(_hearts, MAX_HEARTS)
 
 
-func _physics_process(delta: float) -> void: 
+func _physics_process(delta: float) -> void:
+	if _is_dead:
+		return
+
 	# Take care of gravity
 	if should_we_apply_gravity():
 		if _is_hover_aiming:
@@ -101,10 +122,11 @@ func _physics_process(delta: float) -> void:
 	_update_player_sprite()
 	_update_player_movement(delta)
 	_update_floor_surface_modifiers()
+	_check_out_of_bounds()
 
 
-## Handles updating the player's direction. When aiming the bow, this is 
-## controlled by the mouse. Otherwise we update it based on the movement 
+## Handles updating the player's direction. When aiming the bow, this is
+## controlled by the mouse. Otherwise we update it based on the movement
 ## direction as long as the player isn't wall jumping or melee attacking.
 func _update_player_direction() -> void:
 	if _is_aiming:
@@ -122,10 +144,54 @@ func _update_player_direction() -> void:
 			_player_wants_to_move = true
 
 
-
+## Damageable interface used by spikes, enemies, and projectiles.
 func take_hit(source: Node = null) -> void:
+	if _is_dead or not invulnerability_timer.is_stopped():
+		return
+
+	_hearts = maxi(_hearts - 1, 0)
 	var source_name: String = str(source.name) if source else "unknown"
-	print("Player hit by %s — damage / death (health not implemented)" % source_name)
+	print("Player hit by %s — hearts left: %d" % [source_name, _hearts])
+
+	health_changed.emit(_hearts, MAX_HEARTS)
+	_flash_hurt()
+	invulnerability_timer.start()
+
+	if _hearts <= 0:
+		die()
+
+
+func get_hearts() -> int:
+	return _hearts
+
+
+func get_max_hearts() -> int:
+	return MAX_HEARTS
+
+
+## Instant death (out of bounds, hazards that should kill outright, etc.).
+func die() -> void:
+	if _is_dead:
+		return
+	_is_dead = true
+	died.emit()
+	print("Player died")
+	set_physics_process(false)
+	# Brief timeout, then restart the level (change to reload level prompt later).
+	await get_tree().create_timer(0.6).timeout
+	get_tree().reload_current_scene()
+
+
+func _check_out_of_bounds() -> void:
+	if global_position.y > fall_death_y:
+		die()
+
+
+func _flash_hurt() -> void:
+	var original_modulate: Color = temp_sprite.modulate #store the original state
+	temp_sprite.modulate = Color(1.0, 0.35, 0.35) #set the sprite color to reddish
+	var tween := create_tween() #create a tween to animate the color back to the original state
+	tween.tween_property(temp_sprite, "modulate", original_modulate, 0.2) #animate the color back to the original state
 
 
 ## Activates the nearest interactable currently overlapping the player's interactablerange.
