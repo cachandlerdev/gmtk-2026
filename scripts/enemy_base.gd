@@ -4,11 +4,15 @@ extends CharacterBody2D
 ## projectiles, optional contact damage to the player, a hurt flash, facing +
 ## visual mirroring, and a ledge probe.
 ##
-## Subclasses implement _behaviour() to set horizontal velocity / attacks, and
-## may override _can_be_hit() for shields/armor. Expected (optional) child nodes:
-##   Visual   (Node2D)   — mirrored on facing, flashed on hit
-##   LedgeRay (RayCast2D) — used by has_ground_ahead()
-##   Hitbox   (Area2D)    — wire its body_entered to _on_hitbox_body_entered
+## Movement/attacks come from a BeehaveTree child when present (ticked manually
+## below); subclasses may still override _behaviour() as a fallback, and
+## _can_be_hit() / _can_be_pierced() for shields and armor.
+## Expected (optional) child nodes:
+##   Visual      (Node2D)     — mirrored on facing, flashed on hit
+##   LedgeRay    (RayCast2D)  — used by has_ground_ahead()
+##   Hitbox      (Area2D)     — wire its body_entered to _on_hitbox_body_entered
+##   VisionCone  (VisionCone) — drives is_alerted
+##   BeehaveTree (BeehaveTree)— drives behaviour; set to MANUAL process thread
 
 
 @export var max_health: int = 1
@@ -18,6 +22,9 @@ extends CharacterBody2D
 ## How long the enemy stays alerted after losing sight of the player. Only
 ## matters if the enemy has a VisionCone child.
 @export var alert_linger: float = 1.5
+## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
+@export var patrol_speed: float = 90.0
+@export var chase_speed: float = 130.0
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## True while a VisionCone child sees the player, or recently did (linger).
@@ -28,6 +35,7 @@ var _lost_time: float = 0.0
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
 @onready var _vision: VisionCone = get_node_or_null("VisionCone")
+@onready var _tree: BeehaveTree = _find_behaviour_tree()
 
 
 func _ready() -> void:
@@ -41,13 +49,26 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * gravity_factor * delta
 	_update_perception(delta)
-	_behaviour(delta)
+	# A BeehaveTree child drives behaviour when present. It is set to MANUAL so
+	# we tick it here — after perception, before move_and_slide — instead of
+	# letting it self-tick a frame out of order.
+	if _tree != null:
+		_tree.tick()
+	else:
+		_behaviour(delta)
 	move_and_slide()
 
 
 func _exit_tree() -> void:
 	if is_alerted:
 		GameMode.remove_watching_guard()
+
+
+func _find_behaviour_tree() -> BeehaveTree:
+	for child in get_children():
+		if child is BeehaveTree:
+			return child
+	return null
 
 
 # --- Hooks for subclasses -------------------------------------------------

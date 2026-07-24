@@ -1,8 +1,8 @@
 class_name Shieldbearer
 extends EnemyBase
-## Patrols back and forth behind a raised shield. When its vision cone spots the
-## player it turns to face them and advances, keeping the shield between itself
-## and the player.
+## A guard that fights behind a raised shield. Its movement (patrol until it
+## spots the player, then chase) comes from its BeehaveTree child; this script
+## only handles the shield.
 ##
 ## Damage is gated by hit direction: shots into the shielded front are blocked
 ## (and bounced back like off a wall). Land a hit by getting behind it (dash
@@ -10,18 +10,8 @@ extends EnemyBase
 ## the top of the shield. Arrows never pierce through a shieldbearer.
 
 
-@export var patrol_speed: float = 55.0
-@export var chase_speed: float = 95.0
 ## Speed a blocked arrow keeps when it bounces off the shield.
 @export var block_bounce: float = 0.7
-
-
-func _behaviour(_delta: float) -> void:
-	# is_alerted is driven by the base's VisionCone perception.
-	if is_alerted:
-		chase_step(chase_speed)
-	else:
-		patrol_step(patrol_speed)
 
 
 ## The shield blocks shots into its front. A hit lands from behind, or from a

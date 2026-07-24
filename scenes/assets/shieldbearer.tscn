@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/shieldbearer.gd" id="1_shield"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
+[ext_resource type="PackedScene" uid="uid://cguardbrain0scn" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(32, 52)
@@ -13,6 +14,8 @@ size = Vector2(40, 56)
 collision_layer = 16
 collision_mask = 1
 script = ExtResource("1_shield")
+patrol_speed = 55.0
+chase_speed = 95.0
 
 [node name="Visual" type="Node2D" parent="."]
 
@@ -50,5 +53,7 @@ monitorable = false
 shape = SubResource("Shape_hit")
 
 [node name="VisionCone" parent="." instance=ExtResource("2_vision")]
+
+[node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
