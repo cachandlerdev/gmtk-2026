@@ -12,12 +12,13 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export_group("Power")
 @export var min_arrow_speed: float = 400.0
 @export var max_arrow_speed: float = 1200.0
-@export var max_charge_time: float = 1.0
+@export var max_charge_time: float = 1.2
 
 @export_group("Aim")
 @export var aim_speed: float = 2.5          ## radians per second
 @export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
+@export var COOLDOWN_TIME: float = 0.5
 
 @export_group("Input Actions")
 @export var shoot_action: StringName = &"shoot"
@@ -36,6 +37,8 @@ var _charging: bool = false
 var _charge: float = 0.0
 var _aim_angle: float = 0.0
 
+var _can_shoot: bool = true
+
 func _physics_process(delta: float) -> void:
 	if not active:
 		return
@@ -51,7 +54,7 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _handle_bow(delta: float) -> void:
-	if Input.is_action_just_pressed(shoot_action):
+	if Input.is_action_just_pressed(shoot_action) and _can_shoot:
 		_charging = true
 		_charge = 0.0
 		_aim_angle = 0.0
@@ -105,6 +108,10 @@ func _fire() -> void:
 	arrow.pierces_remaining = 1 if is_equal_approx(ratio, 1.0) else 0
 
 	arrow_fired.emit(arrow, ratio)
+	# Fire cooldown
+	_can_shoot = false
+	await get_tree().create_timer(COOLDOWN_TIME).timeout
+	_can_shoot = true
 
 func _projectile_parent() -> Node:
 	var scene := get_tree().current_scene

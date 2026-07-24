@@ -15,7 +15,7 @@ extends CharacterBody2D
 ##   BeehaveTree (BeehaveTree)— drives behaviour; set to MANUAL process thread
 
 
-@export var max_health: int = 1
+@export var max_health: int = 2
 @export var gravity_factor: float = 1.0
 ## If true, touching the player calls their take_hit().
 @export var contact_damage: bool = true
@@ -168,15 +168,14 @@ func get_player() -> Node2D:
 
 ## True if a vision cone is present and currently sees the player.
 func can_see_player() -> bool:
-	return _vision != null and _vision.can_see_player
+	return _vision != null and _vision.can_see_player and not get_player()._is_dead
 
 
 ## Update `is_alerted` from the vision cone, keeping it set for `alert_linger`
 ## seconds after the player slips out of sight. No-op without a VisionCone.
 func _update_perception(delta: float) -> void:
-	if _vision == null:
-		return
-	if _vision.can_see_player:
+	#if _vision.can_see_player:
+	if can_see_player():
 		if not is_alerted:
 			GameMode.add_watching_guard()
 		is_alerted = true

@@ -23,14 +23,14 @@ func _process(delta: float) -> void:
 
 
 func _restart() -> void:
-	GameMode.set_state(GameMode.Exploration)
 	visible = false
 	get_tree().reload_current_scene()
+	GameMode.set_state(GameMode.Stealth)
 
 
 func _quit() -> void:
 	# Un-pause first so the tree is in a clean state, then exit.
 	# Swap this for get_tree().change_scene_to_file(...) once a main menu exists.
-	GameMode.set_state(GameMode.MainMenu)
 	visible = false
 	get_tree().change_scene_to_file(main_menu_path)
+	GameMode.set_state(GameMode.MainMenu)

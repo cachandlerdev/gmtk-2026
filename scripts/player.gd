@@ -28,8 +28,10 @@ signal died
 # How much of an effect knockback has
 @export var KNOCKBACK_FACTOR: float = 0.1
 
-const COYOTE_FRAMES = 6
-const MAX_HEARTS = 3
+# if needed. Coyote time not implemented right now
+const COYOTE_FRAMES: int = 6
+const MAX_HEARTS: int = 3
+const LOW_HEALTH_THRESHOLD: int = 1
 
 ## World Y past which the player is considered out of bounds (falling).
 @export var fall_death_y: float = 500.0
@@ -50,6 +52,7 @@ const MAX_HEARTS = 3
 @onready var right_ray_cast = $RightRayCast
 @onready var interact_range: Area2D = $InteractRange
 @onready var hearts_hud = $HeartsHUD
+@onready var bow = $Bow
 
 # Controls whether the character can dash again
 var _is_dashing: bool = false
@@ -91,6 +94,12 @@ func _ready() -> void:
 	_hearts = MAX_HEARTS
 	hearts_hud.setup(MAX_HEARTS)
 	health_changed.emit(_hearts, MAX_HEARTS)
+	_is_dead = false
+
+
+func _process(delta: float) -> void:
+	#print(_is_dead)
+	pass
 
 
 func _physics_process(delta: float) -> void:
@@ -168,6 +177,8 @@ func take_hit(source: Node = null) -> void:
 
 	if _hearts <= 0:
 		die()
+	elif _hearts <= LOW_HEALTH_THRESHOLD:
+		GameMode.set_state(GameMode.NearDeath)
 	
 	_is_knocked_back = true
 	await get_tree().create_timer(KNOCKBACK_DURATION).timeout
@@ -249,11 +260,12 @@ func melee_attack() -> void:
 ## Handles aiming to shoot a bow/crossbow/etc. If the player is in the air,
 ## hover aiming can occur
 func aim() -> void:
-	_is_aiming = true
+	if bow._can_shoot:
+		_is_aiming = true
 
-	if not is_on_floor() and _can_hover_aim:
-		_hover_aim()
-		_can_hover_aim = false
+		if not is_on_floor() and _can_hover_aim:
+			_hover_aim()
+			_can_hover_aim = false
 
 
 ## Handles releasing the aim button (right mouse). This probably fires the arrow
