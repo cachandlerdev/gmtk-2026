@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kppng5apsbmx"
-path="res://.godot/imported/wooden_door_sheet_fixed.png-b2b944f87215aae51412f988e1a2a339.ctex"
+uid="uid://brqpaqioxa5vt"
+path="res://.godot/imported/wooden_door_sheet.png-5343fc68ba02b211b6b04b46df6dbc17.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/wooden_door_sheet_fixed.png"
-dest_files=["res://.godot/imported/wooden_door_sheet_fixed.png-b2b944f87215aae51412f988e1a2a339.ctex"]
+source_file="res://assets/sprites/wooden_door_sheet.png"
+dest_files=["res://.godot/imported/wooden_door_sheet.png-5343fc68ba02b211b6b04b46df6dbc17.ctex"]
 
 [params]
 

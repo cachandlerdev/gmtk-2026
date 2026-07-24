@@ -1,16 +1,32 @@
 [gd_scene format=3 uid="uid://bjclvr2cm5rl6"]
 
-[ext_resource type="Texture2D" uid="uid://kppng5apsbmx" path="res://assets/sprites/wooden_door_sheet_fixed.png" id="1_ojcdd"]
 [ext_resource type="Script" uid="uid://dal58b3pxdy71" path="res://scripts/enemy_spawner.gd" id="1_vbd4t"]
+[ext_resource type="Texture2D" uid="uid://brqpaqioxa5vt" path="res://assets/sprites/wooden_door_sheet.png" id="2_ojcdd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mhkbf"]
+atlas = ExtResource("2_ojcdd")
+region = Rect2(32, 0, 32, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c5ll8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mhkbf")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="EnemySpawner" type="Node2D" unique_id=1347671679]
 script = ExtResource("1_vbd4t")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=194630024]
-position = Vector2(-3, -20)
-texture = ExtResource("1_ojcdd")
-
 [node name="CooldownTimer" type="Timer" parent="." unique_id=729131540]
 wait_time = 10.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=961040458]
+position = Vector2(0, -24)
+sprite_frames = SubResource("SpriteFrames_c5ll8")
+frame_progress = 0.24389476
 
 [connection signal="timeout" from="CooldownTimer" to="." method="_on_cooldown_timer_timeout"]
