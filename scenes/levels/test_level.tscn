@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_yautc"]
 [ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_fr1um"]
+[ext_resource type="PackedScene" uid="uid://bsw5uy438d1ov" path="res://scenes/assets/death_zone.tscn" id="3_fr1um"]
 
 [node name="TestLevel" type="Node2D" unique_id=762406808]
 
@@ -50,3 +51,7 @@ scale = Vector2(0.079999164, 4.560001)
 [node name="Floor12" parent="." unique_id=723876858 instance=ExtResource("2_fr1um")]
 position = Vector2(-1229.0001, -422)
 scale = Vector2(0.4954827, 0.3499207)
+
+[node name="DeathZone" parent="." unique_id=25795423 instance=ExtResource("3_fr1um")]
+position = Vector2(6, 470)
+scale = Vector2(2.6400008, 1)

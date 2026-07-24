@@ -69,6 +69,12 @@ func _on_death() -> void:
 	pass
 
 
+## Instant death (out of bounds, etc.). 
+func die() -> void:
+	_on_death()
+	queue_free()
+
+
 # --- Damage ---------------------------------------------------------------
 
 ## Damageable interface. `source` is the projectile/attacker; may be null.
@@ -79,8 +85,7 @@ func take_hit(source: Node = null) -> void:
 	_health -= 1
 	_flash()
 	if _health <= 0:
-		_on_death()
-		queue_free()
+		die()
 
 
 ## Contact/hit area handler. Wire each enemy scene's Hitbox.body_entered here.

@@ -21,6 +21,9 @@ const MAX_NUM_OF_AIR_JUMPS = 1
 const COYOTE_FRAMES = 6
 const MAX_HEARTS = 3
 
+## World Y past which the player is considered out of bounds (falling).
+@export var fall_death_y: float = 500.0
+
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var temp_sprite = $TempSprite
 
@@ -108,6 +111,7 @@ func _physics_process(delta: float) -> void:
 	_update_player_sprite()
 	_update_player_movement(delta)
 	_update_floor_surface_modifiers()
+	_check_out_of_bounds()
 
 
 ## Damageable interface used by spikes, enemies, and projectiles.
@@ -124,7 +128,7 @@ func take_hit(source: Node = null) -> void:
 	invulnerability_timer.start()
 
 	if _hearts <= 0:
-		_die()
+		die()
 
 
 func get_hearts() -> int:
@@ -135,7 +139,8 @@ func get_max_hearts() -> int:
 	return MAX_HEARTS
 
 
-func _die() -> void:
+## Instant death (out of bounds, hazards that should kill outright, etc.).
+func die() -> void:
 	if _is_dead:
 		return
 	_is_dead = true
@@ -145,6 +150,11 @@ func _die() -> void:
 	# Brief timeout, then restart the level (change to reload level prompt later).
 	await get_tree().create_timer(0.6).timeout
 	get_tree().reload_current_scene()
+
+
+func _check_out_of_bounds() -> void:
+	if global_position.y > fall_death_y:
+		die()
 
 
 func _flash_hurt() -> void:
