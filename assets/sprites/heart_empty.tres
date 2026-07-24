@@ -1,0 +1,8 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://dfjf2d2k8j588"]
+
+[ext_resource type="Texture2D" uid="uid://bwv74jdh1s7p8" path="res://assets/sprites/heart_ui_16x16.png" id="1_sheet"]
+
+[resource]
+atlas = ExtResource("1_sheet")
+region = Rect2(32, 0, 16, 16)
+filter_clip = true

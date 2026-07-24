@@ -7,7 +7,7 @@ extends EnemyBase
 ## Damage is gated by hit direction: shots into the shielded front are blocked
 ## (and bounced back like off a wall). Land a hit by getting behind it (dash
 ## past), ricocheting a shot in from the rear, or arcing a plunging shot over
-## the top of the shield.
+## the top of the shield. Arrows never pierce through a shieldbearer.
 
 
 @export var patrol_speed: float = 55.0
@@ -43,6 +43,11 @@ func _can_be_hit(source: Node = null) -> bool:
 	if n2d != null:
 		return signf(n2d.global_position.x - global_position.x) != float(facing)
 	return true
+
+
+## Shielded enemies always stop the arrow; full-draw pierce does not apply.
+func _can_be_pierced(_source: Node = null) -> bool:
+	return false
 
 
 ## Bounce a blocked arrow back off the shield, with a metallic glint.

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bepu8d2b7xgem" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://db51jt005nv26" path="res://scenes/player/bow.tscn" id="2_dovo2"]
+[ext_resource type="PackedScene" uid="uid://cheartshud0scn" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c5ll8"]
 radius = 14.0
@@ -64,6 +65,12 @@ one_shot = true
 
 [node name="HoverAimCooldownTimer" type="Timer" parent="Timers" unique_id=1499024725]
 one_shot = true
+
+[node name="InvulnerabilityTimer" type="Timer" parent="Timers"]
+wait_time = 1.0
+one_shot = true
+
+[node name="HeartsHUD" parent="." instance=ExtResource("3_hearts")]
 
 [node name="RightRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
