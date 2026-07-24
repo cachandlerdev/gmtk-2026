@@ -1,8 +1,7 @@
 extends CanvasLayer
-## Screen-space heart display. Assign `heart_texture` to a sprite asset;
-## hearts are created at runtime under Margin/Hearts.
 
-@export var heart_texture: Texture2D
+@export var full_heart: Texture2D
+@export var empty_heart: Texture2D
 @export var heart_size: Vector2 = Vector2(32, 32)
 
 @onready var _row: HBoxContainer = $Margin/Hearts
@@ -38,12 +37,12 @@ func _make_heart() -> TextureRect:
 	heart.custom_minimum_size = heart_size
 	heart.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	heart.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	heart.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	heart.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	heart.texture = heart_texture
+	heart.texture = full_heart
 	return heart
 
 
 func _on_health_changed(current_hearts: int, _max_hearts: int) -> void:
 	for i in _hearts.size():
-		# Fade out lost hearts
-		_hearts[i].modulate.a = 1.0 if i < current_hearts else 0.22
+		_hearts[i].texture = full_heart if i < current_hearts else empty_heart
