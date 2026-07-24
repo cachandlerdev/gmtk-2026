@@ -12,13 +12,13 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export_group("Power")
 @export var min_arrow_speed: float = 400.0
 @export var max_arrow_speed: float = 1200.0
-@export var max_charge_time: float = 1.2
+@export var max_charge_time: float = 1.0
 
 @export_group("Aim")
 @export var aim_speed: float = 2.5          ## radians per second
 @export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
-@export var COOLDOWN_TIME: float = 0.5
+@export var COOLDOWN_TIME: float = 0.33
 
 @export_group("Input Actions")
 @export var shoot_action: StringName = &"shoot"

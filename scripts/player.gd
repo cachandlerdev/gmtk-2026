@@ -16,16 +16,20 @@ signal died
 ## The impact of inertia. The higher this value, the more control the player has
 @export var INERTIA_FACTOR: float = 2000
 ## How much faster the player moves while performing a melee attack.
-@export var MELEE_THRUST_VELOCITY: float = 2.3
+@export var MELEE_THRUST_VELOCITY: float = 1.2
+## How much the player gets launched vertically performing a melee attack.
+@export var MELEE_JUMP_AMOUNT: float = 3500
 ## How many air jumps the player gets
 @export var MAX_NUM_OF_AIR_JUMPS: int = 1
 ## How much gravity gets applied while hover aiming.
 @export var HOVER_AIM_GRAVITY_FACTOR: float = 0.7
 
-# How long knockback lasts when taking damage
+@export_group("Combat")
+## How long knockback lasts when taking damage
 @export var KNOCKBACK_DURATION: float = 0.15
-
-# How much of an effect knockback has
+## How much damage melee does
+@export var MELEE_DAMAGE: int = 2
+## How much of an effect knockback has
 @export var KNOCKBACK_FACTOR: float = 0.1
 
 # if needed. Coyote time not implemented right now
@@ -48,8 +52,11 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var hover_aim_cooldown_timer = $Timers/HoverAimCooldownTimer
 @onready var invulnerability_timer = $Timers/InvulnerabilityTimer
 
-@onready var left_ray_cast = $LeftRayCast
-@onready var right_ray_cast = $RightRayCast
+@onready var left_wall_ray_cast = $LeftWallRayCast
+@onready var right_wall_ray_cast = $RightWallRayCast
+@onready var left_attack_ray_cast = $LeftAttackRayCast # melee
+@onready var right_attack_ray_cast = $RightAttackRayCast # melee
+
 @onready var interact_range: Area2D = $InteractRange
 @onready var hearts_hud = $HeartsHUD
 @onready var bow = $Bow
@@ -62,7 +69,9 @@ var _can_dash: bool = true
 var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
 
 # The direction the player is currently moving in
-var _direction: float = 0
+var _direction: float = 1.0
+# Keeps track of the looking direction. always 1 or -1, never 0
+var _looking_direction: float = 1.0
 
 # Used to temporarily disable directional movement when wall jumping
 var _is_wall_jumping: bool = false
@@ -98,7 +107,6 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	#print(_is_dead)
 	pass
 
 
@@ -153,13 +161,17 @@ func _update_player_direction() -> void:
 		var player_location := global_position
 		if player_location.x < mouse_location.x: # aiming right
 			_direction = 1.0
+			_looking_direction = 1.0
 		elif player_location.x > mouse_location.x: #aiming left
 			_direction = -1.0
+			_looking_direction = -1.0
 	elif not _is_wall_jumping or _is_melee_attacking:
 		# Get the input direction and handle the movement/deceleration.
 		_direction = Input.get_axis("move_left", "move_right")
 		if _direction != 0:
 			_player_wants_to_move = true
+			_looking_direction = _direction
+		
 
 
 ## Damageable interface used by spikes, enemies, and projectiles.
@@ -199,7 +211,6 @@ func die() -> void:
 		return
 	_is_dead = true
 	died.emit()
-	print("Player died")
 	set_physics_process(false)
 	GameMode.set_state(GameMode.Defeat)
 
@@ -236,7 +247,7 @@ func _try_interact() -> void:
 ## Handles updating the player's jump count.
 func _update_jump_count() -> void:
 	# If you're next to a wall, you can always jump
-	if left_ray_cast.is_colliding() or right_ray_cast.is_colliding():
+	if left_wall_ray_cast.is_colliding() or right_wall_ray_cast.is_colliding():
 		_num_of_jumps = max(_num_of_jumps, 1)
 
 	# Handle the double jump count
@@ -251,7 +262,6 @@ func should_we_apply_gravity() -> bool:
 
 ## Performs a melee attack and launches the player forward slightly
 func melee_attack() -> void:
-	print("melee attack")
 	_is_melee_attacking = true
 	_can_melee_attack = false
 	melee_duration_timer.start()
@@ -292,7 +302,7 @@ func _stop_hover_aim() -> void:
 ## This function assumes that the player can jump at this point in time.
 func _jump() -> void:
 	# We prioritize walljumps
-	if left_ray_cast.is_colliding() and not is_on_floor():
+	if left_wall_ray_cast.is_colliding() and not is_on_floor():
 		_direction = 1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -300,7 +310,7 @@ func _jump() -> void:
 		velocity.y = JUMP_VELOCITY
 		velocity.x = JUMP_VELOCITY
 
-	elif right_ray_cast.is_colliding() and not is_on_floor():
+	elif right_wall_ray_cast.is_colliding() and not is_on_floor():
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -336,12 +346,18 @@ func _update_player_sprite() -> void:
 ## Updates the player's velocity and moves him
 func _update_player_movement(delta: float) -> void:
 	# Move and account for the dash
+	var actual_direction = _direction
+	if _is_dashing or _is_melee_attacking:
+		# Make the player move when either of these happen
+		actual_direction = _looking_direction
+
 	var actual_dash_factor = 1.0
 	if _is_dashing and not is_on_floor():
 		actual_dash_factor = AIR_DASH_FACTOR
 	elif _is_dashing:
 		actual_dash_factor = GROUND_DASH_FACTOR
 	
+	# When melee attacking, you should get launched forward.
 	var actual_melee_factor = 1.0
 	if _is_melee_attacking:
 		actual_melee_factor = MELEE_THRUST_VELOCITY
@@ -350,10 +366,11 @@ func _update_player_movement(delta: float) -> void:
 	if _is_knocked_back:
 		actual_knockback_factor = -1 * KNOCKBACK_FACTOR
 	
+	
 	var target_velocity = 0
-	if _player_wants_to_move:
+	if _player_wants_to_move or _is_melee_attacking or _is_dashing:
 		target_velocity = (
-			_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor * actual_knockback_factor
+			actual_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor * actual_knockback_factor
 		)
 	
 	var use_inertia := (
@@ -368,6 +385,9 @@ func _update_player_movement(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, target_velocity, accel)
 	else:
 		velocity.x = target_velocity
+	
+	if _is_melee_attacking:
+		velocity.y -= MELEE_JUMP_AMOUNT * delta
 
 	move_and_slide()
 	_push_colliding_objects() # Maybe we make it so we need to press a button to push objects instead?
@@ -423,6 +443,19 @@ func _on_wall_jump_timer_timeout() -> void:
 ## The melee attack has finished
 func _on_melee_duration_timer_timeout() -> void:
 	_is_melee_attacking = false
+	# Now is when it should hit the enemy
+	if _looking_direction > 0 and right_attack_ray_cast.is_colliding():
+		# probably cleaner with a signal but oh well
+		var other = right_attack_ray_cast.get_collider()
+		if other is EnemyBase:
+			other.take_hit(self, MELEE_DAMAGE)
+	elif _looking_direction < 0 and left_attack_ray_cast.is_colliding():
+		# probably cleaner with a signal but oh well
+		var other = left_attack_ray_cast.get_collider()
+		if other is EnemyBase:
+			other.take_hit(self, MELEE_DAMAGE)
+
+
 	melee_cooldown_timer.start()
 
 

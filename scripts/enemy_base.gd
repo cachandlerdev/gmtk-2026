@@ -28,7 +28,7 @@ extends CharacterBody2D
 
 @export_group("Attack")
 ## How close the player must be (in pixels) for the enemy to swing.
-@export var attack_range: float = 46.0
+@export var attack_range: float = 30
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
 
@@ -104,7 +104,6 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
-	print("dead")
 	if is_alerted:
 		is_alerted = false
 		GameMode.remove_watching_guard()
@@ -119,11 +118,11 @@ func die() -> void:
 # --- Damage ---------------------------------------------------------------
 
 ## Damageable interface. `source` is the projectile/attacker; may be null.
-func take_hit(source: Node = null) -> void:
+func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
 		_on_hit_blocked(source)
 		return
-	_health -= 1
+	_health -= damage
 	_flash()
 	if _health <= 0:
 		die()

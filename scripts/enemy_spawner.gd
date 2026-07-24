@@ -93,7 +93,6 @@ func _on_cooldown_timer_timeout() -> void:
 
 ## Spawn the enemy
 func _spawn_enemy() -> void:
-	print("spawn_enemy")
 	var new_enemy = load(enemy_prototype).instantiate()
 
 	get_tree().current_scene.add_child((new_enemy))

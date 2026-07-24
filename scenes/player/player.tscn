@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bepu8d2b7xgem" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://db51jt005nv26" path="res://scenes/player/bow.tscn" id="2_dovo2"]
-[ext_resource type="PackedScene" uid="uid://cheartshud0scn" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
+[ext_resource type="PackedScene" uid="uid://bxi8mp02m55w4" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c5ll8"]
 radius = 14.0
@@ -27,6 +27,12 @@ position_smoothing_enabled = true
 
 [node name="TempSprite" type="Polygon2D" parent="." unique_id=1734986798]
 polygon = PackedVector2Array(-14, -34, 14, -34, 14, 0, -14, 0)
+
+[node name="Polygon2D3" type="Polygon2D" parent="TempSprite" unique_id=1178172583]
+position = Vector2(30, 0)
+scale = Vector2(3.0976043, 1)
+color = Color(0.67481464, 0.67481464, 0.6748146, 1)
+polygon = PackedVector2Array(-5.4881124, -14, 14.204527, -14, 14.204527, -12, -5.4881124, -12)
 
 [node name="Polygon2D2" type="Polygon2D" parent="TempSprite" unique_id=2037278657]
 position = Vector2(15, -12)
@@ -66,20 +72,32 @@ one_shot = true
 [node name="HoverAimCooldownTimer" type="Timer" parent="Timers" unique_id=1499024725]
 one_shot = true
 
-[node name="InvulnerabilityTimer" type="Timer" parent="Timers"]
-wait_time = 1.0
+[node name="InvulnerabilityTimer" type="Timer" parent="Timers" unique_id=73429972]
 one_shot = true
 
-[node name="HeartsHUD" parent="." instance=ExtResource("3_hearts")]
+[node name="HeartsHUD" parent="." unique_id=1907220139 instance=ExtResource("3_hearts")]
 
-[node name="RightRayCast" type="RayCast2D" parent="." unique_id=1247435798]
+[node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
 target_position = Vector2(25, 0)
 hit_from_inside = true
 
-[node name="LeftRayCast" type="RayCast2D" parent="." unique_id=314751323]
+[node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
 target_position = Vector2(-25, 0)
+hit_from_inside = true
+collide_with_areas = true
+
+[node name="RightAttackRayCast" type="RayCast2D" parent="." unique_id=659439326]
+position = Vector2(0, -13)
+target_position = Vector2(75, 0)
+collision_mask = 17
+hit_from_inside = true
+
+[node name="LeftAttackRayCast" type="RayCast2D" parent="." unique_id=1478928469]
+position = Vector2(0, -13)
+target_position = Vector2(-75, 0)
+collision_mask = 17
 hit_from_inside = true
 collide_with_areas = true
 
