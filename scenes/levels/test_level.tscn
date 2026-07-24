@@ -47,6 +47,18 @@ scale = Vector2(0.079999164, 4.560001)
 position = Vector2(-744.00006, -317)
 scale = Vector2(0.079999164, 4.560001)
 
+[node name="Floor15" parent="." unique_id=981071487 instance=ExtResource("2_fr1um")]
+position = Vector2(2025, -189.00003)
+scale = Vector2(0.079999164, 4.560001)
+
 [node name="Floor12" parent="." unique_id=723876858 instance=ExtResource("2_fr1um")]
 position = Vector2(-1229.0001, -422)
+scale = Vector2(0.4954827, 0.3499207)
+
+[node name="Floor14" parent="." unique_id=1221645 instance=ExtResource("2_fr1um")]
+position = Vector2(1797, 30.99997)
+scale = Vector2(0.4954827, 0.3499207)
+
+[node name="Floor16" parent="." unique_id=490377460 instance=ExtResource("2_fr1um")]
+position = Vector2(2258, -404.99997)
 scale = Vector2(0.4954827, 0.3499207)

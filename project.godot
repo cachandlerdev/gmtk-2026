@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 PauseMenu="*res://scenes/ui/pause_menu.tscn"
 MusicPlayer="*uid://bfn2vubl544g"
 GameMode="*uid://b06epmfr0ogfd"
+Hud="*uid://cgoesllp5258s"
 
 [display]
 

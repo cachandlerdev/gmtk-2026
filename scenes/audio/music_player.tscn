@@ -38,7 +38,7 @@ Vector2i(2, 0): {
 "fade_beats": 1.0,
 "fade_mode": 4,
 "from_time": 1,
-"to_time": 0
+"to_time": 1
 },
 Vector2i(2, 1): {
 "fade_beats": 1.0,
@@ -57,3 +57,4 @@ Vector2i(2, 2): {
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" unique_id=1450982905]
 stream = SubResource("AudioStreamInteractive_uo026")
 autoplay = true
+bus = &"Music"

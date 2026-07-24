@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cgoesllp5258s"]
+
+[ext_resource type="PackedScene" uid="uid://cxtogyr5g2y5r" path="res://scenes/ui/visibility_indicator.tscn" id="1_0mwgc"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=311716904]
+
+[node name="HUD" type="Control" parent="." unique_id=1791053006]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD" unique_id=157453596]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 138.0
+grow_horizontal = 2
+offset_transform_enabled = true
+alignment = 1
+
+[node name="VisibilityIndicator" parent="HUD/HBoxContainer" unique_id=1711087192 instance=ExtResource("1_0mwgc")]
+layout_mode = 2
+vertical_alignment = 1
