@@ -15,11 +15,17 @@ run/main_scene="uid://dvq7uq48qs07d"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://ct33mw21k8ao4"
+
 [autoload]
 
 PauseMenu="*res://scenes/ui/pause_menu.tscn"
 MusicPlayer="*uid://bfn2vubl544g"
 GameMode="*uid://b06epmfr0ogfd"
+Hud="*uid://cgoesllp5258s"
+DeathMenu="*uid://b0dvrifn7dd6h"
 
 [display]
 
@@ -105,4 +111,5 @@ toggle_vision={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"

@@ -45,6 +45,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+func _exit_tree() -> void:
+	if is_alerted:
+		GameMode.remove_watching_guard()
+
+
 # --- Hooks for subclasses -------------------------------------------------
 
 ## Called once after the base is ready. Override for setup.
@@ -70,7 +75,10 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
-	pass
+	print("dead")
+	if is_alerted:
+		is_alerted = false
+		GameMode.remove_watching_guard()
 
 
 ## Instant death (out of bounds, etc.). 
@@ -140,11 +148,14 @@ func _update_perception(delta: float) -> void:
 	if _vision == null:
 		return
 	if _vision.can_see_player:
+		if not is_alerted:
+			GameMode.add_watching_guard()
 		is_alerted = true
 		_lost_time = 0.0
 	elif is_alerted:
 		_lost_time += delta
 		if _lost_time >= alert_linger:
+			GameMode.remove_watching_guard()
 			is_alerted = false
 
 

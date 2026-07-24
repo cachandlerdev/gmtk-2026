@@ -22,6 +22,12 @@ signal died
 ## How much gravity gets applied while hover aiming.
 @export var HOVER_AIM_GRAVITY_FACTOR: float = 0.7
 
+# How long knockback lasts when taking damage
+@export var KNOCKBACK_DURATION: float = 0.15
+
+# How much of an effect knockback has
+@export var KNOCKBACK_FACTOR: float = 0.1
+
 const COYOTE_FRAMES = 6
 const MAX_HEARTS = 3
 
@@ -74,6 +80,9 @@ var _surface_mods: SurfaceModifiers = SurfaceModifiers.new()
 
 var _hearts: int = MAX_HEARTS
 var _is_dead: bool = false
+
+# Tracks knockback effects
+var _is_knocked_back: bool = false
 
 
 func _ready() -> void:
@@ -159,6 +168,10 @@ func take_hit(source: Node = null) -> void:
 
 	if _hearts <= 0:
 		die()
+	
+	_is_knocked_back = true
+	await get_tree().create_timer(KNOCKBACK_DURATION).timeout
+	_is_knocked_back = false
 
 
 func get_hearts() -> int:
@@ -177,9 +190,7 @@ func die() -> void:
 	died.emit()
 	print("Player died")
 	set_physics_process(false)
-	# Brief timeout, then restart the level (change to reload level prompt later).
-	await get_tree().create_timer(0.6).timeout
-	get_tree().reload_current_scene()
+	GameMode.set_state(GameMode.Defeat)
 
 
 func _check_out_of_bounds() -> void:
@@ -273,7 +284,6 @@ func _jump() -> void:
 		_direction = 1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
-		print("Wall jump from left to right")
 
 		velocity.y = JUMP_VELOCITY
 		velocity.x = JUMP_VELOCITY
@@ -282,7 +292,6 @@ func _jump() -> void:
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
-		print("Wall jump from right to left")
 
 		velocity.y = JUMP_VELOCITY
 		velocity.x = _direction * JUMP_VELOCITY
@@ -325,10 +334,14 @@ func _update_player_movement(delta: float) -> void:
 	if _is_melee_attacking:
 		actual_melee_factor = MELEE_THRUST_VELOCITY
 	
+	var actual_knockback_factor = 1.0
+	if _is_knocked_back:
+		actual_knockback_factor = -1 * KNOCKBACK_FACTOR
+	
 	var target_velocity = 0
 	if _player_wants_to_move:
 		target_velocity = (
-			_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor
+			_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor * actual_knockback_factor
 		)
 	
 	var use_inertia := (

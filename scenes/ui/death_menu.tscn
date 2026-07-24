@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://b0dvrifn7dd6h"]
+
+[ext_resource type="Script" uid="uid://dy2qkndk86jyo" path="res://scenes/ui/death_menu.gd" id="1_mt1vs"]
+
+[node name="DeathMenu" type="CanvasLayer" unique_id=668839730]
+process_mode = 3
+layer = 100
+script = ExtResource("1_mt1vs")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=1548108755]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=444388904]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="Center" unique_id=43066902]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Center/Menu" unique_id=286636442]
+layout_mode = 2
+text = "The Count Lives On..."
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="Center/Menu" unique_id=279223294]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "Restart"
+
+[node name="MainMenuButton" type="Button" parent="Center/Menu" unique_id=1274509227]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+text = "Main Menu"

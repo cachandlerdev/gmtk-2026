@@ -1,16 +1,23 @@
 [gd_scene format=3 uid="uid://dvq7uq48qs07d"]
 
+[ext_resource type="Script" uid="uid://bstmcf7qytjor" path="res://scripts/enemy_test_level.gd" id="1_d021f"]
 [ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_floor"]
+[ext_resource type="PackedScene" uid="uid://bjclvr2cm5rl6" path="res://scenes/assets/enemy_spawner.tscn" id="3_cvmpx"]
 [ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="3_enemy"]
 [ext_resource type="PackedScene" uid="uid://d0k1b4mo45a22" path="res://scenes/assets/shieldbearer.tscn" id="4_shield"]
 [ext_resource type="PackedScene" uid="uid://d047j530r088n" path="res://scenes/assets/projectile_thrower.tscn" id="5_thrower"]
 [ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="6_switch"]
 
 [node name="EnemyTestLevel" type="Node2D" unique_id=1248734629]
+script = ExtResource("1_d021f")
 
 [node name="GroundMain" parent="." unique_id=429960127 instance=ExtResource("2_floor")]
 position = Vector2(700, 200)
+scale = Vector2(2.7, 1)
+
+[node name="GroundMain2" parent="." unique_id=26143825 instance=ExtResource("2_floor")]
+position = Vector2(-1491, 200)
 scale = Vector2(2.7, 1)
 
 [node name="WallLeft" parent="." unique_id=1837385516 instance=ExtResource("2_floor")]
@@ -52,3 +59,10 @@ scale = Vector2(0.14, 0.28)
 [node name="Switch" parent="." unique_id=248714063 instance=ExtResource("6_switch")]
 position = Vector2(1000, 51)
 targets = Array[NodePath]([NodePath("../ProjectileThrower")])
+
+[node name="EnemySpawner" parent="." unique_id=1567161472 instance=ExtResource("3_cvmpx")]
+position = Vector2(-608, 148)
+scale = Vector2(2, 2)
+spawn_right_away = true
+spawn_cooldown = 4.0
+enemy_prototype = "uid://bpna2cn0m2djl"

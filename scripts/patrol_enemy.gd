@@ -13,3 +13,7 @@ func _behaviour(_delta: float) -> void:
 		chase_step(chase_speed)
 	else:
 		patrol_step(speed)
+
+
+func _on_death_despawn_timer_timeout() -> void:
+	pass # Replace with function body.

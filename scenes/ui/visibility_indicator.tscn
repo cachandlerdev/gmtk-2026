@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://cxtogyr5g2y5r"]
+
+[ext_resource type="Texture2D" uid="uid://b7hdaw6yikgf2" path="res://assets/sprites/stealth_eye_24x24-Sheet.png" id="1_bcafi"]
+[ext_resource type="Script" uid="uid://2mlejm5elnlr" path="res://scripts/visibility_indicator.gd" id="1_hope5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7fof"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0cchw"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rxtas"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(48, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nlyo4"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(72, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5054u"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(96, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arr2u"]
+atlas = ExtResource("1_bcafi")
+region = Rect2(120, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c5ll8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7fof")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0cchw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rxtas")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nlyo4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5054u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arr2u")
+}],
+"loop": 0,
+"name": &"close_eye",
+"speed": 10.0
+}]
+
+[node name="VisibilityIndicator" type="AnimatedSprite2D" unique_id=1603064747]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_c5ll8")
+animation = &"close_eye"
+autoplay = "close_eye"
+script = ExtResource("1_hope5")
