@@ -15,7 +15,7 @@ extends CharacterBody2D
 ##   BeehaveTree (BeehaveTree)— drives behaviour; set to MANUAL process thread
 
 
-@export var max_health: int = 1
+@export var max_health: int = 2
 @export var gravity_factor: float = 1.0
 ## If true, touching the player calls their take_hit().
 @export var contact_damage: bool = true
@@ -28,7 +28,7 @@ extends CharacterBody2D
 
 @export_group("Attack")
 ## How close the player must be (in pixels) for the enemy to swing.
-@export var attack_range: float = 46.0
+@export var attack_range: float = 30
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
 
@@ -104,7 +104,6 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
-	print("dead")
 	if is_alerted:
 		is_alerted = false
 		GameMode.remove_watching_guard()
@@ -119,11 +118,11 @@ func die() -> void:
 # --- Damage ---------------------------------------------------------------
 
 ## Damageable interface. `source` is the projectile/attacker; may be null.
-func take_hit(source: Node = null) -> void:
+func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
 		_on_hit_blocked(source)
 		return
-	_health -= 1
+	_health -= damage
 	_flash()
 	if _health <= 0:
 		die()
@@ -168,15 +167,14 @@ func get_player() -> Node2D:
 
 ## True if a vision cone is present and currently sees the player.
 func can_see_player() -> bool:
-	return _vision != null and _vision.can_see_player
+	return _vision != null and _vision.can_see_player and not get_player()._is_dead
 
 
 ## Update `is_alerted` from the vision cone, keeping it set for `alert_linger`
 ## seconds after the player slips out of sight. No-op without a VisionCone.
 func _update_perception(delta: float) -> void:
-	if _vision == null:
-		return
-	if _vision.can_see_player:
+	#if _vision.can_see_player:
+	if can_see_player():
 		if not is_alerted:
 			GameMode.add_watching_guard()
 		is_alerted = true

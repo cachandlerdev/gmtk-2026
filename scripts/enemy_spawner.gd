@@ -8,6 +8,9 @@ enum Type {Infinite, FixedNumberOfEnemies, MaxNumberOfEnemies}
 ## Determines whether the spawner can start firing immediately, or whether it 
 ## should wait for a specified command
 @export var spawn_right_away: bool = false
+## Starts spawning when the alarm has been raised on when the player is trying 
+## to escape 
+@export var spawn_on_alarm: bool = false
 
 ## The spawn type to use. 
 ## Infinite means that an infinite number of enemies can be spawned, each one 
@@ -75,18 +78,27 @@ func reset_spawn_properties() -> void:
 
 ## Cooldown ended. Spawn an enemy if possible
 func _on_cooldown_timer_timeout() -> void:
-	print(can_spawn)
-	print(_should_spawn)
+	if spawn_on_alarm and (GameMode.get_state() == GameMode.AlarmRaised or GameMode.get_state() == GameMode.Escape):
+		_should_spawn = true
+	
+	var live_enemies_spawned = []
+	for enemy in _enemies_spawned:
+		if enemy:
+			live_enemies_spawned.append(enemy)
+	_enemies_spawned = live_enemies_spawned
+
 	if can_spawn() and _should_spawn:
 		_spawn_enemy()
 
 
 ## Spawn the enemy
 func _spawn_enemy() -> void:
-	print("spawn_enemy")
 	var new_enemy = load(enemy_prototype).instantiate()
 
-	#add_child(new_enemy)
+	get_tree().current_scene.add_child((new_enemy))
+	new_enemy.global_position = global_position
+	new_enemy.global_position.y += -20
+	new_enemy.scale = Vector2(1.0, 1.0)
 	_number_of_enemies_spawned += 1
 	_enemies_spawned.append(new_enemy)
 	

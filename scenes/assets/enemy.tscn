@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bpna2cn0m2djl"]
 
-[ext_resource type="Script" path="res://scripts/enemy_base.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://p5ogpg8fo875" path="res://scripts/enemy_base.gd" id="1_enemy"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
-[ext_resource type="PackedScene" uid="uid://cguardbrain0scn" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
+[ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(36, 44)
@@ -46,6 +46,9 @@ shape = SubResource("Shape_hit")
 
 [node name="DeathDespawnTimer" type="Timer" parent="." unique_id=229173128]
 
-[node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
+[node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
+enabled = false
+blackboard = NodePath("@Node@68991")
+actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

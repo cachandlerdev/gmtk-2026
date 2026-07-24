@@ -3,7 +3,7 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	GameMode.set_state(GameMode.Exploration)
+	GameMode.set_state(GameMode.Stealth)
 	pass # Replace with function body.
 
 
