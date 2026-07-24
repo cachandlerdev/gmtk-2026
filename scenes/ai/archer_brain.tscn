@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dlb8ja8hm23td"]
+
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_tree"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_selector"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="3_sequence"]
+[ext_resource type="Script" path="res://scripts/ai/is_alerted_condition.gd" id="4_alerted"]
+[ext_resource type="Script" path="res://scripts/ai/shoot_action.gd" id="5_shoot"]
+[ext_resource type="Script" path="res://scripts/ai/patrol_action.gd" id="6_patrol"]
+
+[node name="BeehaveTree" type="Node"]
+script = ExtResource("1_tree")
+process_thread = 2
+
+[node name="SelectorReactive" type="Node" parent="."]
+script = ExtResource("2_selector")
+
+[node name="ShootBranch" type="Node" parent="SelectorReactive"]
+script = ExtResource("3_sequence")
+
+[node name="IsAlerted" type="Node" parent="SelectorReactive/ShootBranch"]
+script = ExtResource("4_alerted")
+
+[node name="Shoot" type="Node" parent="SelectorReactive/ShootBranch"]
+script = ExtResource("5_shoot")
+
+[node name="Patrol" type="Node" parent="SelectorReactive"]
+script = ExtResource("6_patrol")
