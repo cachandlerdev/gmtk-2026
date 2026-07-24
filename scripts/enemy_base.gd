@@ -4,11 +4,15 @@ extends CharacterBody2D
 ## projectiles, optional contact damage to the player, a hurt flash, facing +
 ## visual mirroring, and a ledge probe.
 ##
-## Subclasses implement _behaviour() to set horizontal velocity / attacks, and
-## may override _can_be_hit() for shields/armor. Expected (optional) child nodes:
-##   Visual   (Node2D)   — mirrored on facing, flashed on hit
-##   LedgeRay (RayCast2D) — used by has_ground_ahead()
-##   Hitbox   (Area2D)    — wire its body_entered to _on_hitbox_body_entered
+## Movement/attacks come from a BeehaveTree child when present (ticked manually
+## below); subclasses may still override _behaviour() as a fallback, and
+## _can_be_hit() / _can_be_pierced() for shields and armor.
+## Expected (optional) child nodes:
+##   Visual      (Node2D)     — mirrored on facing, flashed on hit
+##   LedgeRay    (RayCast2D)  — used by has_ground_ahead()
+##   Hitbox      (Area2D)     — wire its body_entered to _on_hitbox_body_entered
+##   VisionCone  (VisionCone) — drives is_alerted
+##   BeehaveTree (BeehaveTree)— drives behaviour; set to MANUAL process thread
 
 
 @export var max_health: int = 1
@@ -18,16 +22,27 @@ extends CharacterBody2D
 ## How long the enemy stays alerted after losing sight of the player. Only
 ## matters if the enemy has a VisionCone child.
 @export var alert_linger: float = 1.5
+## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
+@export var patrol_speed: float = 90.0
+@export var chase_speed: float = 130.0
+
+@export_group("Attack")
+## How close the player must be (in pixels) for the enemy to swing.
+@export var attack_range: float = 46.0
+## Delay before the enemy may swing again.
+@export var attack_cooldown: float = 1.0
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## True while a VisionCone child sees the player, or recently did (linger).
 var is_alerted: bool = false
 var _health: int
 var _lost_time: float = 0.0
+var _attack_cooldown_left: float = 0.0
 
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
 @onready var _vision: VisionCone = get_node_or_null("VisionCone")
+@onready var _tree: BeehaveTree = _find_behaviour_tree()
 
 
 func _ready() -> void:
@@ -41,13 +56,27 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * gravity_factor * delta
 	_update_perception(delta)
-	_behaviour(delta)
+	_attack_cooldown_left = maxf(0.0, _attack_cooldown_left - delta)
+	# A BeehaveTree child drives behaviour when present. It is set to MANUAL so
+	# we tick it here — after perception, before move_and_slide — instead of
+	# letting it self-tick a frame out of order.
+	if _tree != null:
+		_tree.tick()
+	else:
+		_behaviour(delta)
 	move_and_slide()
 
 
 func _exit_tree() -> void:
 	if is_alerted:
 		GameMode.remove_watching_guard()
+
+
+func _find_behaviour_tree() -> BeehaveTree:
+	for child in get_children():
+		if child is BeehaveTree:
+			return child
+	return null
 
 
 # --- Hooks for subclasses -------------------------------------------------
@@ -175,6 +204,41 @@ func chase_step(speed: float) -> void:
 		velocity.x = facing * speed
 	else:
 		velocity.x = 0.0
+
+
+# --- Attack ---------------------------------------------------------------
+
+## True if the enemy should swing: the player is within attack_range and the
+## attack cooldown has elapsed.
+func can_attack() -> bool:
+	if _attack_cooldown_left > 0.0:
+		return false
+	var player := get_player()
+	if player == null:
+		return false
+	return global_position.distance_to(player.global_position) <= attack_range
+
+
+## Swing once: stop, turn to the player, damage them, and start the cooldown.
+## Instant for now — add wind-up / active frames once there are animations.
+func attack() -> void:
+	velocity.x = 0.0
+	var player := get_player()
+	if player == null:
+		return
+	set_facing(1 if player.global_position.x >= global_position.x else -1)
+	_attack_cooldown_left = attack_cooldown
+	_on_attack()
+	if player.has_method("take_hit"):
+		player.take_hit(self)
+
+
+## Attack feedback hook — override for an animation. Defaults to a brief tint.
+func _on_attack() -> void:
+	if _visual == null:
+		return
+	_visual.modulate = Color(1.5, 1.2, 0.6)
+	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.2)
 
 
 func _align_ledge_ray() -> void:

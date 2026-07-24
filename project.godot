@@ -26,6 +26,8 @@ MusicPlayer="*uid://bfn2vubl544g"
 GameMode="*uid://b06epmfr0ogfd"
 Hud="*uid://cgoesllp5258s"
 DeathMenu="*uid://b0dvrifn7dd6h"
+BeehaveGlobalMetrics="*uid://c3ktl6ontsdt7"
+BeehaveGlobalDebugger="*uid://bl3ma400hpvsh"
 
 [display]
 
@@ -35,6 +37,10 @@ window/stretch/aspect="expand"
 [dotnet]
 
 project/assembly_name="GMTK2026"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
 
 [input]
 

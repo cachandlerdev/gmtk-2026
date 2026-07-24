@@ -38,12 +38,6 @@ position = Vector2(90, 100)
 [node name="Patrol1" parent="." unique_id=161069863 instance=ExtResource("3_enemy")]
 position = Vector2(220, 100)
 
-[node name="Patrol2" parent="." unique_id=1680695899 instance=ExtResource("3_enemy")]
-position = Vector2(420, 100)
-
-[node name="Patrol3" parent="." unique_id=299746044 instance=ExtResource("3_enemy")]
-position = Vector2(600, 100)
-
 [node name="Shieldbearer" parent="." unique_id=2074438974 instance=ExtResource("4_shield")]
 position = Vector2(1000, 100)
 
