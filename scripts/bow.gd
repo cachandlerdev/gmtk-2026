@@ -82,6 +82,8 @@ func _fire() -> void:
 	arrow.global_position = global_position + dir * spawn_offset
 	arrow.rotation = dir.angle()
 	arrow.velocity = dir * arrow_speed
+	# Full draw: pierce one enemy. Partial draw: stop on first hit.
+	arrow.pierces_remaining = 1 if is_equal_approx(ratio, 1.0) else 0
 
 	arrow_fired.emit(arrow, ratio)
 

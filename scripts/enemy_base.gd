@@ -60,6 +60,10 @@ func _behaviour(_delta: float) -> void:
 func _can_be_hit(_source: Node = null) -> bool:
 	return true
 
+## Return false if arrows should never pass through this enemy (e.g. shields).
+func _can_be_pierced(_source: Node = null) -> bool:
+	return true
+
 ## Called when a hit is ignored by _can_be_hit() (spark, clang, ...).
 func _on_hit_blocked(_source: Node = null) -> void:
 	pass
@@ -94,6 +98,12 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 		if contact_damage and body.has_method("take_hit"):
 			body.take_hit(self)
 	elif body.is_in_group("projectile"):
+		# Shield/armor blocks must not consume arrow pierce budget.
+		if not _can_be_hit(body):
+			_on_hit_blocked(body)
+			return
+		if body.has_method("try_hit_enemy") and not body.try_hit_enemy(self, _can_be_pierced(body)):
+			return
 		take_hit(body)
 
 
