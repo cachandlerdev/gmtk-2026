@@ -3,20 +3,24 @@ extends CharacterBody2D
 signal health_changed(current_hearts: int, max_hearts: int)
 signal died
 
-# Controls movement speed
-const SPEED = 500.0
-const JUMP_VELOCITY = -650.0
-# Custom gravity multiplier to improve player movement
-const GRAVITY_FACTOR = 2 
-# How much faster the player moves while dashing. Separate for air or else op.
-const GROUND_DASH_FACTOR = 2.5
-const AIR_DASH_FACTOR = 2.0
-# The impact of inertia. The higher this value, the more control the player has
-const INERTIA_FACTOR = 2000
-# How much faster the player moves while performing a melee attack.
-const MELEE_THRUST_VELOCITY = 2.3
-# How many air jumps the player gets
-const MAX_NUM_OF_AIR_JUMPS = 1
+@export_group("Movement")
+## Controls movement speed
+@export var SPEED: float = 500.0
+## Controls jump strength. The smaller the number, the higher the player jumps.
+@export var JUMP_VELOCITY: float = -650.0
+## Custom gravity multiplier to improve player movement
+@export var GRAVITY_FACTOR: float = 2
+## How much faster the player moves while dashing. Separate for air or else op.
+@export var GROUND_DASH_FACTOR: float = 2.5
+@export var AIR_DASH_FACTOR: float = 2.0
+## The impact of inertia. The higher this value, the more control the player has
+@export var INERTIA_FACTOR: float = 2000
+## How much faster the player moves while performing a melee attack.
+@export var MELEE_THRUST_VELOCITY: float = 2.3
+## How many air jumps the player gets
+@export var MAX_NUM_OF_AIR_JUMPS: int = 1
+## How much gravity gets applied while hover aiming.
+@export var HOVER_AIM_GRAVITY_FACTOR: float = 0.7
 
 const COYOTE_FRAMES = 6
 const MAX_HEARTS = 3
@@ -42,25 +46,28 @@ const MAX_HEARTS = 3
 @onready var hearts_hud = $HeartsHUD
 
 # Controls whether the character can dash again
-var _is_dashing = false
-var _can_dash = true
+var _is_dashing: bool = false
+var _can_dash: bool = true
 
 # Keeps track of the jump count for double jumps
-var _num_of_jumps = MAX_NUM_OF_AIR_JUMPS
+var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
 
 # The direction the player is currently moving in
-var _direction = 0
+var _direction: float = 0
 
 # Used to temporarily disable directional movement when wall jumping
-var _is_wall_jumping = false
+var _is_wall_jumping: bool = false
 
 # Handles melee attacks
-var _is_melee_attacking = false
-var _can_melee_attack = true
+var _is_melee_attacking: bool = false
+var _can_melee_attack: bool = true
 
+# Needed to prevent aiming direction from forcibly moving the character
+var _player_wants_to_move: bool = false
+var _is_aiming: bool = false
 # Handles temporary hovering while aiming to shot
-var _is_hover_aiming = false
-var _can_hover_aim = true
+var _is_hover_aiming: bool = false
+var _can_hover_aim: bool = true
 
 # Floor surface modifiers (sticky / sliding), refreshed after move_and_slide
 var _surface_mods: SurfaceModifiers = SurfaceModifiers.new()
@@ -83,14 +90,18 @@ func _physics_process(delta: float) -> void:
 
 	# Take care of gravity
 	if should_we_apply_gravity():
-		velocity += get_gravity() * delta * GRAVITY_FACTOR
-	if _is_hover_aiming:
-		velocity.x = 0
-		velocity.y = 0
+		if _is_hover_aiming:
+			# hard coded for time reasons
+			velocity.x += get_gravity().x * delta * HOVER_AIM_GRAVITY_FACTOR
+			if velocity.y < 0:
+				# Stops the player from flying super high if aiming right after jumping
+				velocity.y = 0
+			else:
+				velocity.y = max(velocity.y + get_gravity().y * delta * HOVER_AIM_GRAVITY_FACTOR, velocity.y)
+		else:
+			velocity += get_gravity() * delta * GRAVITY_FACTOR
 
-	# Get the input direction and handle the movement/deceleration.
-	if not _is_wall_jumping or _is_melee_attacking:
-		_direction = Input.get_axis("move_left", "move_right")
+	_update_player_direction()
 
 	# Handle player inputs
 	if Input.is_action_just_pressed("jump") and _num_of_jumps > 0 and not _surface_mods.blocks_jump:
@@ -112,6 +123,25 @@ func _physics_process(delta: float) -> void:
 	_update_player_movement(delta)
 	_update_floor_surface_modifiers()
 	_check_out_of_bounds()
+
+
+## Handles updating the player's direction. When aiming the bow, this is
+## controlled by the mouse. Otherwise we update it based on the movement
+## direction as long as the player isn't wall jumping or melee attacking.
+func _update_player_direction() -> void:
+	if _is_aiming:
+		_player_wants_to_move = false
+		var mouse_location := get_viewport().get_mouse_position()
+		var player_location := global_position
+		if player_location.x < mouse_location.x: # aiming right
+			_direction = 1.0
+		elif player_location.x > mouse_location.x: #aiming left
+			_direction = -1.0
+	elif not _is_wall_jumping or _is_melee_attacking:
+		# Get the input direction and handle the movement/deceleration.
+		_direction = Input.get_axis("move_left", "move_right")
+		if _direction != 0:
+			_player_wants_to_move = true
 
 
 ## Damageable interface used by spikes, enemies, and projectiles.
@@ -194,7 +224,7 @@ func _update_jump_count() -> void:
 
 ## A helper that says whether gravity should be applied
 func should_we_apply_gravity() -> bool:
-	return not is_on_floor() and not _is_dashing and not _is_hover_aiming
+	return not is_on_floor() and not _is_dashing
 
 
 ## Performs a melee attack and launches the player forward slightly
@@ -208,8 +238,7 @@ func melee_attack() -> void:
 ## Handles aiming to shoot a bow/crossbow/etc. If the player is in the air,
 ## hover aiming can occur
 func aim() -> void:
-	print("aim")
-	# TODO
+	_is_aiming = true
 
 	if not is_on_floor() and _can_hover_aim:
 		_hover_aim()
@@ -218,7 +247,7 @@ func aim() -> void:
 
 ## Handles releasing the aim button (right mouse). This probably fires the arrow
 func stop_aiming() -> void:
-	# TODO: Does this fire the arrow? Not sure b/c depends on bow logic
+	_is_aiming = false
 	if not is_on_floor() and _is_hover_aiming:
 		_stop_hover_aim()
 
@@ -296,9 +325,11 @@ func _update_player_movement(delta: float) -> void:
 	if _is_melee_attacking:
 		actual_melee_factor = MELEE_THRUST_VELOCITY
 	
-	var target_velocity = (
-		_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor
-	)
+	var target_velocity = 0
+	if _player_wants_to_move:
+		target_velocity = (
+			_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor
+		)
 	
 	var use_inertia := (
 		(not is_on_floor() and not (_is_wall_jumping or _is_dashing or _is_melee_attacking))
