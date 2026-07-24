@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dvq7uq48qs07d"]
 
+[ext_resource type="Script" uid="uid://bstmcf7qytjor" path="res://scripts/enemy_test_level.gd" id="1_d021f"]
 [ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="2_floor"]
 [ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="3_enemy"]
@@ -8,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="6_switch"]
 
 [node name="EnemyTestLevel" type="Node2D" unique_id=1248734629]
+script = ExtResource("1_d021f")
 
 [node name="GroundMain" parent="." unique_id=429960127 instance=ExtResource("2_floor")]
 position = Vector2(700, 200)

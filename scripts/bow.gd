@@ -65,7 +65,6 @@ func _handle_bow(delta: float) -> void:
 			# Get angle between mouse cursor and the bow's location
 			var mouse_location := get_global_mouse_position()
 			var player_location := global_position
-			print(player_location)
 			var x_diff: float = abs(mouse_location.x - player_location.x)
 			var y_diff: float = player_location.y - mouse_location.y
 			aim_input = atan2(y_diff, x_diff)

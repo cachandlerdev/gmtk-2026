@@ -177,8 +177,10 @@ func die() -> void:
 	died.emit()
 	print("Player died")
 	set_physics_process(false)
+	GameMode.set_state(GameMode.Defeat)
 	# Brief timeout, then restart the level (change to reload level prompt later).
-	await get_tree().create_timer(0.6).timeout
+	# TODO: UI for death
+	await get_tree().create_timer(5).timeout
 	get_tree().reload_current_scene()
 
 
@@ -273,7 +275,6 @@ func _jump() -> void:
 		_direction = 1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
-		print("Wall jump from left to right")
 
 		velocity.y = JUMP_VELOCITY
 		velocity.x = JUMP_VELOCITY
@@ -282,7 +283,6 @@ func _jump() -> void:
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
-		print("Wall jump from right to left")
 
 		velocity.y = JUMP_VELOCITY
 		velocity.x = _direction * JUMP_VELOCITY
