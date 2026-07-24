@@ -32,6 +32,10 @@ func _process(delta: float) -> void:
 	pass
 
 
+func get_state():
+	return _game_mode_state
+
+
 ## Updates the game state and handles things like music changes 
 func set_state(new_state) -> void:
 	# TODO: Make this more sophisticated for multiple music tracks. 

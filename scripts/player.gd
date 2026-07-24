@@ -178,10 +178,6 @@ func die() -> void:
 	print("Player died")
 	set_physics_process(false)
 	GameMode.set_state(GameMode.Defeat)
-	# Brief timeout, then restart the level (change to reload level prompt later).
-	# TODO: UI for death
-	await get_tree().create_timer(5).timeout
-	get_tree().reload_current_scene()
 
 
 func _check_out_of_bounds() -> void:
