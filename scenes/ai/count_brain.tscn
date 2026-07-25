@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://beui553fqefvc"]
+
+[ext_resource type="Script" uid="uid://bb0t2ovl7wifo" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_s53tl"]
+[ext_resource type="Script" uid="uid://cw22yurt5l74k" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_dr0tw"]
+[ext_resource type="Script" uid="uid://dcojdhvj8qcw0" path="res://addons/beehave/nodes/composites/sequence_reactive.gd" id="3_4pvxy"]
+[ext_resource type="Script" uid="uid://bmkyycp4x5ld" path="res://scripts/ai/is_alerted_condition.gd" id="4_nu0w4"]
+[ext_resource type="Script" uid="uid://bb21q0smqjoc4" path="res://scripts/ai/can_attack_condition.gd" id="5_7vi74"]
+[ext_resource type="Script" uid="uid://d1fy3ny6yi0ip" path="res://scripts/ai/attack_action.gd" id="6_0nyv2"]
+[ext_resource type="Script" uid="uid://ca4h65ft4vqst" path="res://scripts/ai/chase_action.gd" id="7_dpq51"]
+[ext_resource type="Script" uid="uid://t8pqesxgh2jt" path="res://scripts/ai/patrol_action.gd" id="8_6s1n6"]
+
+[node name="BeehaveTree" type="Node"]
+script = ExtResource("1_s53tl")
+process_thread = 2
+
+[node name="SelectorReactive" type="Node" parent="."]
+script = ExtResource("2_dr0tw")
+
+[node name="AttackBranch" type="Node" parent="SelectorReactive"]
+script = ExtResource("3_4pvxy")
+
+[node name="IsAlerted" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("4_nu0w4")
+
+[node name="CanAttack" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("5_7vi74")
+
+[node name="Attack" type="Node" parent="SelectorReactive/AttackBranch"]
+script = ExtResource("6_0nyv2")
+
+[node name="ChaseBranch" type="Node" parent="SelectorReactive"]
+script = ExtResource("3_4pvxy")
+
+[node name="IsAlerted" type="Node" parent="SelectorReactive/ChaseBranch"]
+script = ExtResource("4_nu0w4")
+
+[node name="Chase" type="Node" parent="SelectorReactive/ChaseBranch"]
+script = ExtResource("7_dpq51")
+
+[node name="Patrol" type="Node" parent="SelectorReactive"]
+script = ExtResource("8_6s1n6")

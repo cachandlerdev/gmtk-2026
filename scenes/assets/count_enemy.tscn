@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://drm7ktbvjves1"]
+
+[ext_resource type="Script" uid="uid://l5r7bt11e5s8" path="res://scripts/count_enemy.gd" id="1_62xqn"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_ye4qw"]
+[ext_resource type="PackedScene" uid="uid://beui553fqefvc" path="res://scenes/ai/count_brain.tscn" id="3_62xqn"]
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(36, 44)
+
+[sub_resource type="RectangleShape2D" id="Shape_hit"]
+size = Vector2(40, 48)
+
+[node name="CountEnemy" type="CharacterBody2D" unique_id=245799776]
+collision_layer = 16
+script = ExtResource("1_62xqn")
+max_health = 4
+
+[node name="Visual" type="Node2D" parent="." unique_id=307105698]
+
+[node name="Body" type="Polygon2D" parent="Visual" unique_id=800521712]
+color = Color(0.9589115, 0.00459781, 0.11109423, 1)
+polygon = PackedVector2Array(-18, 22, 18, 22, 18, -12, 8, -22, -8, -22, -18, -12)
+
+[node name="Eye" type="Polygon2D" parent="Visual" unique_id=402540187]
+polygon = PackedVector2Array(4, -14, 14, -14, 14, -4, 4, -4)
+
+[node name="Pupil" type="Polygon2D" parent="Visual" unique_id=1936481640]
+color = Color(0.05, 0.05, 0.05, 1)
+polygon = PackedVector2Array(9, -12, 13, -12, 13, -6, 9, -6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498682953]
+shape = SubResource("Shape_body")
+
+[node name="LedgeRay" type="RayCast2D" parent="." unique_id=1815644042]
+position = Vector2(20, 0)
+target_position = Vector2(0, 34)
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=2002285091]
+collision_layer = 0
+collision_mask = 7
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1027005596]
+shape = SubResource("Shape_hit")
+
+[node name="VisionCone" parent="." unique_id=874998519 instance=ExtResource("2_ye4qw")]
+
+[node name="DeathDespawnTimer" type="Timer" parent="." unique_id=229173128]
+
+[node name="CountBeehaveTree" parent="." unique_id=665891478 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_62xqn")]
+enabled = false
+blackboard = NodePath("@Node@125265")
+actor = NodePath("..")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
