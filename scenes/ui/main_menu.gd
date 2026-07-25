@@ -1,18 +1,15 @@
 extends Control
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	# Announce we're on the menu so global HUD bits (the stealth eye) hide and
+	# the menu music plays. On boot nothing else sets this — GameMode defaults
+	# to Stealth — so the menu has to do it itself.
+	GameMode.set_state(GameMode.MainMenu)
 
 
 func _on_start_game_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/levels/test_level.tscn")
+	LevelManager.start_game()
 
 
 func _on_quit_game_pressed() -> void:

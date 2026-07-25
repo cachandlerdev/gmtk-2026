@@ -35,9 +35,7 @@ layout_mode = 2
 [node name="Start Game" type="Button" parent="CenterContainer/VBoxContainer" unique_id=586542926]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Start
-
-"
+text = "Start"
 
 [node name="Quit Game" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2033349739]
 layout_mode = 2
