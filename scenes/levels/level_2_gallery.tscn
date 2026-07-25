@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://clevel2gallery"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_lvl"]
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="3_floor"]
+[ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://capt2b3tx4va4" path="res://scenes/assets/archer.tscn" id="5_archer"]
+[ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="6_count"]
+
+[node name="Level2Gallery" type="Node2D"]
+script = ExtResource("1_lvl")
+
+[node name="Ground" parent="." instance=ExtResource("3_floor")]
+position = Vector2(700, 260)
+scale = Vector2(2.7, 1)
+
+[node name="WallLeft" parent="." instance=ExtResource("3_floor")]
+position = Vector2(-380, 150)
+scale = Vector2(0.06, 2)
+
+[node name="WallRight" parent="." instance=ExtResource("3_floor")]
+position = Vector2(1780, 150)
+scale = Vector2(0.06, 2)
+
+[node name="Step" parent="." instance=ExtResource("3_floor")]
+position = Vector2(950, 175)
+scale = Vector2(0.25, 0.3)
+
+[node name="Dais" parent="." instance=ExtResource("3_floor")]
+position = Vector2(1350, 120)
+scale = Vector2(0.55, 0.35)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(0, 160)
+
+[node name="Patrol" parent="." instance=ExtResource("4_enemy")]
+position = Vector2(450, 160)
+
+[node name="Archer" parent="." instance=ExtResource("5_archer")]
+position = Vector2(700, 160)
+
+[node name="Count" parent="." instance=ExtResource("6_count")]
+position = Vector2(1350, 60)

@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://clevel1courtyd"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_lvl"]
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="3_floor"]
+[ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="5_count"]
+
+[node name="Level1Courtyard" type="Node2D"]
+script = ExtResource("1_lvl")
+
+[node name="Ground" parent="." instance=ExtResource("3_floor")]
+position = Vector2(700, 200)
+scale = Vector2(2.7, 1)
+
+[node name="WallLeft" parent="." instance=ExtResource("3_floor")]
+position = Vector2(-380, 90)
+scale = Vector2(0.06, 2)
+
+[node name="WallRight" parent="." instance=ExtResource("3_floor")]
+position = Vector2(1780, 90)
+scale = Vector2(0.06, 2)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(0, 100)
+
+[node name="Patrol" parent="." instance=ExtResource("4_enemy")]
+position = Vector2(650, 100)
+
+[node name="Count" parent="." instance=ExtResource("5_count")]
+position = Vector2(1400, 100)

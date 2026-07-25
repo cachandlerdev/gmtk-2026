@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=3 uid="uid://clevel3throne0"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_lvl"]
+[ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="3_floor"]
+[ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" uid="uid://d0k1b4mo45a22" path="res://scenes/assets/shieldbearer.tscn" id="5_shield"]
+[ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="6_count"]
+[ext_resource type="PackedScene" uid="uid://bsw5uy438d1ov" path="res://scenes/assets/death_zone.tscn" id="7_death"]
+
+[node name="Level3Throne" type="Node2D"]
+script = ExtResource("1_lvl")
+
+[node name="GroundLeft" parent="." instance=ExtResource("3_floor")]
+position = Vector2(200, 260)
+scale = Vector2(1.2, 1)
+
+[node name="GroundRight" parent="." instance=ExtResource("3_floor")]
+position = Vector2(1500, 260)
+scale = Vector2(1.2, 1)
+
+[node name="WallLeft" parent="." instance=ExtResource("3_floor")]
+position = Vector2(-280, 150)
+scale = Vector2(0.06, 2)
+
+[node name="WallRight" parent="." instance=ExtResource("3_floor")]
+position = Vector2(1980, 150)
+scale = Vector2(0.06, 2)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(-100, 160)
+
+[node name="Patrol" parent="." instance=ExtResource("4_enemy")]
+position = Vector2(400, 160)
+
+[node name="Shieldbearer" parent="." instance=ExtResource("5_shield")]
+position = Vector2(1250, 160)
+
+[node name="Count" parent="." instance=ExtResource("6_count")]
+position = Vector2(1750, 160)
+
+[node name="DeathZone" parent="." instance=ExtResource("7_death")]
+position = Vector2(850, 480)
+scale = Vector2(1.5, 1)
