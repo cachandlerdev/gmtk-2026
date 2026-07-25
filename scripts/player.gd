@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 signal health_changed(current_hearts: int, max_hearts: int)
 signal died
+signal arrow_inventory_changed
 
 @export_group("Movement")
 ## Controls movement speed
@@ -22,7 +23,7 @@ signal died
 ## How many air jumps the player gets
 @export var MAX_NUM_OF_AIR_JUMPS: int = 1
 ## How much gravity gets applied while hover aiming.
-@export var HOVER_AIM_GRAVITY_FACTOR: float = 0.7
+@export var HOVER_AIM_GRAVITY_FACTOR: float = 0.25
 
 @export_group("Combat")
 ## How long knockback lasts when taking damage
@@ -31,6 +32,11 @@ signal died
 @export var MELEE_DAMAGE: int = 2
 ## How much of an effect knockback has
 @export var KNOCKBACK_FACTOR: float = 0.1
+
+@export_group("Arrows")
+@export var starting_basic_arrows: int = 5
+@export var starting_piercing_arrows: int = 3
+@export var starting_bouncing_arrows: int = 3
 
 # if needed. Coyote time not implemented right now
 const COYOTE_FRAMES: int = 6
@@ -59,6 +65,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 
 @onready var interact_range: Area2D = $InteractRange
 @onready var hearts_hud = $HeartsHUD
+@onready var arrows_hud = $ArrowsHUD
 @onready var bow = $Bow
 
 # Controls whether the character can dash again
@@ -96,6 +103,8 @@ var _is_dead: bool = false
 # Tracks knockback effects
 var _is_knocked_back: bool = false
 
+var arrow_inventory: ArrowInventory = ArrowInventory.new()
+
 
 func _ready() -> void:
 	# Add the player to the player group
@@ -104,6 +113,19 @@ func _ready() -> void:
 	hearts_hud.setup(MAX_HEARTS)
 	health_changed.emit(_hearts, MAX_HEARTS)
 	_is_dead = false
+
+	arrow_inventory.add(Arrow.Type.BASIC, starting_basic_arrows)
+	arrow_inventory.add(Arrow.Type.PIERCING, starting_piercing_arrows)
+	arrow_inventory.add(Arrow.Type.BOUNCING, starting_bouncing_arrows)
+	arrow_inventory.changed.connect(_on_arrow_inventory_changed)
+	bow.inventory = arrow_inventory
+	if arrows_hud != null and arrows_hud.has_method("setup"):
+		arrows_hud.setup(arrow_inventory)
+	arrow_inventory_changed.emit()
+	# Bow updates first so hover can read the current draw state this frame.
+	bow.process_physics_priority = -100
+	if not bow.arrow_fired.is_connected(_on_bow_arrow_fired):
+		bow.arrow_fired.connect(_on_bow_arrow_fired)
 
 
 func _process(delta: float) -> void:
@@ -117,13 +139,11 @@ func _physics_process(delta: float) -> void:
 	# Take care of gravity
 	if should_we_apply_gravity():
 		if _is_hover_aiming:
-			# hard coded for time reasons
+			# Soft hover: kill upward momentum, fall much slower than normal.
+			if velocity.y < 0.0:
+				velocity.y = 0.0
+			velocity.y += get_gravity().y * delta * HOVER_AIM_GRAVITY_FACTOR
 			velocity.x += get_gravity().x * delta * HOVER_AIM_GRAVITY_FACTOR
-			if velocity.y < 0:
-				# Stops the player from flying super high if aiming right after jumping
-				velocity.y = 0
-			else:
-				velocity.y = max(velocity.y + get_gravity().y * delta * HOVER_AIM_GRAVITY_FACTOR, velocity.y)
 		else:
 			velocity += get_gravity() * delta * GRAVITY_FACTOR
 
@@ -136,14 +156,19 @@ func _physics_process(delta: float) -> void:
 		_dash()
 	if Input.is_action_just_pressed("melee") and _can_melee_attack:
 		melee_attack()
-	if Input.is_action_just_pressed("aim"):
+	if Input.is_action_just_pressed("aim") or Input.is_action_just_pressed("shoot"):
 		aim()
-	if Input.is_action_just_released("aim"): 
-		# this might be a release arrow? not sure
+	if Input.is_action_just_released("aim") or Input.is_action_just_released("shoot"):
 		stop_aiming()
 	if Input.is_action_just_pressed("interact"):
 		_try_interact()
-	
+	if Input.is_action_just_pressed("cycle_arrow_next"):
+		cycle_arrow_next()
+	if Input.is_action_just_pressed("cycle_arrow_prev"):
+		cycle_arrow_prev()
+
+	_auto_loot_arrows()
+	_sync_hover_aim_with_bow()
 	_update_jump_count()
 	_update_player_sprite()
 	_update_player_movement(delta)
@@ -157,7 +182,8 @@ func _physics_process(delta: float) -> void:
 func _update_player_direction() -> void:
 	if _is_aiming:
 		_player_wants_to_move = false
-		var mouse_location := get_viewport().get_mouse_position()
+		# Must use world space. Viewport mouse coords break once the camera moves.
+		var mouse_location := get_global_mouse_position()
 		var player_location := global_position
 		if player_location.x < mouse_location.x: # aiming right
 			_direction = 1.0
@@ -244,6 +270,36 @@ func _try_interact() -> void:
 		nearest_node.activate()
 
 
+## Pick up every landed arrow in interact range that still fits in inventory.
+func _auto_loot_arrows() -> void:
+	for area in interact_range.get_overlapping_areas():
+		var target := area.get_parent()
+		if target is Arrow:
+			(target as Arrow).try_loot(self)
+
+
+## Returns true if at least one arrow of this type was added.
+func try_add_arrow(type: int, amount: int = 1) -> bool:
+	return arrow_inventory.add(type, amount) > 0
+
+
+## Return a looted arrow to inventory (clamped to the per-type cap).
+func add_arrow(type: Arrow.Type, amount: int = 1) -> void:
+	arrow_inventory.add(type, amount)
+
+
+func cycle_arrow_next() -> void:
+	arrow_inventory.cycle_next()
+
+
+func cycle_arrow_prev() -> void:
+	arrow_inventory.cycle_prev()
+
+
+func _on_arrow_inventory_changed() -> void:
+	arrow_inventory_changed.emit()
+
+
 ## Handles updating the player's jump count.
 func _update_jump_count() -> void:
 	# If you're next to a wall, you can always jump
@@ -267,35 +323,56 @@ func melee_attack() -> void:
 	melee_duration_timer.start()
 
 
-## Handles aiming to shoot a bow/crossbow/etc. If the player is in the air,
-## hover aiming can occur
+## Handles aiming. Hover is synced from the bow draw
+## state in `_sync_hover_aim_with_bow` so it works for both aim and shoot inputs.
 func aim() -> void:
-	if bow._can_shoot:
+	if bow._can_shoot and arrow_inventory.has_any():
 		_is_aiming = true
 
-		if not is_on_floor() and _can_hover_aim:
-			_hover_aim()
-			_can_hover_aim = false
 
-
-## Handles releasing the aim button (right mouse). This probably fires the arrow
+## Handles releasing the aim/shoot button.
 func stop_aiming() -> void:
 	_is_aiming = false
-	if not is_on_floor() and _is_hover_aiming:
+	if _is_hover_aiming:
 		_stop_hover_aim()
 
 
-## Takes care of hover aiming. Temporarily removes the effects of gravity while
-## aiming for a short time.
+## Reduced gravity while drawing in the air.
 func _hover_aim() -> void:
 	_is_hover_aiming = true
+	if velocity.y < 0.0:
+		velocity.y = 0.0
+	# Normal end is full draw / release / fire. If nothing happens the hover aim will time out
+	hover_aim_duration_timer.wait_time = bow.max_charge_time + 0.25
 	hover_aim_duration_timer.start()
 
 
 ## Stops the hover aiming.
 func _stop_hover_aim() -> void:
+	if not _is_hover_aiming:
+		return
 	_is_hover_aiming = false
+	if not hover_aim_duration_timer.is_stopped():
+		hover_aim_duration_timer.stop()
 	hover_aim_cooldown_timer.start()
+
+
+## Hover while the bow is drawing in the air; stop on full draw, fire, or release.
+func _sync_hover_aim_with_bow() -> void:
+	var drawing: bool = bow.is_charging() and not bow.is_at_full_draw()
+	if drawing and not is_on_floor():
+		if not _is_hover_aiming and _can_hover_aim:
+			_hover_aim()
+			_can_hover_aim = false
+	elif _is_hover_aiming:
+		# Full draw, released, landed, or no longer charging.
+		if is_on_floor() or not bow.is_charging() or bow.is_at_full_draw():
+			_stop_hover_aim()
+
+
+func _on_bow_arrow_fired(_arrow: Node, _charge_ratio: float) -> void:
+	if _is_hover_aiming:
+		_stop_hover_aim()
 
 
 ## Handles jump related actions like regular jumps and wall jumps.
