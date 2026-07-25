@@ -3,6 +3,7 @@ extends CharacterBody2D
 signal health_changed(current_hearts: int, max_hearts: int)
 signal died
 signal arrow_inventory_changed
+signal key_count_changed(count: int)
 
 @export_group("Movement")
 ## Controls movement speed
@@ -66,6 +67,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var interact_range: Area2D = $InteractRange
 @onready var hearts_hud = $HeartsHUD
 @onready var arrows_hud = $ArrowsHUD
+@onready var keys_hud = $KeysHUD
 @onready var bow = $Bow
 
 # Controls whether the character can dash again
@@ -104,6 +106,8 @@ var _is_dead: bool = false
 var _is_knocked_back: bool = false
 
 var arrow_inventory: ArrowInventory = ArrowInventory.new()
+## How many keys the player is currently holding. Uncapped; each unlock consumes one.
+var key_count: int = 0
 
 
 func _ready() -> void:
@@ -122,6 +126,9 @@ func _ready() -> void:
 	if arrows_hud != null and arrows_hud.has_method("setup"):
 		arrows_hud.setup(arrow_inventory)
 	arrow_inventory_changed.emit()
+	if keys_hud != null and keys_hud.has_method("setup"):
+		keys_hud.setup(self)
+	key_count_changed.emit(key_count)
 	# Bow updates first so hover can read the current draw state this frame.
 	bow.process_physics_priority = -100
 	if not bow.arrow_fired.is_connected(_on_bow_arrow_fired):
@@ -167,7 +174,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("cycle_arrow_prev"):
 		cycle_arrow_prev()
 
-	_auto_loot_arrows()
+	_auto_loot_items()
 	_sync_hover_aim_with_bow()
 	_update_jump_count()
 	_update_player_sprite()
@@ -270,17 +277,34 @@ func _try_interact() -> void:
 		nearest_node.activate()
 
 
-## Pick up every landed arrow in interact range that still fits in inventory.
-func _auto_loot_arrows() -> void:
+## Pick up every lootable item in interact range (landed arrows, keys, ...).
+func _auto_loot_items() -> void:
 	for area in interact_range.get_overlapping_areas():
 		var target := area.get_parent()
-		if target is Arrow:
-			(target as Arrow).try_loot(self)
+		if target != null and target.has_method("try_loot"):
+			target.try_loot(self)
 
 
 ## Returns true if at least one arrow of this type was added.
 func try_add_arrow(type: int, amount: int = 1) -> bool:
 	return arrow_inventory.add(type, amount) > 0
+
+
+## Add keys to the player's inventory.
+func add_keys(amount: int = 1) -> void:
+	if amount <= 0:
+		return
+	key_count += amount
+	key_count_changed.emit(key_count)
+
+
+## Spend keys if the player has enough. Returns true when consumed.
+func try_consume_key(amount: int = 1) -> bool:
+	if amount <= 0 or key_count < amount:
+		return false
+	key_count -= amount
+	key_count_changed.emit(key_count)
+	return true
 
 
 ## Return a looted arrow to inventory (clamped to the per-type cap).

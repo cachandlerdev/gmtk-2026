@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://ckeyshud00001"]
+
+[ext_resource type="Script" path="res://scenes/ui/keys_hud.gd" id="1_keys"]
+[ext_resource type="Texture2D" uid="uid://dyqahatm1q20r" path="res://assets/sprites/key_16x16.png" id="2_tex"]
+
+[node name="KeysHUD" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_keys")
+key_texture = ExtResource("2_tex")
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 52.0
+grow_horizontal = 0
+
+[node name="Row" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="Icon" type="TextureRect" parent="Margin/Row"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+texture_filter = 1
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Count" type="Label" parent="Margin/Row"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0"
+vertical_alignment = 1
