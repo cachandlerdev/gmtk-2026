@@ -21,8 +21,9 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 
 @export var max_health: int = 2
 @export var gravity_factor: float = 1.0
-## If true, touching the player calls their take_hit().
-@export var contact_damage: bool = true
+## If true, merely touching the player damages them. Off by default so the
+## telegraphed attack is the real threat; enable per-enemy for spiked/hazard types.
+@export var contact_damage: bool = false
 ## How long the enemy stays fully alerted after losing sight of the player
 ## before its detection meter starts to drain.
 @export var alert_linger: float = 1.5
