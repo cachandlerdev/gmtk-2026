@@ -6,7 +6,7 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var arrow_scene: PackedScene
 @export var active: bool = true
 @export var auto_facing: bool = true
-# If this is true, we use the player's mouse for input.
+# If this is true, we use the player's mouse/stick for input.
 @export var is_player: bool = false
 
 @export_group("Power")
@@ -19,11 +19,14 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
 @export var COOLDOWN_TIME: float = 0.33
+@export var aim_deadzone: float = 0.25      ## stick deflection required to aim / face
 
 @export_group("Input Actions")
 @export var shoot_action: StringName = &"shoot"
 @export var aim_up_action: StringName = &"aim_up"
 @export var aim_down_action: StringName = &"aim_down"
+@export var aim_left_action: StringName = &"aim_left"
+@export var aim_right_action: StringName = &"aim_right"
 @export var move_left_action: StringName = &"move_left"
 @export var move_right_action: StringName = &"move_right"
 
@@ -39,6 +42,9 @@ var charge_ratio: float = 0.0
 ## Shared with the player. Null means unlimited ammo (e.g. enemy bows later).
 var inventory: ArrowInventory
 
+## True while mouse is the active aim device; false for stick/gamepad.
+var using_mouse_aim: bool = true
+
 var _charging: bool = false
 var _charge: float = 0.0
 var _aim_angle: float = 0.0
@@ -53,19 +59,48 @@ func is_at_full_draw() -> bool:
 	return _charging and is_equal_approx(charge_ratio, 1.0)
 
 
+func _input(event: InputEvent) -> void:
+	if not is_player:
+		return
+	if event is InputEventMouseMotion:
+		using_mouse_aim = true
+	elif event is InputEventJoypadMotion:
+		if event.axis == JOY_AXIS_RIGHT_X or event.axis == JOY_AXIS_RIGHT_Y:
+			if absf(event.axis_value) >= aim_deadzone:
+				using_mouse_aim = false
+	elif event is InputEventJoypadButton:
+		using_mouse_aim = false
+
+
 func _physics_process(delta: float) -> void:
 	if not active:
 		return
 
 	if auto_facing:
-		# TODO: Figure out how this would work if we have an enemy archer
-		var mouse_location := get_global_mouse_position()
-		var player_location := global_position
-		var x_diff: float = mouse_location.x - player_location.x
-		facing = 1 if x_diff >= 0.0 else -1
+		_update_facing()
 
 	_handle_bow(delta)
 	queue_redraw()
+
+
+func _update_facing() -> void:
+	if is_player and not using_mouse_aim:
+		var stick := _get_aim_stick()
+		if absf(stick.x) >= aim_deadzone:
+			facing = 1 if stick.x > 0.0 else -1
+		return
+
+	var mouse_location := get_global_mouse_position()
+	var x_diff: float = mouse_location.x - global_position.x
+	facing = 1 if x_diff >= 0.0 else -1
+
+
+func _get_aim_stick() -> Vector2:
+	return Vector2(
+		Input.get_axis(aim_left_action, aim_right_action),
+		Input.get_axis(aim_down_action, aim_up_action)
+	)
+
 
 func _handle_bow(delta: float) -> void:
 	if Input.is_action_just_pressed(shoot_action) and _can_shoot and _has_ammo():
@@ -77,21 +112,25 @@ func _handle_bow(delta: float) -> void:
 	if _charging:
 		_charge = minf(_charge + delta, max_charge_time)
 
-		var aim_input: float = 0.0
 		var limit := deg_to_rad(max_aim_angle)
-		if is_player:
-			# Get angle between mouse cursor and the bow's location
+		if is_player and using_mouse_aim:
+			# Absolute aim toward the mouse cursor.
 			var mouse_location := get_global_mouse_position()
-			var player_location := global_position
-			var x_diff: float = abs(mouse_location.x - player_location.x)
-			var y_diff: float = player_location.y - mouse_location.y
-			aim_input = atan2(y_diff, x_diff)
-
-			var new_aim_angle = lerp(_aim_angle, aim_input, aim_speed * delta)
-			_aim_angle = clampf(new_aim_angle, -limit, limit)
+			var x_diff: float = absf(mouse_location.x - global_position.x)
+			var y_diff: float = global_position.y - mouse_location.y
+			var target := atan2(y_diff, x_diff)
+			_aim_angle = clampf(lerp(_aim_angle, target, aim_speed * delta), -limit, limit)
+		elif is_player:
+			# Absolute aim from the right stick; hold last angle when stick is neutral.
+			var stick := _get_aim_stick()
+			if stick.length() >= aim_deadzone:
+				if absf(stick.x) >= aim_deadzone:
+					facing = 1 if stick.x > 0.0 else -1
+				var target := atan2(stick.y, maxf(absf(stick.x), 0.001))
+				_aim_angle = clampf(lerp(_aim_angle, target, aim_speed * delta), -limit, limit)
 		else:
-			# TODO: Figure out how this will work if enemies are carrying bows
-			aim_input = Input.get_axis(aim_down_action, aim_up_action)
+			# Incremental aim (keyboard / non-player).
+			var aim_input := Input.get_axis(aim_down_action, aim_up_action)
 			_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
 
 		charge_ratio = _charge / max_charge_time

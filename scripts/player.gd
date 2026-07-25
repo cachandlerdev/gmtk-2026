@@ -257,21 +257,14 @@ func _shake() -> void:
 	camera.offset.y = max_shake_offset.y * amount * randf_range(-1, 1)
 
 
-## Handles updating the player's direction. When aiming the bow, this is
-## controlled by the mouse. Otherwise we update it based on the movement
-## direction as long as the player isn't wall jumping or melee attacking.
+## Handles updating the player's direction. When aiming the bow, this follows
+## the bow's facing (mouse or right stick). Otherwise we update it based on
+## movement as long as the player isn't wall jumping or melee attacking.
 func _update_player_direction() -> void:
 	if _is_aiming:
 		_player_wants_to_move = false
-		# Must use world space. Viewport mouse coords break once the camera moves.
-		var mouse_location := get_global_mouse_position()
-		var player_location := global_position
-		if player_location.x < mouse_location.x: # aiming right
-			_direction = 1.0
-			_looking_direction = 1.0
-		elif player_location.x > mouse_location.x: #aiming left
-			_direction = -1.0
-			_looking_direction = -1.0
+		_direction = float(bow.facing)
+		_looking_direction = _direction
 	elif not _is_wall_jumping or _is_melee_attacking or _is_dive_hovering or _is_dive_attacking:
 		# Get the input direction and handle the movement/deceleration.
 		_direction = Input.get_axis("move_left", "move_right")
