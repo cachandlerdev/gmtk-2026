@@ -247,5 +247,5 @@ func _align_ledge_ray() -> void:
 func _flash() -> void:
 	if _visual == null:
 		return
-	_visual.modulate = Color(1.0, 0.4, 0.4)
+	_visual.modulate = Color(1.0, 0, 0)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)
