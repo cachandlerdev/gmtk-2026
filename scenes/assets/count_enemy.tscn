@@ -49,7 +49,7 @@ shape = SubResource("Shape_hit")
 
 [node name="CountBeehaveTree" parent="." unique_id=665891478 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_62xqn")]
 enabled = false
-blackboard = NodePath("@Node@125265")
+blackboard = NodePath("@Node@20670")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

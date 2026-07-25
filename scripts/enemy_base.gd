@@ -130,6 +130,8 @@ func take_hit(source: Node = null, damage: int = 1) -> void:
 
 ## Contact/hit area handler. Wire each enemy scene's Hitbox.body_entered here.
 func _on_hitbox_body_entered(body: Node2D) -> void:
+	# TODO: This only works when the player first enters the collision box, so 
+	# if he sits in the box, he only takes damage once
 	if body.is_in_group("player"):
 		if contact_damage and body.has_method("take_hit"):
 			body.take_hit(self)
