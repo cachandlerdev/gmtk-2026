@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://blvlcmplt0menu"]
+[gd_scene format=3 uid="uid://dd3q43h2sercg"]
 
 [ext_resource type="Script" path="res://scenes/ui/level_complete_menu.gd" id="1_lcm"]
 

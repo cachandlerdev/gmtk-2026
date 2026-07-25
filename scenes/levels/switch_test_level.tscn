@@ -17,6 +17,7 @@ scale = Vector2(5.5, 1)
 
 [node name="Door" parent="." unique_id=1984602227 instance=ExtResource("4_door")]
 position = Vector2(160, 15)
+open_mode = 1
 
 [node name="Bridge" parent="." unique_id=1836655993 instance=ExtResource("5_bridge")]
 position = Vector2(280, -46)
