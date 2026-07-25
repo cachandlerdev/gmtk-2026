@@ -20,7 +20,7 @@ position = Vector2(160, 15)
 
 [node name="Bridge" parent="." unique_id=1836655993 instance=ExtResource("5_bridge")]
 position = Vector2(280, -46)
-tile_count = 7
+tile_count = 12
 
 [node name="Switch" parent="." unique_id=2088253830 instance=ExtResource("3_switch")]
 position = Vector2(80, 15)

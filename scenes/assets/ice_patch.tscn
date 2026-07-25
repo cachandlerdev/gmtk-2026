@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dlcs1nuc83m5c"]
+
+[ext_resource type="Script" uid="uid://i866s4xiyqg6" path="res://scripts/ice_patch.gd" id="1_ice"]
+[ext_resource type="Texture2D" uid="uid://bg2jo4gkn4hij" path="res://assets/sprites/ice_floor_16x16.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="Shape_ice"]
+size = Vector2(48, 6)
+
+[node name="IcePatch" type="StaticBody2D" unique_id=350149661]
+collision_mask = 0
+script = ExtResource("1_ice")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2039151656]
+position = Vector2(24, 3)
+shape = SubResource("Shape_ice")
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1159654425]
+texture_filter = 1
+scale = Vector2(3, 1)
+texture = ExtResource("2_tex")
+centered = false
