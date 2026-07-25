@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://drm7ktbvjves1"]
+[gd_scene format=3 uid="uid://dsbpkkk50fvm0"]
 
 [ext_resource type="Script" uid="uid://l5r7bt11e5s8" path="res://scripts/count_enemy.gd" id="1_62xqn"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_ye4qw"]
@@ -49,7 +49,7 @@ shape = SubResource("Shape_hit")
 
 [node name="CountBeehaveTree" parent="." unique_id=665891478 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_62xqn")]
 enabled = false
-blackboard = NodePath("@Node@20670")
+blackboard = NodePath("@Node@21096")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

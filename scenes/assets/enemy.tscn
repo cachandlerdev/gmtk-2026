@@ -12,6 +12,7 @@ size = Vector2(40, 48)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=245799776]
 collision_layer = 16
+collision_mask = 17
 script = ExtResource("1_enemy")
 
 [node name="Visual" type="Node2D" parent="." unique_id=307105698]
@@ -48,7 +49,7 @@ shape = SubResource("Shape_hit")
 
 [node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
 enabled = false
-blackboard = NodePath("@Node@203747")
+blackboard = NodePath("@Node@46668")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

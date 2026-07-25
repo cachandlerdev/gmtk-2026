@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dlb8ja8hm23td"]
+[gd_scene format=3 uid="uid://dlb8ja8hm23td"]
 
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_tree"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_selector"]

@@ -16,6 +16,7 @@ radius = 96.00521
 
 [node name="Player" type="CharacterBody2D" unique_id=1441560064]
 z_index = 5
+collision_mask = 65
 script = ExtResource("1_8afob")
 DIVE_MELEE_DAMAGE = 2
 DIVE_COOLDOWN = 0.2
@@ -91,7 +92,7 @@ one_shot = true
 
 [node name="HeartsHUD" parent="." unique_id=1907220139 instance=ExtResource("3_hearts")]
 
-[node name="ArrowsHUD" parent="." instance=ExtResource("4_arrows")]
+[node name="ArrowsHUD" parent="." unique_id=185083823 instance=ExtResource("4_arrows")]
 
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)

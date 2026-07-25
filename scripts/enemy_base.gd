@@ -68,6 +68,7 @@ var _knockback_left: float = 0.0
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
 @onready var _vision: VisionCone = get_node_or_null("VisionCone")
 @onready var _tree: BeehaveTree = _find_behaviour_tree()
+@onready var _hitbox: Area2D = $Hitbox
 
 
 func _ready() -> void:
@@ -91,6 +92,7 @@ func _physics_process(delta: float) -> void:
 		_tree.tick()
 	else:
 		_behaviour(delta)
+	
 	move_and_slide()
 
 

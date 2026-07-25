@@ -41,10 +41,29 @@ signal arrow_inventory_changed
 ## How much of an effect knockback has
 @export var KNOCKBACK_FACTOR: float = 1
 
+
 @export_group("Arrows")
 @export var starting_basic_arrows: int = 5
 @export var starting_piercing_arrows: int = 3
 @export var starting_bouncing_arrows: int = 3
+
+# credit to https://kidscancode.org/godot_recipes/4.x/2d/screen_shake/index.html
+@export_group("Screen Shake")
+@export var MELEE_ATTACK_SCREEN_SHAKE: float = 0.1
+@export var DIVE_ATTACK_SCREEN_SHAKE: float = 0.3
+@export var DASH_SCREEN_SHAKE: float = 0.2
+
+## How quickly shaking stops [0, 1]
+@export var shake_decay: float = 0.8
+## Maximum horizontal/vertical shake in pixels
+@export var max_shake_offset = Vector2(100, 75)
+## Maximum screenshake rotation in radians (use sparingly)
+@export var max_roll = 0.1
+
+# Current camera shake strength
+var _screen_shake_amount: float = 0.0
+# Exponent used for the shake strength. Use [2, 3]
+var _shake_power: float = 2
 
 # if needed. Coyote time not implemented right now
 const COYOTE_FRAMES: int = 6
@@ -69,6 +88,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var dive_hover_timer = $Timers/DiveHoverTimer
 
 @onready var collision = $CollisionShape2D
+@onready var camera = $Camera2D
 
 @onready var left_wall_ray_cast = $LeftWallRayCast
 @onready var right_wall_ray_cast = $RightWallRayCast
@@ -145,7 +165,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	pass
+	if _screen_shake_amount:
+		_screen_shake_amount = max(_screen_shake_amount - shake_decay * delta, 0)
+		_shake()
 
 
 func _physics_process(delta: float) -> void:
@@ -200,6 +222,19 @@ func _physics_process(delta: float) -> void:
 	_update_player_movement(delta)
 	_update_floor_surface_modifiers()
 	_check_out_of_bounds()
+
+
+## Add screen shake
+func add_screen_shake(amount: float) -> void:
+	_screen_shake_amount = min(_screen_shake_amount + amount, 1.0)
+
+
+## Applies camera shake for this instant
+func _shake() -> void:
+	var amount = pow(_screen_shake_amount, _shake_power)
+	camera.rotation = max_roll * amount * randf_range(-1, 1)
+	camera.offset.x = max_shake_offset.x * amount * randf_range(-1, 1)
+	camera.offset.y = max_shake_offset.y * amount * randf_range(-1, 1)
 
 
 ## Handles updating the player's direction. When aiming the bow, this is
@@ -532,11 +567,11 @@ func _push_colliding_objects() -> void:
 	if _direction == 0.0:
 		return
 	for i in get_slide_collision_count():
-		var collision := get_slide_collision(i)
-		var collider := collision.get_collider()
+		var push_collision := get_slide_collision(i)
+		var collider := push_collision.get_collider()
 		if collider == null or not collider.has_method("apply_push"):
 			continue
-		var normal := collision.get_normal()
+		var normal := push_collision.get_normal()
 		# Side contact only — ignore standing on top or hitting the underside.
 		if absf(normal.y) > 0.3:
 			continue
@@ -551,6 +586,7 @@ func _dash() -> void:
 	_can_dash = false
 	_is_dashing = true
 	dash_duration_timer.start()
+	add_screen_shake(DASH_SCREEN_SHAKE)
 
 
 ## Re-enables the dash when the cooldown is over
@@ -576,6 +612,7 @@ func _on_melee_duration_timer_timeout() -> void:
 		for other in others:
 			if other is EnemyBase:
 				other.take_hit(self, DIVE_MELEE_DAMAGE)
+		add_screen_shake(DIVE_ATTACK_SCREEN_SHAKE)
 	else:
 		# Now is when it should hit the enemy
 		if _looking_direction > 0 and right_attack_ray_cast.is_colliding():
@@ -588,6 +625,7 @@ func _on_melee_duration_timer_timeout() -> void:
 			var other = left_attack_ray_cast.get_collider()
 			if other is EnemyBase:
 				other.take_hit(self, MELEE_DAMAGE)
+		add_screen_shake(MELEE_ATTACK_SCREEN_SHAKE)
 
 	_is_melee_attacking = false
 	_is_dive_attacking = false
