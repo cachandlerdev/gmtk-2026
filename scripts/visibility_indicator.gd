@@ -1,21 +1,21 @@
 extends AnimatedSprite2D
+## The stealth "eye" on the HUD. Its openness tracks the strongest guard
+## detection: fully closed while unseen, opening as a guard's detection meter
+## fills, fully open once a guard is alerted.
 
-var was_hidden: bool = true
 var _game_states_not_to_show = [GameMode.Victory, GameMode.Defeat, GameMode.MainMenu]
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
-	pass # Replace with function body.
+	# Drive the frame manually rather than autoplaying the open/close animation.
+	stop()
+	animation = &"close_eye"
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	visible = GameMode.get_state() not in _game_states_not_to_show
-
-	# Not great on tick but it's fast
-	if GameMode.is_hidden() and not was_hidden:
-		play("close_eye")
-	elif not GameMode.is_hidden() and was_hidden:
-		play("close_eye", -1.0)
-
-	was_hidden = GameMode.is_hidden()
+	if not visible:
+		return
+	# Frame 0 = open eye (fully detected); last frame = closed (unseen).
+	var last := sprite_frames.get_frame_count(&"close_eye") - 1
+	frame = int(round((1.0 - GameMode.get_detection_level()) * last))

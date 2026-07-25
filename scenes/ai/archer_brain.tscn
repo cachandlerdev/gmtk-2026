@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dlb8ja8hm23td"]
+[gd_scene load_steps=9 format=3 uid="uid://dlb8ja8hm23td"]
 
 [ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_tree"]
 [ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector_reactive.gd" id="2_selector"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://scripts/ai/is_alerted_condition.gd" id="4_alerted"]
 [ext_resource type="Script" path="res://scripts/ai/shoot_action.gd" id="5_shoot"]
 [ext_resource type="Script" path="res://scripts/ai/patrol_action.gd" id="6_patrol"]
+[ext_resource type="Script" path="res://scripts/ai/is_suspicious_condition.gd" id="7_suspicious"]
+[ext_resource type="Script" path="res://scripts/ai/investigate_action.gd" id="8_investigate"]
 
 [node name="BeehaveTree" type="Node"]
 script = ExtResource("1_tree")
@@ -22,6 +24,15 @@ script = ExtResource("4_alerted")
 
 [node name="Shoot" type="Node" parent="SelectorReactive/ShootBranch"]
 script = ExtResource("5_shoot")
+
+[node name="SuspiciousBranch" type="Node" parent="SelectorReactive"]
+script = ExtResource("3_sequence")
+
+[node name="IsSuspicious" type="Node" parent="SelectorReactive/SuspiciousBranch"]
+script = ExtResource("7_suspicious")
+
+[node name="Investigate" type="Node" parent="SelectorReactive/SuspiciousBranch"]
+script = ExtResource("8_investigate")
 
 [node name="Patrol" type="Node" parent="SelectorReactive"]
 script = ExtResource("6_patrol")
