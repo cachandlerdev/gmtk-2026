@@ -68,6 +68,7 @@ var _knockback_left: float = 0.0
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
 @onready var _vision: VisionCone = get_node_or_null("VisionCone")
 @onready var _tree: BeehaveTree = _find_behaviour_tree()
+@onready var _hitbox: Area2D = $Hitbox
 
 
 func _ready() -> void:
@@ -91,6 +92,7 @@ func _physics_process(delta: float) -> void:
 		_tree.tick()
 	else:
 		_behaviour(delta)
+	
 	move_and_slide()
 
 
@@ -159,6 +161,8 @@ func take_hit(source: Node = null, damage: int = 1) -> void:
 
 ## Contact/hit area handler. Wire each enemy scene's Hitbox.body_entered here.
 func _on_hitbox_body_entered(body: Node2D) -> void:
+	# TODO: This only works when the player first enters the collision box, so 
+	# if he sits in the box, he only takes damage once
 	if body.is_in_group("player"):
 		if contact_damage and body.has_method("take_hit"):
 			body.take_hit(self)
@@ -376,5 +380,5 @@ func _align_ledge_ray() -> void:
 func _flash() -> void:
 	if _visual == null:
 		return
-	_visual.modulate = Color(1.0, 0.4, 0.4)
+	_visual.modulate = Color(1.0, 0, 0)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)

@@ -20,3 +20,4 @@ func _on_death() -> void:
 	# Keep the base's alert/GameMode cleanup, then announce the kill.
 	super._on_death()
 	defeated.emit()
+	GameMode.set_state(GameMode.Escape)

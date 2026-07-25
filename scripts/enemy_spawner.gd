@@ -88,6 +88,7 @@ func _on_cooldown_timer_timeout() -> void:
 	_enemies_spawned = live_enemies_spawned
 
 	if can_spawn() and _should_spawn:
+		print("spawn enemy")
 		_spawn_enemy()
 
 
