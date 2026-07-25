@@ -33,10 +33,16 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 ## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
 @export var patrol_speed: float = 90.0
 @export var chase_speed: float = 130.0
+## Horizontal speed of the brief backward knockback applied when the enemy is hit.
+@export var knockback_speed: float = 150.0
+## How long that knockback lasts, in seconds.
+@export var knockback_time: float = 0.14
 
 @export_group("Attack")
-## How close the player must be (in pixels) for the enemy to swing.
-@export var attack_range: float = 30
+## Horizontal reach (in pixels) at which the enemy stops to swing.
+@export var attack_range: float = 44
+## Pause before the blow lands — the player's window to strike (or dodge) first.
+@export var attack_windup: float = 0.35
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
 
@@ -53,6 +59,9 @@ var last_seen_pos: Vector2 = Vector2.ZERO
 var _health: int
 var _alert_hold: float = 0.0
 var _attack_cooldown_left: float = 0.0
+var _attacking: bool = false
+var _windup_left: float = 0.0
+var _knockback_left: float = 0.0
 
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
@@ -72,10 +81,12 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * gravity_factor * delta
 	_update_perception(delta)
 	_attack_cooldown_left = maxf(0.0, _attack_cooldown_left - delta)
-	# A BeehaveTree child drives behaviour when present. It is set to MANUAL so
-	# we tick it here — after perception, before move_and_slide — instead of
-	# letting it self-tick a frame out of order.
-	if _tree != null:
+	if _knockback_left > 0.0:
+		# Staggered: skip behaviour and let the knockback velocity carry it.
+		_knockback_left -= delta
+	elif _tree != null:
+		# A BeehaveTree child drives behaviour. It is set to MANUAL so we tick it
+		# here — after perception, before move_and_slide.
 		_tree.tick()
 	else:
 		_behaviour(delta)
@@ -137,6 +148,8 @@ func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
 		_on_hit_blocked(source)
 		return
+	cancel_attack()          # a hit staggers the enemy, cancelling any wind-up
+	_apply_knockback(source)
 	_health -= damage
 	_flash()
 	if _health <= 0:
@@ -262,36 +275,96 @@ func chase_step(speed: float) -> void:
 # --- Attack ---------------------------------------------------------------
 
 ## True if the enemy should swing: the player is within attack_range and the
-## attack cooldown has elapsed.
+## cooldown has elapsed. Stays true through a committed wind-up.
 func can_attack() -> bool:
+	if _attacking:
+		return true
 	if _attack_cooldown_left > 0.0:
 		return false
 	var player := get_player()
 	if player == null:
 		return false
-	return global_position.distance_to(player.global_position) <= attack_range
+	# Horizontal reach (see _strike) — the enemy pauses this far out to wind up.
+	return absf(player.global_position.x - global_position.x) <= attack_range
 
 
-## Swing once: stop, turn to the player, damage them, and start the cooldown.
-## Instant for now — add wind-up / active frames once there are animations.
-func attack() -> void:
+## Drive one frame of an attack: pause (stationary) for attack_windup, then land
+## the blow. Returns true while still winding up, false once the swing resolves.
+## The wind-up is the player's window to hit first — a hit cancels it.
+func attack_step(delta: float) -> bool:
 	velocity.x = 0.0
+	if not _attacking:
+		_attacking = true
+		_windup_left = attack_windup
+		var player := get_player()
+		if player != null:
+			set_facing(1 if player.global_position.x >= global_position.x else -1)
+		_on_attack_windup()
+	_windup_left -= delta
+	if _windup_left > 0.0:
+		return true
+	_attacking = false
+	_attack_cooldown_left = attack_cooldown
+	_strike()
+	return false
+
+
+## Abandon an in-progress wind-up (the branch switched, or the enemy was hit).
+func cancel_attack() -> void:
+	_attacking = false
+
+
+## Land the blow if the player is still in range and in front — stepping away or
+## getting behind during the wind-up dodges it.
+func _strike() -> void:
 	var player := get_player()
 	if player == null:
 		return
-	set_facing(1 if player.global_position.x >= global_position.x else -1)
-	_attack_cooldown_left = attack_cooldown
+	var to_player := player.global_position - global_position
+	# Horizontal reach — the enemy's body-centre origin sits above the player's
+	# feet origin, so full distance would over-read.
+	if absf(to_player.x) > attack_range:
+		return
+	if signf(to_player.x) == float(-facing):
+		return
 	_on_attack()
 	if player.has_method("take_hit"):
 		player.take_hit(self)
 
 
-## Attack feedback hook — override for an animation. Defaults to a brief tint.
+## Brief backward shove when the enemy is hit, pushing away from the hit source.
+func _apply_knockback(source: Node) -> void:
+	var dir := -float(facing)
+	var body := source as CharacterBody2D
+	if body != null and absf(body.velocity.x) > 1.0:
+		dir = signf(body.velocity.x)                       # player's arrow
+	elif source != null and "direction" in source:
+		dir = signf(source.direction.x)                    # trap / enemy projectile
+	elif source is Node2D:
+		var dx := global_position.x - (source as Node2D).global_position.x
+		if not is_zero_approx(dx):
+			dir = signf(dx)
+	if dir == 0.0:
+		dir = -float(facing)
+	velocity.x = dir * knockback_speed
+	_knockback_left = knockback_time
+
+
+## Wind-up telegraph hook — override for an animation. Defaults to a tint that
+## fades as the strike approaches.
+func _on_attack_windup() -> void:
+	if _visual == null:
+		return
+	_visual.modulate = Color(1.7, 1.4, 0.5)
+	create_tween().tween_property(_visual, "modulate", Color.WHITE, attack_windup)
+
+
+## Strike feedback hook — override for an animation. Defaults to a brief tint.
 func _on_attack() -> void:
 	if _visual == null:
 		return
-	_visual.modulate = Color(1.5, 1.2, 0.6)
-	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.2)
+	_visual.modulate = Color(1.6, 0.5, 0.4)
+	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)
 
 
 func _align_ledge_ray() -> void:
