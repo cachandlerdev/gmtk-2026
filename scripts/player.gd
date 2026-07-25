@@ -16,9 +16,11 @@ signal died
 ## The impact of inertia. The higher this value, the more control the player has
 @export var INERTIA_FACTOR: float = 2000
 ## How much faster the player moves while performing a melee attack.
-@export var MELEE_THRUST_VELOCITY: float = 1.2
+@export var MELEE_THRUST_VELOCITY: float = 1.15
 ## How much the player gets launched vertically performing a melee attack.
 @export var MELEE_JUMP_AMOUNT: float = 3500
+## How fast the player dives downwards for a dive attack
+@export var DIVE_FACTOR: float = 8
 ## How many air jumps the player gets
 @export var MAX_NUM_OF_AIR_JUMPS: int = 1
 ## How much gravity gets applied while hover aiming.
@@ -29,6 +31,12 @@ signal died
 @export var KNOCKBACK_DURATION: float = 0.15
 ## How much damage melee does
 @export var MELEE_DAMAGE: int = 2
+## How much damage dive attacks do
+@export var DIVE_MELEE_DAMAGE: int = 4
+## How much gravity gets applied while hovering before a dive
+@export var DIVE_HOVER_GRAVITY_FACTOR: float = 0.3
+## How long you can't move after diving
+@export var DIVE_COOLDOWN: float = 1
 ## How much of an effect knockback has
 @export var KNOCKBACK_FACTOR: float = 0.1
 
@@ -51,11 +59,14 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var hover_aim_duration_timer = $Timers/HoverAimDurationTimer
 @onready var hover_aim_cooldown_timer = $Timers/HoverAimCooldownTimer
 @onready var invulnerability_timer = $Timers/InvulnerabilityTimer
+@onready var dive_update_timer = $Timers/DiveUpdateTimer
+@onready var dive_hover_timer = $Timers/DiveHoverTimer
 
 @onready var left_wall_ray_cast = $LeftWallRayCast
 @onready var right_wall_ray_cast = $RightWallRayCast
 @onready var left_attack_ray_cast = $LeftAttackRayCast # melee
 @onready var right_attack_ray_cast = $RightAttackRayCast # melee
+@onready var dive_collider = $DiveCollider
 
 @onready var interact_range: Area2D = $InteractRange
 @onready var hearts_hud = $HeartsHUD
@@ -79,6 +90,9 @@ var _is_wall_jumping: bool = false
 # Handles melee attacks
 var _is_melee_attacking: bool = false
 var _can_melee_attack: bool = true
+var _is_dive_attacking: bool = false
+var _is_dive_hovering: bool = false
+var _on_dive_cooldown: bool = false
 
 # Needed to prevent aiming direction from forcibly moving the character
 var _player_wants_to_move: bool = false
@@ -116,16 +130,19 @@ func _physics_process(delta: float) -> void:
 
 	# Take care of gravity
 	if should_we_apply_gravity():
-		if _is_hover_aiming:
-			# hard coded for time reasons
-			velocity.x += get_gravity().x * delta * HOVER_AIM_GRAVITY_FACTOR
+		if _is_hover_aiming or _is_dive_hovering:
+			var actual_gravity_factor: float = DIVE_HOVER_GRAVITY_FACTOR if _is_dive_hovering else HOVER_AIM_GRAVITY_FACTOR
+			# velocity.x += get_gravity().x * delta * actual_gravity_factor
 			if velocity.y < 0:
 				# Stops the player from flying super high if aiming right after jumping
 				velocity.y = 0
 			else:
-				velocity.y = max(velocity.y + get_gravity().y * delta * HOVER_AIM_GRAVITY_FACTOR, velocity.y)
+				velocity.y = max(velocity.y + get_gravity().y * delta * actual_gravity_factor, velocity.y)
 		else:
-			velocity += get_gravity() * delta * GRAVITY_FACTOR
+			var actual_dive_factor: float = 1
+			if _is_dive_attacking:
+				actual_dive_factor = DIVE_FACTOR
+			velocity += get_gravity() * delta * GRAVITY_FACTOR * actual_dive_factor
 
 	_update_player_direction()
 
@@ -135,7 +152,12 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash") and _can_dash:
 		_dash()
 	if Input.is_action_just_pressed("melee") and _can_melee_attack:
-		melee_attack()
+		if is_on_floor():
+			melee_attack()
+		else:
+			start_dive_attack()
+	if Input.is_action_just_released("melee") and _is_dive_hovering:
+		dive_downwards()
 	if Input.is_action_just_pressed("aim"):
 		aim()
 	if Input.is_action_just_released("aim"): 
@@ -165,7 +187,7 @@ func _update_player_direction() -> void:
 		elif player_location.x > mouse_location.x: #aiming left
 			_direction = -1.0
 			_looking_direction = -1.0
-	elif not _is_wall_jumping or _is_melee_attacking:
+	elif not _is_wall_jumping or _is_melee_attacking or _is_dive_hovering or _is_dive_attacking:
 		# Get the input direction and handle the movement/deceleration.
 		_direction = Input.get_axis("move_left", "move_right")
 		if _direction != 0:
@@ -267,6 +289,20 @@ func melee_attack() -> void:
 	melee_duration_timer.start()
 
 
+## Fly downwards and attack. This starts the attack by hovering the player for a sec
+func start_dive_attack() -> void:
+	_is_dive_hovering = true
+	_direction = 0
+	dive_hover_timer.start()
+
+
+## Start the actual dive attack
+func dive_downwards() -> void:
+	invulnerability_timer.start()
+	_is_dive_attacking = true
+	_can_melee_attack = false
+	dive_update_timer.start()
+
 ## Handles aiming to shoot a bow/crossbow/etc. If the player is in the air,
 ## hover aiming can occur
 func aim() -> void:
@@ -310,7 +346,7 @@ func _jump() -> void:
 		velocity.y = JUMP_VELOCITY
 		velocity.x = JUMP_VELOCITY
 
-	elif right_wall_ray_cast.is_colliding() and not is_on_floor():
+	elif right_wall_ray_cast.is_colliding() and not is_on_floor() and right_wall_ray_cast.get_collider() :
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -345,9 +381,13 @@ func _update_player_sprite() -> void:
 
 ## Updates the player's velocity and moves him
 func _update_player_movement(delta: float) -> void:
+	if _on_dive_cooldown:
+		velocity = Vector2(0, 0)
+		return
+
 	# Move and account for the dash
 	var actual_direction = _direction
-	if _is_dashing or _is_melee_attacking:
+	if _is_dashing or _is_melee_attacking or _is_dive_attacking:
 		# Make the player move when either of these happen
 		actual_direction = _looking_direction
 
@@ -359,13 +399,13 @@ func _update_player_movement(delta: float) -> void:
 	
 	# When melee attacking, you should get launched forward.
 	var actual_melee_factor = 1.0
+	#if _is_melee_attacking or _is_dive_attacking:
 	if _is_melee_attacking:
 		actual_melee_factor = MELEE_THRUST_VELOCITY
 	
 	var actual_knockback_factor = 1.0
 	if _is_knocked_back:
 		actual_knockback_factor = -1 * KNOCKBACK_FACTOR
-	
 	
 	var target_velocity = 0
 	if _player_wants_to_move or _is_melee_attacking or _is_dashing:
@@ -386,9 +426,12 @@ func _update_player_movement(delta: float) -> void:
 	else:
 		velocity.x = target_velocity
 	
-	if _is_melee_attacking:
+	if _is_melee_attacking or _is_dive_attacking:
 		velocity.y -= MELEE_JUMP_AMOUNT * delta
-
+	
+	if _is_dive_hovering or _is_dive_attacking:
+		velocity.x = 0
+	
 	move_and_slide()
 	_push_colliding_objects() # Maybe we make it so we need to press a button to push objects instead?
 
@@ -440,21 +483,28 @@ func _on_wall_jump_timer_timeout() -> void:
 	_is_wall_jumping = false
 
 
-## The melee attack has finished
+## The melee attack has finished. When you dive attack, you hit enemies on both sides of you
 func _on_melee_duration_timer_timeout() -> void:
-	_is_melee_attacking = false
-	# Now is when it should hit the enemy
-	if _looking_direction > 0 and right_attack_ray_cast.is_colliding():
-		# probably cleaner with a signal but oh well
-		var other = right_attack_ray_cast.get_collider()
-		if other is EnemyBase:
-			other.take_hit(self, MELEE_DAMAGE)
-	elif _looking_direction < 0 and left_attack_ray_cast.is_colliding():
-		# probably cleaner with a signal but oh well
-		var other = left_attack_ray_cast.get_collider()
-		if other is EnemyBase:
-			other.take_hit(self, MELEE_DAMAGE)
+	if _is_dive_attacking:
+		var others = dive_collider.get_overlapping_bodies()
+		for other in others:
+			if other is EnemyBase:
+				other.take_hit(self, DIVE_MELEE_DAMAGE)
+	else:
+		# Now is when it should hit the enemy
+		if _looking_direction > 0 and right_attack_ray_cast.is_colliding():
+			# probably cleaner with a signal but oh well
+			var other = right_attack_ray_cast.get_collider()
+			if other is EnemyBase:
+				other.take_hit(self, MELEE_DAMAGE)
+		elif _looking_direction < 0 and left_attack_ray_cast.is_colliding():
+			# probably cleaner with a signal but oh well
+			var other = left_attack_ray_cast.get_collider()
+			if other is EnemyBase:
+				other.take_hit(self, MELEE_DAMAGE)
 
+	_is_melee_attacking = false
+	_is_dive_attacking = false
 
 	melee_cooldown_timer.start()
 
@@ -472,3 +522,21 @@ func _on_hover_aim_duration_timer_timeout() -> void:
 ## The player can hover aim again
 func _on_hover_aim_cooldown_timer_timeout() -> void:
 	_can_hover_aim = true
+
+
+## Reevaluates whether the player is still diving, or whether they've hit the 
+## ground now
+func _on_dive_update_timer_timeout() -> void:
+	if is_on_floor():
+		_on_melee_duration_timer_timeout()
+		_on_dive_cooldown = true
+		await get_tree().create_timer(DIVE_COOLDOWN).timeout
+		_on_dive_cooldown = false
+	else:
+		dive_update_timer.start()
+
+
+## You ran out of time to hover. Start diving
+func _on_dive_hover_timer_timeout() -> void:
+	_is_dive_hovering = false
+	dive_downwards()
