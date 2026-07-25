@@ -11,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD" unique_id=2122156064]
 layout_mode = 1
@@ -22,6 +23,7 @@ offset_right = 20.0
 offset_bottom = 40.0
 grow_horizontal = 2
 alignment = 1
+mouse_filter = 2
 
 [node name="VisibilityIndicator" parent="HUD/HBoxContainer" unique_id=1603064747 instance=ExtResource("1_0mwgc")]
 position = Vector2(0, 50)

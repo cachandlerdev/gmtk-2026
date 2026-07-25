@@ -33,7 +33,7 @@ func _resume() -> void:
 	visible = false
 
 func _quit() -> void:
-	# Un-pause first so the tree is in a clean state, then exit.
-	# Swap this for get_tree().change_scene_to_file(...) once a main menu exists.
+	# Un-pause first so the tree is in a clean state, then head to the main menu.
 	get_tree().paused = false
-	get_tree().quit()
+	visible = false
+	LevelManager.go_to_main_menu()
