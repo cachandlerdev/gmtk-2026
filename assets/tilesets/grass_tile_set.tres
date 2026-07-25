@@ -1,0 +1,49 @@
+[gd_resource type="TileSet" format=3 uid="uid://b50xwhskdsv5q"]
+
+[ext_resource type="Texture2D" uid="uid://b0d3l8y7co2s3" path="res://assets/sprites/grass_tileset.png" id="1_ib1rd"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8vdcu"]
+texture = ExtResource("1_ib1rd")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+1:7/0 = 0
+2:7/0 = 0
+
+[resource]
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.011836315, 0.47182864, 1.92523e-07, 1)
+sources/0 = SubResource("TileSetAtlasSource_8vdcu")
