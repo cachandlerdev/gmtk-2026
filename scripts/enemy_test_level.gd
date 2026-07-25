@@ -1,12 +1,4 @@
-extends Node2D
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	GameMode.set_state(GameMode.Stealth)
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+extends "res://scripts/level.gd"
+## Sandbox level for enemy/AI testing. Inherits the standard level wiring —
+## stealth music on entry plus "objective (Count) killed → LevelManager" — from
+## level.gd, so killing the Count here completes the level.
