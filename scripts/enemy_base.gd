@@ -46,6 +46,9 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export var attack_windup: float = 0.35
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
+## How long the enemy stands still recovering after a swing lands, before it
+## resumes chasing/patrolling.
+@export var attack_recovery: float = 0.35
 
 @export_group("Loot")
 ## Scenes to spawn at this enemy's position on death (e.g. key pickups). Assign per-instance in the editor.
@@ -67,6 +70,11 @@ var _attack_cooldown_left: float = 0.0
 var _attacking: bool = false
 var _windup_left: float = 0.0
 var _knockback_left: float = 0.0
+## Keeps the attack animation on screen briefly through the strike (the attack
+## state itself ends the instant the blow lands).
+var _anim_lock_left: float = 0.0
+## Counts down a stand-still recovery pause after a swing lands.
+var _recover_left: float = 0.0
 
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
@@ -90,14 +98,19 @@ func _physics_process(delta: float) -> void:
 	if _knockback_left > 0.0:
 		# Staggered: skip behaviour and let the knockback velocity carry it.
 		_knockback_left -= delta
+	elif _recover_left > 0.0:
+		# Recovery pause after a swing — hold position before resuming behaviour.
+		_recover_left -= delta
+		velocity.x = 0.0
 	elif _tree != null:
 		# A BeehaveTree child drives behaviour. It is set to MANUAL so we tick it
 		# here — after perception, before move_and_slide.
 		_tree.tick()
 	else:
 		_behaviour(delta)
-	
+
 	move_and_slide()
+	_update_animation(delta)
 
 
 func _exit_tree() -> void:
@@ -333,6 +346,8 @@ func attack_step(delta: float) -> bool:
 		return true
 	_attacking = false
 	_attack_cooldown_left = attack_cooldown
+	_anim_lock_left = 0.2   # hold the attack animation through the strike frame
+	_recover_left = attack_recovery   # stand still briefly after the swing
 	_strike()
 	return false
 
@@ -393,6 +408,31 @@ func _on_attack() -> void:
 		return
 	_visual.modulate = Color(1.6, 0.5, 0.4)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)
+
+
+## Pick the animation on the Visual when it is an AnimatedSprite2D: attack during
+## a wind-up (held briefly through the strike), walk while moving on the ground,
+## idle otherwise. Missing animations fall back to idle, so a single-frame enemy
+## (the Count) just holds its one frame.
+func _update_animation(delta: float) -> void:
+	var spr := _visual as AnimatedSprite2D
+	if spr == null or spr.sprite_frames == null:
+		return
+	_anim_lock_left = maxf(0.0, _anim_lock_left - delta)
+	var want := &"idle"
+	if _attacking or _anim_lock_left > 0.0:
+		want = &"attack"
+	elif is_on_floor() and absf(velocity.x) > 5.0:
+		want = &"walk"
+	if not spr.sprite_frames.has_animation(want):
+		want = &"idle"
+	if not spr.sprite_frames.has_animation(want):
+		return
+	# Only (re)start on a change of animation. Looping clips (walk/idle) keep
+	# playing; a one-shot attack plays through and holds its last (strike) frame
+	# rather than restarting each frame while the attack state lingers.
+	if spr.animation != want:
+		spr.play(want)
 
 
 func _align_ledge_ray() -> void:

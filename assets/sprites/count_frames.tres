@@ -1,0 +1,15 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://bcountframes01"]
+
+[ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="1"]
+
+[sub_resource type="AtlasTexture" id="c0"]
+atlas = ExtResource("1")
+region = Rect2(0, 64, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("c0")}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
