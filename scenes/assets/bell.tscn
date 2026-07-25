@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cdgmue1sgm4vo"]
+
+[ext_resource type="Script" uid="uid://b36gne07pmwy1" path="res://scripts/bell.gd" id="1_1rtuu"]
+[ext_resource type="Texture2D" uid="uid://wkra75dtuhnh" path="res://assets/sprites/switch_sheet_16x16.png" id="2_uoktf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
+size = Vector2(48, 48)
+
+[node name="Bell" type="Node2D" unique_id=813885473]
+script = ExtResource("1_1rtuu")
+one_shot = true
+
+[node name="Visual" type="Sprite2D" parent="." unique_id=1535654818]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("2_uoktf")
+centered = false
+offset = Vector2(-8, -16)
+hframes = 2
+
+[node name="InteractArea" type="Area2D" parent="." unique_id=1547867611]
+collision_layer = 24
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea" unique_id=1689877045]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_interact")
+
+[connection signal="body_entered" from="InteractArea" to="." method="_on_interact_area_body_entered"]

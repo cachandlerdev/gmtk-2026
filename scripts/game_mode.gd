@@ -43,18 +43,20 @@ func set_state(new_state) -> void:
 	var can_change: bool = false
 	match new_state:
 		Stealth:
-			MusicPlayer.get_stream_playback().switch_to_clip(stealth_music_index)
-			can_change = true
+			if _game_mode_state != AlarmRaised:
+				MusicPlayer.get_stream_playback().switch_to_clip(stealth_music_index)
+				can_change = true
 		Exploration:
-			MusicPlayer.get_stream_playback().switch_to_clip(exploration_music_index)
-			can_change = true
+			if _game_mode_state != AlarmRaised:
+				MusicPlayer.get_stream_playback().switch_to_clip(exploration_music_index)
+				can_change = true
 		Battle:
-			if not player._is_dead:
+			if not player._is_dead and _game_mode_state != AlarmRaised:
 				print("TODO: Battle stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(battle_music_index)
 				can_change = true
 		NearDeath:
-			if not player._is_dead:
+			if not player._is_dead and _game_mode_state != AlarmRaised:
 				print("TODO: Near Death stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(near_death_music_index)
 				can_change = true
@@ -64,7 +66,7 @@ func set_state(new_state) -> void:
 				MusicPlayer.get_stream_playback().switch_to_clip(alarm_raised_music_index)
 				can_change = true
 		Escape:
-			if not player._is_dead:
+			if not player._is_dead and _game_mode_state != AlarmRaised:
 				print("TODO: Escape stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(escape_music_index)
 				can_change = true

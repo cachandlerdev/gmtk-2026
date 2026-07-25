@@ -26,7 +26,7 @@ func _restart() -> void:
 	visible = false
 	get_tree().reload_current_scene()
 	GameMode.set_state(GameMode.Stealth)
-
+	var player = get_tree().get_first_node_in_group("player")
 
 func _quit() -> void:
 	# Un-pause first so the tree is in a clean state, then exit.

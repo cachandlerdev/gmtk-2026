@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://d047j530r088n" path="res://scenes/assets/projectile_thrower.tscn" id="5_thrower"]
 [ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="6_switch"]
 [ext_resource type="PackedScene" uid="uid://drm7ktbvjves1" path="res://scenes/assets/count_enemy.tscn" id="8_cvmpx"]
+[ext_resource type="PackedScene" uid="uid://ddvn0mixx1jj5" path="res://scenes/assets/watchman_enemy.tscn" id="10_0j5xy"]
+[ext_resource type="PackedScene" uid="uid://cdgmue1sgm4vo" path="res://scenes/assets/bell.tscn" id="11_gljni"]
 
 [node name="EnemyTestLevel" type="Node2D" unique_id=1248734629]
 script = ExtResource("1_d021f")
@@ -27,6 +29,14 @@ scale = Vector2(0.06, 2)
 
 [node name="WallLeft3" parent="." unique_id=179577804 instance=ExtResource("2_floor")]
 position = Vector2(-392, 148)
+scale = Vector2(0.06, 2)
+
+[node name="WallLeft4" parent="." unique_id=1441071296 instance=ExtResource("2_floor")]
+position = Vector2(-1637, 95)
+scale = Vector2(0.06, 2)
+
+[node name="WallLeft5" parent="." unique_id=244063282 instance=ExtResource("2_floor")]
+position = Vector2(-2562, 79)
 scale = Vector2(0.06, 2)
 
 [node name="WallDivider" parent="." unique_id=1826499322 instance=ExtResource("2_floor")]
@@ -81,4 +91,10 @@ enemy_prototype = "uid://d0k1b4mo45a22"
 position = Vector2(-289, 119)
 
 [node name="Player" parent="." unique_id=1441560064 instance=ExtResource("1_player")]
-position = Vector2(19, -33)
+position = Vector2(-1640, -33)
+
+[node name="WatchmanEnemy" parent="." unique_id=1812884636 instance=ExtResource("10_0j5xy")]
+position = Vector2(-1878, 121)
+
+[node name="Bell" parent="." unique_id=813885473 instance=ExtResource("11_gljni")]
+position = Vector2(-2318, 141)

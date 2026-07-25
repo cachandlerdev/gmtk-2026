@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://bpna2cn0m2djl"]
+[gd_scene format=3 uid="uid://ddvn0mixx1jj5"]
 
-[ext_resource type="Script" uid="uid://p5ogpg8fo875" path="res://scripts/enemy_base.gd" id="1_enemy"]
-[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
-[ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
+[ext_resource type="Script" uid="uid://b0tr3jqkjc5ya" path="res://scripts/watchman_enemy.gd" id="1_isbbr"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_evnww"]
+[ext_resource type="PackedScene" uid="uid://beui553fqefvc" path="res://scenes/ai/count_brain.tscn" id="3_7tjbx"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(36, 44)
@@ -10,14 +10,14 @@ size = Vector2(36, 44)
 [sub_resource type="RectangleShape2D" id="Shape_hit"]
 size = Vector2(40, 48)
 
-[node name="Enemy" type="CharacterBody2D" unique_id=245799776]
+[node name="WatchmanEnemy" type="CharacterBody2D" unique_id=245799776]
 collision_layer = 16
-script = ExtResource("1_enemy")
+script = ExtResource("1_isbbr")
 
 [node name="Visual" type="Node2D" parent="." unique_id=307105698]
 
 [node name="Body" type="Polygon2D" parent="Visual" unique_id=800521712]
-color = Color(0.45, 0.18, 0.5, 1)
+color = Color(0, 0.6232243, 0.16756076, 1)
 polygon = PackedVector2Array(-18, 22, 18, 22, 18, -12, 8, -22, -8, -22, -18, -12)
 
 [node name="Eye" type="Polygon2D" parent="Visual" unique_id=402540187]
@@ -42,13 +42,13 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1027005596]
 shape = SubResource("Shape_hit")
 
-[node name="VisionCone" parent="." unique_id=874998519 instance=ExtResource("2_vision")]
+[node name="VisionCone" parent="." unique_id=874998519 instance=ExtResource("2_evnww")]
 
 [node name="DeathDespawnTimer" type="Timer" parent="." unique_id=229173128]
 
-[node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
+[node name="CountBeehaveTree" parent="." unique_id=665891478 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_7tjbx")]
 enabled = false
-blackboard = NodePath("@Node@203747")
+blackboard = NodePath("@Node@20046")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

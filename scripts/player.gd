@@ -38,7 +38,7 @@ signal died
 ## How long you can't move after diving
 @export var DIVE_COOLDOWN: float = 1
 ## How much of an effect knockback has
-@export var KNOCKBACK_FACTOR: float = 0.1
+@export var KNOCKBACK_FACTOR: float = 1
 
 # if needed. Coyote time not implemented right now
 const COYOTE_FRAMES: int = 6
@@ -61,6 +61,8 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var invulnerability_timer = $Timers/InvulnerabilityTimer
 @onready var dive_update_timer = $Timers/DiveUpdateTimer
 @onready var dive_hover_timer = $Timers/DiveHoverTimer
+
+@onready var collision = $CollisionShape2D
 
 @onready var left_wall_ray_cast = $LeftWallRayCast
 @onready var right_wall_ray_cast = $RightWallRayCast
@@ -233,6 +235,7 @@ func die() -> void:
 		return
 	_is_dead = true
 	died.emit()
+	collision.disabled = true
 	set_physics_process(false)
 	GameMode.set_state(GameMode.Defeat)
 
@@ -387,7 +390,9 @@ func _update_player_movement(delta: float) -> void:
 
 	# Move and account for the dash
 	var actual_direction = _direction
-	if _is_dashing or _is_melee_attacking or _is_dive_attacking:
+	if _is_knocked_back:
+		actual_direction = _looking_direction
+	elif _is_dashing or _is_melee_attacking or _is_dive_attacking:
 		# Make the player move when either of these happen
 		actual_direction = _looking_direction
 

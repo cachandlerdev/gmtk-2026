@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dgso6ricq5r3w"]
+
+[ext_resource type="Script" uid="uid://cy62jmw1qqryy" path="res://scenes/ui/objective_tracker.gd" id="1_pe3pm"]
+
+[node name="ObjectiveTracker" type="Label" unique_id=1212483230]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Find the Count."
+horizontal_alignment = 2
+script = ExtResource("1_pe3pm")
