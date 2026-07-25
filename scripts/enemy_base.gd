@@ -47,6 +47,10 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
 
+@export_group("Loot")
+## Scenes to spawn at this enemy's position on death (e.g. key pickups). Assign per-instance in the editor.
+@export var loot_drops: Array[PackedScene] = []
+
 var facing: int = 1          ## 1 = right, -1 = left
 ## Current awareness state (see the Awareness enum).
 var awareness: Awareness = Awareness.UNAWARE
@@ -141,7 +145,26 @@ func _on_death() -> void:
 ## Instant death (out of bounds, etc.). 
 func die() -> void:
 	_on_death()
+	_spawn_loot()
 	queue_free()
+
+
+## Instantiate editor-assigned loot scenes at this enemy's feet.
+func _spawn_loot() -> void:
+	if loot_drops.is_empty():
+		return
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+	for scene in loot_drops:
+		if scene == null:
+			continue
+		var drop: Node = scene.instantiate()
+		parent.add_child(drop)
+		if drop is Node2D:
+			(drop as Node2D).global_position = global_position
 
 
 # --- Damage ---------------------------------------------------------------

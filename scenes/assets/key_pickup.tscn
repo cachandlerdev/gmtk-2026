@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://3tbo66tfyiuq"]
+
+[ext_resource type="Script" path="res://scripts/key_pickup.gd" id="1_key"]
+[ext_resource type="Texture2D" uid="uid://dyqahatm1q20r" path="res://assets/sprites/key_16x16.png" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
+size = Vector2(28, 28)
+
+[node name="KeyPickup" type="Node2D"]
+script = ExtResource("1_key")
+
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+offset = Vector2(-8, -16)
+scale = Vector2(2, 2)
+texture = ExtResource("2_tex")
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_interact")
