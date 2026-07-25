@@ -7,6 +7,7 @@
 [node name="TestLevel" type="Node2D" unique_id=762406808]
 
 [node name="Player" parent="." unique_id=1441560064 instance=ExtResource("1_yautc")]
+position = Vector2(0, -1)
 
 [node name="Floor" parent="." unique_id=26143825 instance=ExtResource("2_fr1um")]
 position = Vector2(12, 66)

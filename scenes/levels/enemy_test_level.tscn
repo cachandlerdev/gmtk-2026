@@ -71,13 +71,11 @@ targets = Array[NodePath]([NodePath("../ProjectileThrower")])
 
 [node name="EnemySpawner" parent="." unique_id=1567161472 instance=ExtResource("3_cvmpx")]
 position = Vector2(-608, 148)
-scale = Vector2(3, 3)
 spawn_cooldown = 4.0
 enemy_prototype = "uid://bpna2cn0m2djl"
 
 [node name="EnemySpawner3" parent="." unique_id=1347671679 instance=ExtResource("3_cvmpx")]
 position = Vector2(-1108, 147)
-scale = Vector2(3, 3)
 spawn_right_away = true
 spawn_type = 2
 spawn_cooldown = 4.0
@@ -86,7 +84,6 @@ enemy_prototype = "uid://bpna2cn0m2djl"
 
 [node name="EnemySpawner2" parent="." unique_id=2076959285 instance=ExtResource("3_cvmpx")]
 position = Vector2(-890, 148)
-scale = Vector2(3, 3)
 spawn_type = 1
 spawn_cooldown = 1.0
 enemy_prototype = "uid://bpna2cn0m2djl"
