@@ -18,6 +18,8 @@ extends Node
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}
 var _game_mode_state := Stealth
 var _num_of_alert_guards: int = 0
+## Strongest detection any guard currently has on the player, 0..1.
+var _detection_level: float = 0.0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -25,9 +27,14 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+# Track the highest detection meter across all guards so the visibility eye can
+# open gradually as the player is spotted.
+func _process(_delta: float) -> void:
+	var highest := 0.0
+	for guard in get_tree().get_nodes_in_group("enemy"):
+		if "detection" in guard:
+			highest = maxf(highest, guard.detection)
+	_detection_level = highest
 
 
 func get_state():
@@ -89,6 +96,12 @@ func set_state(new_state) -> void:
 ## Returns whether there are any guards that currently know where the player is.
 func is_hidden() -> bool:
 	return _num_of_alert_guards == 0
+
+
+## The strongest detection any guard has on the player right now, 0..1. 0 = fully
+## unseen, 1 = a guard is fully alerted. Drives the visibility eye's openness.
+func get_detection_level() -> float:
+	return _detection_level
 
 
 ## Used to let the player know that he's been discovered. Adds the guard to a 

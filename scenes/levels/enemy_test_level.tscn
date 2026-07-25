@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://d0k1b4mo45a22" path="res://scenes/assets/shieldbearer.tscn" id="4_shield"]
 [ext_resource type="PackedScene" uid="uid://d047j530r088n" path="res://scenes/assets/projectile_thrower.tscn" id="5_thrower"]
 [ext_resource type="PackedScene" uid="uid://btwhex02s54fl" path="res://scenes/assets/lever.tscn" id="6_switch"]
+[ext_resource type="PackedScene" uid="uid://capt2b3tx4va4" path="res://scenes/assets/archer.tscn" id="7_archer"]
+[ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="10_aixi7"]
 
 [node name="EnemyTestLevel" type="Node2D" unique_id=1248734629]
 script = ExtResource("1_d021f")
@@ -37,6 +39,9 @@ position = Vector2(90, 100)
 
 [node name="Patrol1" parent="." unique_id=161069863 instance=ExtResource("3_enemy")]
 position = Vector2(220, 100)
+
+[node name="Archer" parent="." unique_id=531405409 instance=ExtResource("7_archer")]
+position = Vector2(640, 100)
 
 [node name="Shieldbearer" parent="." unique_id=2074438974 instance=ExtResource("4_shield")]
 position = Vector2(1000, 100)
@@ -75,3 +80,6 @@ scale = Vector2(3, 3)
 spawn_type = 1
 spawn_cooldown = 1.0
 enemy_prototype = "uid://bpna2cn0m2djl"
+
+[node name="Count" parent="." unique_id=494434669 instance=ExtResource("10_aixi7")]
+position = Vector2(1601, 90)
