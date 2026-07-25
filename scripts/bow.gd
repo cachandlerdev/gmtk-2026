@@ -161,5 +161,5 @@ func _draw() -> void:
 	var ratio := _charge / max_charge_time
 	var length := lerpf(34.0, 96.0, ratio)
 	var col := Color(1.0, 1.0, 1.0, 0.85).lerp(Color(1.0, 0.55, 0.2, 0.95), ratio)
-	draw_line(Vector2.ZERO, dir * length, col, 3.0)
-	draw_circle(dir * length, 4.0, col)
+	#draw_line(Vector2.ZERO, dir * length, col, 3.0)
+	#draw_circle(dir * length, 4.0, col)

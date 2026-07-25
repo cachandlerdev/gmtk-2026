@@ -12,14 +12,14 @@ signal arrow_inventory_changed
 ## Custom gravity multiplier to improve player movement
 @export var GRAVITY_FACTOR: float = 2
 ## How much faster the player moves while dashing. Separate for air or else op.
-@export var GROUND_DASH_FACTOR: float = 2.5
+@export var GROUND_DASH_FACTOR: float = 2
 @export var AIR_DASH_FACTOR: float = 2.0
 ## The impact of inertia. The higher this value, the more control the player has
 @export var INERTIA_FACTOR: float = 2000
 ## How much faster the player moves while performing a melee attack.
 @export var MELEE_THRUST_VELOCITY: float = 1.15
 ## How much the player gets launched vertically performing a melee attack.
-@export var MELEE_JUMP_AMOUNT: float = 3500
+@export var MELEE_JUMP_AMOUNT: float = 1500
 ## How fast the player dives downwards for a dive attack
 @export var DIVE_FACTOR: float = 8
 ## How many air jumps the player gets
@@ -101,7 +101,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var arrows_hud = $ArrowsHUD
 @onready var bow = $Bow
 
-enum {Idle, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
+enum {Idle, Run, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
 
 # Helps us keep track of the animation state
 var _anim_state = Idle
@@ -112,6 +112,7 @@ var _can_dash: bool = true
 
 # Keeps track of the jump count for double jumps
 var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
+var _is_jumping: bool = false
 
 # The direction the player is currently moving in
 var _direction: float = 1.0
@@ -131,9 +132,9 @@ var _on_dive_cooldown: bool = false
 # Needed to prevent aiming direction from forcibly moving the character
 var _player_wants_to_move: bool = false
 var _is_aiming: bool = false
-# A threshold value used for the difference between the mouse and the player 
+# A threshold value used for the degree angle difference between the mouse and the player 
 # position to see if we're aiming sideways
-var _aim_side_threshold: float = 100
+var _aim_side_threshold: float = 20
 # Handles temporary hovering while aiming to shot
 var _is_hover_aiming: bool = false
 var _can_hover_aim: bool = true
@@ -203,8 +204,13 @@ func _physics_process(delta: float) -> void:
 
 	_update_player_direction()
 
+	if is_on_floor():
+		_is_jumping = false
+
+
 	# Handle player inputs
 	if Input.is_action_just_pressed("jump") and _num_of_jumps > 0 and not _surface_mods.blocks_jump:
+		_is_jumping = true
 		_jump()
 	if Input.is_action_just_pressed("dash") and _can_dash:
 		animated_sprite.play("dash")
@@ -271,6 +277,8 @@ func _update_player_direction() -> void:
 		if _direction != 0:
 			_player_wants_to_move = true
 			_looking_direction = _direction
+		else:
+			_player_wants_to_move = false
 		
 
 
@@ -412,8 +420,6 @@ func start_dive_attack() -> void:
 ## Start the actual dive attack
 func dive_downwards() -> void:
 	invulnerability_timer.start()
-	animated_sprite.play("dive_end")
-	_anim_state = DiveEnd
 	_is_dive_attacking = true
 	_can_melee_attack = false
 	dive_update_timer.start()
@@ -497,7 +503,7 @@ func _jump() -> void:
 		_anim_state = WallJump
 	else:
 		# Regular jump
-
+		print("jump")
 		animated_sprite.play("jump")
 		_anim_state = Jump
 		velocity.y = JUMP_VELOCITY
@@ -518,27 +524,29 @@ func _update_player_sprite() -> void:
 		# get mouse y relative to player y
 		var mouse_location := get_global_mouse_position()
 		var player_location := global_position
+		var x_diff: float = abs(mouse_location.x - player_location.x)
 		var y_diff: float = player_location.y - mouse_location.y
+		var angle_diff = atan2(y_diff, x_diff)
 
-		print("abs_start")
-		print(y_diff)
-		print(_aim_side_threshold)
-		#if abs(y_diff < _aim_side_threshold):
-		#	animated_sprite.play("aim_bow_side")
-		#	_anim_state = AimBowSide
-		#elif y_diff < 0:
-		#	# Mouse above player
-		#	animated_sprite.play("aim_bow_up")
-		#	_anim_state = AimBowUp
-		#else:
-		#	animated_sprite.play("aim_bow_down")
-		#	_anim_state = AimBowDown
+		if abs(angle_diff) < deg_to_rad(_aim_side_threshold):
+			animated_sprite.play("aim_bow_side")
+			_anim_state = AimBowSide
+		elif y_diff > 0:
+			animated_sprite.play("aim_bow_up")
+			_anim_state = AimBowUp
+		else:
+			animated_sprite.play("aim_bow_down")
+			_anim_state = AimBowDown
+	elif _player_wants_to_move and is_on_floor() and not _is_dashing and not _is_dead and not _is_jumping and not _on_dive_cooldown and not _is_melee_attacking:
+		_anim_state = Run
+		animated_sprite.play("run")
+	
 	
 	# rip, this is why I should have made a state enum instead of bool flags
-	if (not _is_aiming and not _is_dashing and not _is_dead and 
-		not _is_dive_attacking and not _is_dive_hovering and 
-		not _is_melee_attacking) and not _anim_state == Idle:
-
+	if (not _is_aiming and not _is_dashing and not _is_dead and not _is_jumping and  
+		not _is_dive_attacking and not _is_dive_hovering and not _player_wants_to_move and
+		not _is_melee_attacking and not _is_wall_jumping and not _on_dive_cooldown) and is_on_floor() and not _anim_state == Idle:
+		print("play idle")
 		animated_sprite.play("idle")
 		_anim_state = Idle
 
@@ -685,6 +693,8 @@ func _on_melee_duration_timer_timeout() -> void:
 
 	_is_melee_attacking = false
 	_is_dive_attacking = false
+	animated_sprite.play("idle")
+	_anim_state = Idle
 
 	melee_cooldown_timer.start()
 
@@ -709,6 +719,8 @@ func _on_hover_aim_cooldown_timer_timeout() -> void:
 func _on_dive_update_timer_timeout() -> void:
 	if is_on_floor():
 		_on_melee_duration_timer_timeout()
+		animated_sprite.play("dive_end")
+		_anim_state = DiveEnd
 		_on_dive_cooldown = true
 		await get_tree().create_timer(DIVE_COOLDOWN).timeout
 		_on_dive_cooldown = false
