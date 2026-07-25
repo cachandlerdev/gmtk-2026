@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dcount0boss0scn"]
+[gd_scene format=3 uid="uid://ct5whhvkdecon"]
 
 [ext_resource type="Script" path="res://scripts/count.gd" id="1_count"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]

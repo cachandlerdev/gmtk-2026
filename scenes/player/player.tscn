@@ -3,17 +3,251 @@
 [ext_resource type="Script" uid="uid://bepu8d2b7xgem" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://db51jt005nv26" path="res://scenes/player/bow.tscn" id="2_dovo2"]
 [ext_resource type="PackedScene" uid="uid://bxi8mp02m55w4" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
+[ext_resource type="Texture2D" uid="uid://duelv24br3gqg" path="res://assets/sprites/bird.png" id="3_p47bc"]
 [ext_resource type="PackedScene" path="res://scenes/ui/arrows_hud.tscn" id="4_arrows"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_c5ll8"]
-radius = 14.0
+[sub_resource type="AtlasTexture" id="AtlasTexture_cnsyf"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_007i1"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cv16"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p47bc"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h17s1"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_je7p5"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ugbui"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(96, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcs02"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_myrg7"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75vfm"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0owmy"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qek5x"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gtgg"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvlxm"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uf5tr"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(96, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgqa7"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fm80t"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gx1jg"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ydkj"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3j4b4"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yj68g"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(64, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ioxgp"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(96, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j4nxn"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28m0y"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_viskr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cnsyf")
+}],
+"loop": 1,
+"name": &"aim_bow_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_007i1")
+}],
+"loop": 1,
+"name": &"aim_bow_side",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6cv16")
+}],
+"loop": 1,
+"name": &"aim_bow_up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p47bc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h17s1")
+}],
+"loop": 0,
+"name": &"dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_je7p5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ugbui")
+}],
+"loop": 0,
+"name": &"dive_end",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcs02")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_myrg7")
+}],
+"loop": 0,
+"name": &"dive_start",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75vfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0owmy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qek5x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5gtgg")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kvlxm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uf5tr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lgqa7")
+}],
+"loop": 0,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fm80t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gx1jg")
+}],
+"loop": 0,
+"name": &"melee_attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ydkj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3j4b4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yj68g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ioxgp")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j4nxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28m0y")
+}],
+"loop": 0,
+"name": &"wall_jump",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h17s1"]
+radius = 8.0
+height = 28.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
-radius = 36.0
+radius = 20.09975
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2rd22"]
+radius = 30.265491
 
 [node name="Player" type="CharacterBody2D" unique_id=1441560064]
 z_index = 5
+collision_mask = 65
 script = ExtResource("1_8afob")
+DIVE_MELEE_DAMAGE = 2
+DIVE_COOLDOWN = 0.2
 
 [node name="Bow" parent="." unique_id=466650387 instance=ExtResource("2_dovo2")]
 position = Vector2(0, -16)
@@ -22,11 +256,17 @@ aim_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=187761564]
+position = Vector2(0, -16)
+sprite_frames = SubResource("SpriteFrames_viskr")
+animation = &"aim_bow_down"
+autoplay = "idle"
 
 [node name="TempSprite" type="Polygon2D" parent="." unique_id=1734986798]
+visible = false
 polygon = PackedVector2Array(-14, -34, 14, -34, 14, 0, -14, 0)
 
 [node name="Polygon2D3" type="Polygon2D" parent="TempSprite" unique_id=1178172583]
@@ -43,7 +283,7 @@ polygon = PackedVector2Array(-5, -15, 2.272725, -15, 2.272725, -10, -5.1136336, 
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=899755760]
 position = Vector2(0, -14)
-shape = SubResource("CircleShape2D_c5ll8")
+shape = SubResource("CapsuleShape2D_h17s1")
 
 [node name="Timers" type="Node" parent="." unique_id=151467907]
 
@@ -56,6 +296,14 @@ one_shot = true
 
 [node name="MeleeDurationTimer" type="Timer" parent="Timers" unique_id=833370498]
 wait_time = 0.05
+one_shot = true
+
+[node name="DiveUpdateTimer" type="Timer" parent="Timers" unique_id=1052761966]
+wait_time = 0.05
+one_shot = true
+
+[node name="DiveHoverTimer" type="Timer" parent="Timers" unique_id=1708718556]
+wait_time = 0.15
 one_shot = true
 
 [node name="MeleeCooldownTimer" type="Timer" parent="Timers" unique_id=271734698]
@@ -78,28 +326,25 @@ one_shot = true
 
 [node name="HeartsHUD" parent="." unique_id=1907220139 instance=ExtResource("3_hearts")]
 
-[node name="ArrowsHUD" parent="." instance=ExtResource("4_arrows")]
+[node name="ArrowsHUD" parent="." unique_id=185083823 instance=ExtResource("4_arrows")]
 
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
-target_position = Vector2(25, 0)
-hit_from_inside = true
+target_position = Vector2(15, 0)
 
 [node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
-target_position = Vector2(-25, 0)
-hit_from_inside = true
-collide_with_areas = true
+target_position = Vector2(-15, 0)
 
 [node name="RightAttackRayCast" type="RayCast2D" parent="." unique_id=659439326]
 position = Vector2(0, -13)
-target_position = Vector2(75, 0)
+target_position = Vector2(35, 0)
 collision_mask = 17
 hit_from_inside = true
 
 [node name="LeftAttackRayCast" type="RayCast2D" parent="." unique_id=1478928469]
 position = Vector2(0, -13)
-target_position = Vector2(-75, 0)
+target_position = Vector2(-35, 0)
 collision_mask = 17
 hit_from_inside = true
 collide_with_areas = true
@@ -113,9 +358,18 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractRange" unique_id=367867143]
 shape = SubResource("CircleShape2D_interact")
 
+[node name="DiveCollider" type="Area2D" parent="." unique_id=1806610364]
+collision_mask = 17
+
+[node name="DiveColliderCircle" type="CollisionShape2D" parent="DiveCollider" unique_id=714906608]
+position = Vector2(0, -13)
+shape = SubResource("CircleShape2D_2rd22")
+
 [connection signal="timeout" from="Timers/DashDurationTimer" to="." method="_on_dash_duration_timer_timeout"]
 [connection signal="timeout" from="Timers/DashCooldownTimer" to="." method="_on_dash_cooldown_timer_timeout"]
 [connection signal="timeout" from="Timers/MeleeDurationTimer" to="." method="_on_melee_duration_timer_timeout"]
+[connection signal="timeout" from="Timers/DiveUpdateTimer" to="." method="_on_dive_update_timer_timeout"]
+[connection signal="timeout" from="Timers/DiveHoverTimer" to="." method="_on_dive_hover_timer_timeout"]
 [connection signal="timeout" from="Timers/MeleeCooldownTimer" to="." method="_on_melee_cooldown_timer_timeout"]
 [connection signal="timeout" from="Timers/WallJumpTimer" to="." method="_on_wall_jump_timer_timeout"]
 [connection signal="timeout" from="Timers/HoverAimDurationTimer" to="." method="_on_hover_aim_duration_timer_timeout"]

@@ -1,23 +1,25 @@
 [gd_scene format=3 uid="uid://bxi8mp02m55w4"]
 
 [ext_resource type="Script" uid="uid://bct0v81tswnjc" path="res://scenes/ui/hearts_hud.gd" id="1_hearts"]
-[ext_resource type="Texture2D" uid="uid://cheartfull0tex" path="res://assets/sprites/heart_full.tres" id="2_full"]
-[ext_resource type="Texture2D" uid="uid://cheartempty0tex" path="res://assets/sprites/heart_empty.tres" id="3_empty"]
+[ext_resource type="Texture2D" uid="uid://bxi8mdesu560f" path="res://assets/sprites/heart_full.tres" id="2_full"]
+[ext_resource type="Texture2D" uid="uid://dfjf2d2k8j588" path="res://assets/sprites/heart_empty.tres" id="3_empty"]
 
-[node name="HeartsHUD" type="CanvasLayer"]
+[node name="HeartsHUD" type="CanvasLayer" unique_id=1077126994]
 layer = 10
 script = ExtResource("1_hearts")
 full_heart = ExtResource("2_full")
 empty_heart = ExtResource("3_empty")
 
-[node name="Margin" type="MarginContainer" parent="."]
-offset_right = 160.0
-offset_bottom = 56.0
+[node name="Margin" type="MarginContainer" parent="." unique_id=1837770274]
+offset_left = 35.0
+offset_top = 35.0
+offset_right = 195.0
+offset_bottom = 91.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 12
 
-[node name="Hearts" type="HBoxContainer" parent="Margin"]
+[node name="Hearts" type="HBoxContainer" parent="Margin" unique_id=728920761]
 layout_mode = 2
 theme_override_constants/separation = 4

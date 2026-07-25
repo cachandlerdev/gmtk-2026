@@ -22,6 +22,8 @@ func _process(delta: float) -> void:
 
 func hide_menu() -> void:
 	visible = false
+	get_tree().reload_current_scene()
+	GameMode.set_state(GameMode.Stealth)
 
 
 func _restart() -> void:
