@@ -27,6 +27,7 @@ var facing: int = 1
 var can_see_player: bool = false
 
 var _player: Node2D = null
+var _detection: float = 0.0   ## mirrored from the owner for the cone tint
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -42,6 +43,8 @@ func _physics_process(_delta: float) -> void:
 	var owner_node := get_parent()
 	if owner_node != null and "facing" in owner_node:
 		facing = owner_node.facing
+	if owner_node != null and "detection" in owner_node:
+		_detection = owner_node.detection
 
 	var seen := _check_visible()
 	if seen and not can_see_player:
@@ -93,5 +96,6 @@ func _draw() -> void:
 	for i in range(steps + 1):
 		var a := forward - half + (2.0 * half) * (float(i) / float(steps))
 		points.append(eye_offset + Vector2(cos(a), sin(a)) * view_distance)
-	var col := Color(1.0, 0.3, 0.2, 0.16) if can_see_player else Color(1.0, 0.9, 0.3, 0.10)
+	# Tint ramps with the owner's detection: calm yellow → alert red.
+	var col := Color(1.0, 0.9, 0.3, 0.09).lerp(Color(1.0, 0.25, 0.18, 0.20), _detection)
 	draw_colored_polygon(points, col)

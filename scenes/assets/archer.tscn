@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://capt2b3tx4va4"]
+
+[ext_resource type="Script" path="res://scripts/archer.gd" id="1_archer"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
+[ext_resource type="PackedScene" uid="uid://carcherbrain0scn" path="res://scenes/ai/archer_brain.tscn" id="3_brain"]
+[ext_resource type="PackedScene" uid="uid://cenmyarrow0proj" path="res://scenes/assets/enemy_arrow.tscn" id="4_arrow"]
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(34, 44)
+
+[sub_resource type="RectangleShape2D" id="Shape_hit"]
+size = Vector2(38, 48)
+
+[node name="Archer" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 1
+script = ExtResource("1_archer")
+attack_cooldown = 1.5
+projectile_scene = ExtResource("4_arrow")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+color = Color(0.24, 0.5, 0.3, 1)
+polygon = PackedVector2Array(-16, 22, 16, 22, 16, -12, 7, -22, -7, -22, -16, -12)
+
+[node name="Bow" type="Polygon2D" parent="Visual"]
+color = Color(0.55, 0.4, 0.22, 1)
+polygon = PackedVector2Array(14, -18, 18, -14, 20, 0, 18, 14, 14, 18, 16, 14, 17, 0, 16, -14)
+
+[node name="Eye" type="Polygon2D" parent="Visual"]
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(3, -14, 13, -14, 13, -5, 3, -5)
+
+[node name="Pupil" type="Polygon2D" parent="Visual"]
+color = Color(0.05, 0.05, 0.05, 1)
+polygon = PackedVector2Array(8, -12, 12, -12, 12, -7, 8, -7)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Shape_body")
+
+[node name="LedgeRay" type="RayCast2D" parent="."]
+position = Vector2(20, 0)
+target_position = Vector2(0, 34)
+collision_mask = 1
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 7
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("Shape_hit")
+
+[node name="VisionCone" parent="." instance=ExtResource("2_vision")]
+view_distance = 340.0
+
+[node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

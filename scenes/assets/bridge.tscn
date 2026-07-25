@@ -1,22 +1,26 @@
-[gd_scene format=3 uid="uid://edsig0u0xqkc"]
+[gd_scene load_steps=5 format=3 uid="uid://bridge01toggleable"]
 
 [ext_resource type="Script" path="res://scripts/bridge.gd" id="1_bridge"]
+[ext_resource type="Texture2D" uid="uid://cdrawbridgeleft" path="res://assets/sprites/drawbridge_left.tres" id="2_left"]
+[ext_resource type="Texture2D" uid="uid://cdrawbridgemid" path="res://assets/sprites/drawbridge_middle.tres" id="3_mid"]
+[ext_resource type="Texture2D" uid="uid://cdrawbridgeright" path="res://assets/sprites/drawbridge_right.tres" id="4_right"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bridge"]
-size = Vector2(120, 16)
+size = Vector2(64, 16)
 
 [node name="Bridge" type="Node2D"]
 script = ExtResource("1_bridge")
+left_tile = ExtResource("2_left")
+middle_tile = ExtResource("3_mid")
+right_tile = ExtResource("4_right")
 
-[node name="Body" type="StaticBody2D" parent="."]
+[node name="Body" type="AnimatableBody2D" parent="."]
+sync_to_physics = true
 collision_layer = 1
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(32, 0)
 shape = SubResource("RectangleShape2D_bridge")
-disabled = true
 
-[node name="Visual" type="Polygon2D" parent="Body"]
-visible = false
-color = Color(0.4, 0.55, 0.7, 1)
-polygon = PackedVector2Array(-60, -8, 60, -8, 60, 8, -60, 8)
+[node name="Visuals" type="Node2D" parent="Body"]
