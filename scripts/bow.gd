@@ -33,11 +33,22 @@ var facing: int = 1
 ## Current charge as a 0..1 ratio; handy for HUDs.
 var charge_ratio: float = 0.0
 
+## Shared with the player. Null means unlimited ammo (e.g. enemy bows later).
+var inventory: ArrowInventory
+
 var _charging: bool = false
 var _charge: float = 0.0
 var _aim_angle: float = 0.0
 
 var _can_shoot: bool = true
+
+func is_charging() -> bool:
+	return _charging
+
+
+func is_at_full_draw() -> bool:
+	return _charging and is_equal_approx(charge_ratio, 1.0)
+
 
 func _physics_process(delta: float) -> void:
 	if not active:
@@ -54,9 +65,10 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _handle_bow(delta: float) -> void:
-	if Input.is_action_just_pressed(shoot_action) and _can_shoot:
+	if Input.is_action_just_pressed(shoot_action) and _can_shoot and _has_ammo():
 		_charging = true
 		_charge = 0.0
+		charge_ratio = 0.0
 		_aim_angle = 0.0
 
 	if _charging:
@@ -79,33 +91,51 @@ func _handle_bow(delta: float) -> void:
 			aim_input = Input.get_axis(aim_down_action, aim_up_action)
 			_aim_angle = clampf(_aim_angle + aim_input * aim_speed * delta, -limit, limit)
 
-
-	charge_ratio = _charge / max_charge_time
+		charge_ratio = _charge / max_charge_time
 
 	if Input.is_action_just_released(shoot_action) and _charging:
 		_fire()
 		_charging = false
+		charge_ratio = 0.0
 
 func _aim_direction() -> Vector2:
 	var f := 1.0 if facing >= 0 else -1.0
 	return Vector2(f, 0.0).rotated(-_aim_angle * f)
 
+func _has_ammo() -> bool:
+	if inventory == null:
+		return true
+	if inventory.selected_count() > 0:
+		return true
+	# Selected type empty — try another type the player still has.
+	if inventory.has_any():
+		inventory.cycle_next()
+		return inventory.selected_count() > 0
+	return false
+
 func _fire() -> void:
 	if arrow_scene == null:
 		push_warning("Bow has no arrow_scene assigned.")
+		return
+	if not _has_ammo():
 		return
 
 	var ratio := _charge / max_charge_time
 	var arrow_speed := lerpf(min_arrow_speed, max_arrow_speed, ratio)
 	var dir := _aim_direction()
+	var fired_type: Arrow.Type = Arrow.Type.BASIC
+	if inventory != null:
+		fired_type = inventory.selected
+		if not inventory.try_consume(fired_type):
+			return
 
 	var arrow := arrow_scene.instantiate()
 	_projectile_parent().add_child(arrow)
 	arrow.global_position = global_position + dir * spawn_offset
 	arrow.rotation = dir.angle()
 	arrow.velocity = dir * arrow_speed
-	# Full draw: pierce one enemy. Partial draw: stop on first hit.
-	arrow.pierces_remaining = 1 if is_equal_approx(ratio, 1.0) else 0
+	if arrow.has_method("apply_type"):
+		arrow.apply_type(fired_type, ratio)
 
 	arrow_fired.emit(arrow, ratio)
 	# Fire cooldown

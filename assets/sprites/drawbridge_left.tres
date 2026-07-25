@@ -1,0 +1,8 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://d3prb138plqjl"]
+
+[ext_resource type="Texture2D" uid="uid://dksrd1762x712" path="res://assets/sprites/drawbridge_ground_16x16.png" id="1_sheet"]
+
+[resource]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 0, 16, 16)
+filter_clip = true
