@@ -8,8 +8,6 @@ extends CanvasLayer
 @onready var restart_button: Button = $Center/Menu/RestartButton
 @onready var main_menu_button: Button = $Center/Menu/MainMenuButton
 
-@export var main_menu_path: String = "res://scenes/levels/main_menu_level.tscn"
-
 func _ready() -> void:
 	visible = false
 	restart_button.pressed.connect(_restart)
@@ -22,15 +20,15 @@ func _process(delta: float) -> void:
 		visible = true
 
 
-func _restart() -> void:
+func hide_menu() -> void:
 	visible = false
 	get_tree().reload_current_scene()
 	GameMode.set_state(GameMode.Stealth)
 
 
+func _restart() -> void:
+	LevelManager.restart_level()
+
+
 func _quit() -> void:
-	# Un-pause first so the tree is in a clean state, then exit.
-	# Swap this for get_tree().change_scene_to_file(...) once a main menu exists.
-	visible = false
-	get_tree().change_scene_to_file(main_menu_path)
-	GameMode.set_state(GameMode.MainMenu)
+	LevelManager.go_to_main_menu()

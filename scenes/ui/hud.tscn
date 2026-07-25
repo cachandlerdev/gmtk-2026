@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cgoesllp5258s"]
 
 [ext_resource type="PackedScene" uid="uid://cxtogyr5g2y5r" path="res://scenes/ui/visibility_indicator.tscn" id="1_0mwgc"]
+[ext_resource type="PackedScene" uid="uid://dgso6ricq5r3w" path="res://scenes/ui/objective_tracker.tscn" id="2_hqnrr"]
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=311716904]
 
@@ -11,6 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD" unique_id=2122156064]
 layout_mode = 1
@@ -22,7 +24,19 @@ offset_right = 20.0
 offset_bottom = 40.0
 grow_horizontal = 2
 alignment = 1
+mouse_filter = 2
 
 [node name="VisibilityIndicator" parent="HUD/HBoxContainer" unique_id=1603064747 instance=ExtResource("1_0mwgc")]
-position = Vector2(0, 50)
+position = Vector2(0, 65)
 scale = Vector2(2, 2)
+
+[node name="ObjectiveTracker" parent="HUD" unique_id=1212483230 instance=ExtResource("2_hqnrr")]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -169.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = 85.0
+grow_horizontal = 0

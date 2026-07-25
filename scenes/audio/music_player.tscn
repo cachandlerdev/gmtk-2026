@@ -2,16 +2,16 @@
 
 [ext_resource type="AudioStream" uid="uid://c263d74equkfs" path="res://assets/music/stealth1_gmtk2026.mp3" id="1_75yjh"]
 [ext_resource type="AudioStream" uid="uid://d4mr58pj7eff4" path="res://assets/music/gmtk2026_battle1_layer1.mp3" id="2_cktme"]
+[ext_resource type="AudioStream" uid="uid://dq3ku7lufi5d8" path="res://assets/sounds/gmtk2026_filler.mp3" id="3_6q31x"]
 [ext_resource type="AudioStream" uid="uid://b1mhxi00x6lt8" path="res://assets/music/gmtk2026_battle1_layer2.mp3" id="3_cktme"]
 [ext_resource type="AudioStream" uid="uid://c0as6c08axs4m" path="res://assets/sounds/gmtk2026_battle1_victory.wav" id="4_t58dm"]
 [ext_resource type="AudioStream" uid="uid://df1cnbptdpsp1" path="res://assets/sounds/gmtk2026_battle1_defeat.wav" id="5_63kkf"]
-
-[sub_resource type="AudioStream" id="AudioStream_t58dm"]
-
-[sub_resource type="AudioStream" id="AudioStream_6q6g4"]
+[ext_resource type="AudioStream" uid="uid://8s4h33h7ka3x" path="res://assets/music/gmtk2026_escape.mp3" id="6_vplls"]
+[ext_resource type="AudioStream" uid="uid://cecycjgqkl3ui" path="res://assets/music/gmtk2026_stealth2.mp3" id="7_6q6g4"]
+[ext_resource type="AudioStream" uid="uid://c1r8wax7ije4h" path="res://assets/sounds/gmtk2026_escape_start.mp3" id="9_w18am"]
 
 [sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_uo026"]
-clip_count = 9
+clip_count = 11
 clip_0/name = &"main_menu"
 clip_0/stream = ExtResource("1_75yjh")
 clip_0/auto_advance = 0
@@ -28,18 +28,36 @@ clip_4/name = &"defeat"
 clip_4/stream = ExtResource("5_63kkf")
 clip_4/auto_advance = 0
 clip_5/name = &"escape"
-clip_5/stream = SubResource("AudioStream_t58dm")
+clip_5/stream = ExtResource("6_vplls")
 clip_5/auto_advance = 0
 clip_6/name = &"exploration"
+clip_6/stream = ExtResource("7_6q6g4")
 clip_6/auto_advance = 0
 clip_7/name = &"stealth"
-clip_7/stream = ExtResource("1_75yjh")
+clip_7/stream = ExtResource("7_6q6g4")
 clip_7/auto_advance = 0
 clip_8/name = &"alarm_raised"
-clip_8/stream = SubResource("AudioStream_6q6g4")
+clip_8/stream = ExtResource("6_vplls")
 clip_8/auto_advance = 0
-initial_clip = 7
+clip_9/name = &"escape_start"
+clip_9/stream = ExtResource("9_w18am")
+clip_9/auto_advance = 0
+clip_10/name = &"stealth_filler"
+clip_10/stream = ExtResource("3_6q31x")
+clip_10/auto_advance = 0
 _transitions = {
+Vector2i(-1, 0): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 1,
+"to_time": 1
+},
+Vector2i(-1, 2): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 1,
+"to_time": 0
+},
 Vector2i(-1, 3): {
 "fade_beats": 1.0,
 "fade_mode": 4,
@@ -52,11 +70,37 @@ Vector2i(-1, 4): {
 "from_time": 0,
 "to_time": 1
 },
-Vector2i(0, 2): {
+Vector2i(-1, 5): {
 "fade_beats": 1.0,
 "fade_mode": 4,
-"from_time": 2,
-"to_time": 1
+"filler_clip": 9,
+"from_time": 1,
+"to_time": 1,
+"use_filler_clip": true
+},
+Vector2i(-1, 7): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"filler_clip": 10,
+"from_time": 1,
+"to_time": 0,
+"use_filler_clip": true
+},
+Vector2i(-1, 8): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"filler_clip": 9,
+"from_time": 0,
+"to_time": 1,
+"use_filler_clip": true
+},
+Vector2i(0, 7): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"filler_clip": 10,
+"from_time": 0,
+"to_time": 1,
+"use_filler_clip": true
 },
 Vector2i(0, 8): {
 "fade_beats": 1.0,
@@ -64,47 +108,17 @@ Vector2i(0, 8): {
 "from_time": 2,
 "to_time": 1
 },
-Vector2i(1, 0): {
-"fade_beats": 1.0,
-"fade_mode": 4,
-"from_time": 2,
-"to_time": 0
-},
-Vector2i(2, 0): {
-"fade_beats": 1.0,
-"fade_mode": 4,
-"from_time": 2,
-"to_time": 0
-},
 Vector2i(2, 1): {
 "fade_beats": 1.0,
 "fade_mode": 4,
 "from_time": 2,
 "to_time": 0
 },
-Vector2i(7, 0): {
-"fade_beats": 1.0,
-"fade_mode": 4,
-"from_time": 2,
-"to_time": 1
-},
 Vector2i(7, 1): {
 "fade_beats": 1.0,
 "fade_mode": 4,
 "from_time": 2,
 "to_time": 0
-},
-Vector2i(7, 2): {
-"fade_beats": 1.0,
-"fade_mode": 4,
-"from_time": 2,
-"to_time": 0
-},
-Vector2i(7, 6): {
-"fade_beats": 1.0,
-"fade_mode": 4,
-"from_time": 2,
-"to_time": 1
 }
 }
 

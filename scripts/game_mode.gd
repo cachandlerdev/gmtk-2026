@@ -10,8 +10,8 @@ extends Node
 @export var victory_music_index: int = 3
 @export var defeat_music_index: int = 4
 @export var escape_music_index: int = 5
-@export var exploration_music_index: int = 6# outside, probably harp?
-@export var stealth_music_index: int = 0 # TODO switch back to 7, add new stealth music
+@export var exploration_music_index: int = 6 # outside, probably harp?
+@export var stealth_music_index: int = 7
 @export var alarm_raised_music_index: int = 8
 
 
@@ -50,18 +50,21 @@ func set_state(new_state) -> void:
 	var can_change: bool = false
 	match new_state:
 		Stealth:
-			MusicPlayer.get_stream_playback().switch_to_clip(stealth_music_index)
-			can_change = true
+			if _game_mode_state != AlarmRaised and _game_mode_state != Escape:
+				MusicPlayer.get_stream_playback().switch_to_clip(stealth_music_index)
+				can_change = true
 		Exploration:
-			MusicPlayer.get_stream_playback().switch_to_clip(exploration_music_index)
-			can_change = true
+			if _game_mode_state != AlarmRaised and _game_mode_state != Escape:
+				MusicPlayer.get_stream_playback().switch_to_clip(stealth_music_index)
+				MusicPlayer.get_stream_playback().switch_to_clip(exploration_music_index)
+				can_change = true
 		Battle:
-			if not player._is_dead:
+			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
 				print("TODO: Battle stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(battle_music_index)
 				can_change = true
 		NearDeath:
-			if not player._is_dead:
+			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
 				print("TODO: Near Death stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(near_death_music_index)
 				can_change = true
@@ -71,7 +74,9 @@ func set_state(new_state) -> void:
 				MusicPlayer.get_stream_playback().switch_to_clip(alarm_raised_music_index)
 				can_change = true
 		Escape:
-			if not player._is_dead:
+			# We don't check AlarmRaised here so that if the count is killed 
+			# after the alarm is raised, it updates to say that the count is dead.
+			if not player._is_dead and _game_mode_state != Escape:
 				print("TODO: Escape stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(escape_music_index)
 				can_change = true

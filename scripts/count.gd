@@ -10,7 +10,14 @@ extends EnemyBase
 signal defeated
 
 
+## Register as the level's objective so level.gd can find us and wire `defeated`
+## to level completion.
+func _ready_enemy() -> void:
+	add_to_group("objective")
+
+
 func _on_death() -> void:
 	# Keep the base's alert/GameMode cleanup, then announce the kill.
 	super._on_death()
 	defeated.emit()
+	GameMode.set_state(GameMode.Escape)

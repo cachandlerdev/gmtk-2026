@@ -27,6 +27,9 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var move_left_action: StringName = &"move_left"
 @export var move_right_action: StringName = &"move_right"
 
+@export_group("Camera")
+@export var BOW_RELEASE_SCREEN_SHAKE: float = 0.15
+
 ## 1 = facing right, -1 = facing left. Set by the host when auto_facing is off.
 var facing: int = 1
 
@@ -136,6 +139,10 @@ func _fire() -> void:
 	arrow.velocity = dir * arrow_speed
 	if arrow.has_method("apply_type"):
 		arrow.apply_type(fired_type, ratio)
+	
+	if is_player:
+		var player = get_tree().get_first_node_in_group("player")
+		player.add_screen_shake(BOW_RELEASE_SCREEN_SHAKE)
 
 	arrow_fired.emit(arrow, ratio)
 	# Fire cooldown

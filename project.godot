@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="GMTK2026"
-run/main_scene="uid://dvq7uq48qs07d"
+run/main_scene="uid://uq3pdfkdw76i"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -26,6 +26,8 @@ MusicPlayer="*uid://bfn2vubl544g"
 GameMode="*uid://b06epmfr0ogfd"
 Hud="*uid://cgoesllp5258s"
 DeathMenu="*uid://b0dvrifn7dd6h"
+LevelManager="*res://scripts/level_manager.gd"
+LevelCompleteMenu="*res://scenes/ui/level_complete_menu.tscn"
 BeehaveGlobalMetrics="*uid://c3ktl6ontsdt7"
 BeehaveGlobalDebugger="*uid://bl3ma400hpvsh"
 
