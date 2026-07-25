@@ -3,32 +3,28 @@
 [ext_resource type="Script" uid="uid://p5ogpg8fo875" path="res://scripts/enemy_base.gd" id="1_enemy"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
 [ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
+[ext_resource type="SpriteFrames" uid="uid://bptrolframes01" path="res://assets/sprites/patrol_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
-size = Vector2(36, 44)
+size = Vector2(18, 30)
 
 [sub_resource type="RectangleShape2D" id="Shape_hit"]
-size = Vector2(40, 48)
+size = Vector2(22, 32)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=245799776]
 collision_layer = 16
 collision_mask = 17
 script = ExtResource("1_enemy")
+attack_windup = 0.5
 
-[node name="Visual" type="Node2D" parent="." unique_id=307105698]
-
-[node name="Body" type="Polygon2D" parent="Visual" unique_id=800521712]
-color = Color(0.45, 0.18, 0.5, 1)
-polygon = PackedVector2Array(-18, 22, 18, 22, 18, -12, 8, -22, -8, -22, -18, -12)
-
-[node name="Eye" type="Polygon2D" parent="Visual" unique_id=402540187]
-polygon = PackedVector2Array(4, -14, 14, -14, 14, -4, 4, -4)
-
-[node name="Pupil" type="Polygon2D" parent="Visual" unique_id=1936481640]
-color = Color(0.05, 0.05, 0.05, 1)
-polygon = PackedVector2Array(9, -12, 13, -12, 13, -6, 9, -6)
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=307105698]
+position = Vector2(0, 6)
+sprite_frames = ExtResource("4_frames")
+animation = &"idle"
+autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498682953]
+position = Vector2(0, 7)
 shape = SubResource("Shape_body")
 
 [node name="LedgeRay" type="RayCast2D" parent="." unique_id=1815644042]
@@ -41,6 +37,7 @@ collision_mask = 7
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1027005596]
+position = Vector2(0, 6)
 shape = SubResource("Shape_hit")
 
 [node name="VisionCone" parent="." unique_id=874998519 instance=ExtResource("2_vision")]
