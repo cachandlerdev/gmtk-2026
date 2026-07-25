@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3pysvxnkqcs2"]
+[gd_scene load_steps=8 format=3 uid="uid://b3pysvxnkqcs2"]
 
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_lvl"]
 [ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="2_player"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
 [ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="5_count"]
 [ext_resource type="PackedScene" uid="uid://cshieldbearer0scn" path="res://scenes/assets/shieldbearer.tscn" id="6_shield"]
+[ext_resource type="PackedScene" uid="uid://bf434gvd0age" path="res://scenes/assets/exit.tscn" id="7_exit"]
 
 [node name="Level1Courtyard" type="Node2D"]
 script = ExtResource("1_lvl")
@@ -33,3 +34,6 @@ position = Vector2(1050, 100)
 
 [node name="Count" parent="." instance=ExtResource("5_count")]
 position = Vector2(1400, 100)
+
+[node name="Exit" parent="." instance=ExtResource("7_exit")]
+position = Vector2(1700, 101)
