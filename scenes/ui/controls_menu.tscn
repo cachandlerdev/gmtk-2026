@@ -1,50 +1,50 @@
 [gd_scene format=3 uid="uid://bvy0g6cjjkr14"]
 
-[ext_resource type="Script" path="res://scenes/ui/controls_menu.gd" id="1_controls"]
+[ext_resource type="Script" uid="uid://bpk4ormq84xln" path="res://scenes/ui/controls_menu.gd" id="1_controls"]
 
-[node name="ControlsMenu" type="CanvasLayer"]
-layer = 110
+[node name="ControlsMenu" type="CanvasLayer" unique_id=1142031336]
 process_mode = 3
+layer = 110
 script = ExtResource("1_controls")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=103079106]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.6)
+color = Color(0, 0, 0, 1)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=1833486213]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Menu" type="VBoxContainer" parent="Center"]
+[node name="Menu" type="VBoxContainer" parent="Center" unique_id=329750261]
 custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="Center/Menu"]
+[node name="Title" type="Label" parent="Center/Menu" unique_id=469324637]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 48
 text = "Controls"
 horizontal_alignment = 1
 
-[node name="Header" type="HBoxContainer" parent="Center/Menu"]
+[node name="Header" type="HBoxContainer" parent="Center/Menu" unique_id=1526268302]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Header"]
+[node name="Action" type="Label" parent="Center/Menu/Header" unique_id=575427630]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Action"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Header"]
+[node name="Kbm" type="Label" parent="Center/Menu/Header" unique_id=1313160521]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -52,7 +52,7 @@ theme_override_font_sizes/font_size = 18
 text = "Keyboard / Mouse"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Header"]
+[node name="Controller" type="Label" parent="Center/Menu/Header" unique_id=262654304]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -60,214 +60,214 @@ theme_override_font_sizes/font_size = 18
 text = "Controller"
 horizontal_alignment = 1
 
-[node name="Move" type="HBoxContainer" parent="Center/Menu"]
+[node name="Move" type="HBoxContainer" parent="Center/Menu" unique_id=1740682532]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Move"]
+[node name="Action" type="Label" parent="Center/Menu/Move" unique_id=765678503]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Move"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Move"]
+[node name="Kbm" type="Label" parent="Center/Menu/Move" unique_id=718967765]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "A / D"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Move"]
+[node name="Controller" type="Label" parent="Center/Menu/Move" unique_id=2145050937]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Stick / D-Pad"
 horizontal_alignment = 1
 
-[node name="Jump" type="HBoxContainer" parent="Center/Menu"]
+[node name="Jump" type="HBoxContainer" parent="Center/Menu" unique_id=844127199]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Jump"]
+[node name="Action" type="Label" parent="Center/Menu/Jump" unique_id=1724381907]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Jump"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Jump"]
+[node name="Kbm" type="Label" parent="Center/Menu/Jump" unique_id=1771460838]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Space"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Jump"]
+[node name="Controller" type="Label" parent="Center/Menu/Jump" unique_id=1154736882]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "A"
 horizontal_alignment = 1
 
-[node name="Dash" type="HBoxContainer" parent="Center/Menu"]
+[node name="Dash" type="HBoxContainer" parent="Center/Menu" unique_id=716127636]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Dash"]
+[node name="Action" type="Label" parent="Center/Menu/Dash" unique_id=995450829]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Dash"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Dash"]
+[node name="Kbm" type="Label" parent="Center/Menu/Dash" unique_id=290470280]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Shift"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Dash"]
+[node name="Controller" type="Label" parent="Center/Menu/Dash" unique_id=1834285346]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "B / LB"
 horizontal_alignment = 1
 
-[node name="Melee" type="HBoxContainer" parent="Center/Menu"]
+[node name="Melee" type="HBoxContainer" parent="Center/Menu" unique_id=1704920348]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Melee"]
+[node name="Action" type="Label" parent="Center/Menu/Melee" unique_id=699294160]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Melee"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Melee"]
+[node name="Kbm" type="Label" parent="Center/Menu/Melee" unique_id=530592252]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Left Click"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Melee"]
+[node name="Controller" type="Label" parent="Center/Menu/Melee" unique_id=159319214]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "X"
 horizontal_alignment = 1
 
-[node name="AimShoot" type="HBoxContainer" parent="Center/Menu"]
+[node name="AimShoot" type="HBoxContainer" parent="Center/Menu" unique_id=344332732]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/AimShoot"]
+[node name="Action" type="Label" parent="Center/Menu/AimShoot" unique_id=606449375]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Aim / Shoot"
 
-[node name="Kbm" type="Label" parent="Center/Menu/AimShoot"]
+[node name="Kbm" type="Label" parent="Center/Menu/AimShoot" unique_id=807451212]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Click"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/AimShoot"]
+[node name="Controller" type="Label" parent="Center/Menu/AimShoot" unique_id=815861106]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "RT / RB"
 horizontal_alignment = 1
 
-[node name="AimDir" type="HBoxContainer" parent="Center/Menu"]
+[node name="AimDir" type="HBoxContainer" parent="Center/Menu" unique_id=422309125]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/AimDir"]
+[node name="Action" type="Label" parent="Center/Menu/AimDir" unique_id=1633448016]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Aim Direction"
 
-[node name="Kbm" type="Label" parent="Center/Menu/AimDir"]
+[node name="Kbm" type="Label" parent="Center/Menu/AimDir" unique_id=267120871]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Mouse / W·S"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/AimDir"]
+[node name="Controller" type="Label" parent="Center/Menu/AimDir" unique_id=1278950174]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Right Stick"
 horizontal_alignment = 1
 
-[node name="Interact" type="HBoxContainer" parent="Center/Menu"]
+[node name="Interact" type="HBoxContainer" parent="Center/Menu" unique_id=1966666333]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Interact"]
+[node name="Action" type="Label" parent="Center/Menu/Interact" unique_id=1772890719]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Interact"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Interact"]
+[node name="Kbm" type="Label" parent="Center/Menu/Interact" unique_id=232241689]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "E"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Interact"]
+[node name="Controller" type="Label" parent="Center/Menu/Interact" unique_id=834977667]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Y"
 horizontal_alignment = 1
 
-[node name="CycleArrows" type="HBoxContainer" parent="Center/Menu"]
+[node name="CycleArrows" type="HBoxContainer" parent="Center/Menu" unique_id=379613470]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/CycleArrows"]
+[node name="Action" type="Label" parent="Center/Menu/CycleArrows" unique_id=1691109433]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Cycle Arrows"
 
-[node name="Kbm" type="Label" parent="Center/Menu/CycleArrows"]
+[node name="Kbm" type="Label" parent="Center/Menu/CycleArrows" unique_id=1632270251]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Q / Scroll Wheel"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/CycleArrows"]
+[node name="Controller" type="Label" parent="Center/Menu/CycleArrows" unique_id=1452188086]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "D-Pad Up / Down"
 horizontal_alignment = 1
 
-[node name="Pause" type="HBoxContainer" parent="Center/Menu"]
+[node name="Pause" type="HBoxContainer" parent="Center/Menu" unique_id=1286807213]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Action" type="Label" parent="Center/Menu/Pause"]
+[node name="Action" type="Label" parent="Center/Menu/Pause" unique_id=283754832]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Pause"
 
-[node name="Kbm" type="Label" parent="Center/Menu/Pause"]
+[node name="Kbm" type="Label" parent="Center/Menu/Pause" unique_id=1791025728]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Esc"
 horizontal_alignment = 1
 
-[node name="Controller" type="Label" parent="Center/Menu/Pause"]
+[node name="Controller" type="Label" parent="Center/Menu/Pause" unique_id=681738375]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Start"
 horizontal_alignment = 1
 
-[node name="BackButton" type="Button" parent="Center/Menu"]
+[node name="BackButton" type="Button" parent="Center/Menu" unique_id=836768689]
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 size_flags_horizontal = 4
