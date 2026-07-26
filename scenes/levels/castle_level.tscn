@@ -73,30 +73,30 @@ sources/0 = SubResource("TileSetAtlasSource_3ec2h")
 scale = Vector2(0.75, 0.75)
 
 [node name="ProjectileThrower" parent="Projectile Throwers" unique_id=1721818677 instance=ExtResource("6_1c5et")]
-position = Vector2(942, 784)
+position = Vector2(942.6667, 781.3333)
 
 [node name="ProjectileThrower2" parent="Projectile Throwers" unique_id=1606789149 instance=ExtResource("6_1c5et")]
-position = Vector2(1249, 883)
-rotation = -3.1415925
+position = Vector2(1249.3334, 909.3334)
+scale = Vector2(-1, 1)
 
 [node name="ProjectileThrower3" parent="Projectile Throwers" unique_id=826525296 instance=ExtResource("6_1c5et")]
 position = Vector2(910, 1039)
 
 [node name="ProjectileThrower4" parent="Projectile Throwers" unique_id=186072203 instance=ExtResource("6_1c5et")]
-position = Vector2(1233, 628)
-rotation = -3.1415925
+position = Vector2(1233.3334, 652)
+scale = Vector2(-1, 1)
 
 [node name="ProjectileThrower5" parent="Projectile Throwers" unique_id=528117845 instance=ExtResource("6_1c5et")]
-position = Vector2(3932, -205)
-rotation = -3.1415925
+position = Vector2(3940, -178.66667)
+scale = Vector2(-1, 1)
 
 [node name="ProjectileThrower6" parent="Projectile Throwers" unique_id=1703370322 instance=ExtResource("6_1c5et")]
-position = Vector2(3473, -1836)
-rotation = -3.1415925
+position = Vector2(3461.3333, -1810.6667)
+scale = Vector2(-1, 1)
 
 [node name="ProjectileThrower7" parent="Projectile Throwers" unique_id=1241620321 instance=ExtResource("6_1c5et")]
-position = Vector2(4320, -1725)
-rotation = -3.1415925
+position = Vector2(4321.3335, -1698.6667)
+scale = Vector2(-1, 1)
 
 [node name="ProjectileThrower8" parent="Projectile Throwers" unique_id=934226697 instance=ExtResource("6_1c5et")]
 position = Vector2(2941, -719)
