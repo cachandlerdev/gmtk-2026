@@ -9,13 +9,15 @@ extends Toggleable
 
 @onready var _timer: Timer = $FireTimer
 @onready var _muzzle: Marker2D = $Muzzle
-@onready var _visual: Polygon2D = $Body/Visual
+@onready var _visual: CanvasItem = $Body/Visual
+@onready var _body: StaticBody2D = $Body
 
 
 func _ready() -> void:
 	add_to_group("projectile_thrower")
+	_body.add_to_group("projectile_thrower")
 	if projectile_scene == null:
-		projectile_scene = preload("res://scenes/assets/projectile.tscn")
+		projectile_scene = preload("res://scenes/assets/enemy_arrow.tscn")
 	_timer.wait_time = fire_interval
 	super._ready()
 
