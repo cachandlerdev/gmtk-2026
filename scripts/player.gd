@@ -44,9 +44,9 @@ signal key_count_changed(count: int)
 
 
 @export_group("Arrows")
-@export var starting_basic_arrows: int = 5
-@export var starting_piercing_arrows: int = 3
-@export var starting_bouncing_arrows: int = 3
+@export var starting_basic_arrows: int = 3
+@export var starting_piercing_arrows: int = 0
+@export var starting_bouncing_arrows: int = 0
 
 # credit to https://kidscancode.org/godot_recipes/4.x/2d/screen_shake/index.html
 @export_group("Screen Shake")
@@ -326,6 +326,17 @@ func get_max_hearts() -> int:
 	return MAX_HEARTS
 
 
+## Restore hearts up to the max. Returns true if any heart was gained.
+func try_heal(amount: int = 1) -> bool:
+	if _is_dead or amount <= 0 or _hearts >= MAX_HEARTS:
+		return false
+	_hearts = mini(_hearts + amount, MAX_HEARTS)
+	health_changed.emit(_hearts, MAX_HEARTS)
+	if _hearts > LOW_HEALTH_THRESHOLD and GameMode.get_state() == GameMode.NearDeath:
+		GameMode.set_state(GameMode.Battle if not GameMode.is_hidden() else GameMode.Stealth)
+	return true
+
+
 ## Instant death (out of bounds, hazards that should kill outright, etc.).
 func die() -> void:
 	if _is_dead:
@@ -366,7 +377,7 @@ func _try_interact() -> void:
 		nearest_node.activate()
 
 
-## Pick up every lootable item in interact range (landed arrows, keys, ...).
+## Pick up every lootable item in interact range (landed arrows, keys, hearts, ...).
 func _auto_loot_items() -> void:
 	for area in interact_range.get_overlapping_areas():
 		var target := area.get_parent()

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://d2omxwyqm3idc"]
+
+[ext_resource type="Script" path="res://scripts/arrow_pickup.gd" id="1_arrow"]
+[ext_resource type="Texture2D" uid="uid://dyfkisgyv3lem" path="res://assets/sprites/arrow_16x16.png" id="2_basic"]
+[ext_resource type="Texture2D" uid="uid://cjdtor00wn3o4" path="res://assets/sprites/arrow_piercing_16x16.png" id="3_pierce"]
+[ext_resource type="Texture2D" uid="uid://b0makld8osljr" path="res://assets/sprites/arrow_bouncing_16x16.png" id="4_bounce"]
+[ext_resource type="Texture2D" uid="uid://b5j3k2txr5a42" path="res://assets/sprites/arrow_fire_16x16.png" id="5_fire"]
+[ext_resource type="Texture2D" uid="uid://bltiio0287hty" path="res://assets/sprites/arrow_ice_16x16.png" id="6_ice"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
+size = Vector2(28, 28)
+
+[node name="ArrowPickup" type="Node2D"]
+script = ExtResource("1_arrow")
+basic_texture = ExtResource("2_basic")
+piercing_texture = ExtResource("3_pierce")
+bouncing_texture = ExtResource("4_bounce")
+fire_texture = ExtResource("5_fire")
+ice_texture = ExtResource("6_ice")
+
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+centered = false
+offset = Vector2(-8, -16)
+scale = Vector2(1.333, 1.333)
+texture = ExtResource("2_basic")
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+monitorable = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+position = Vector2(0, -10.664)
+shape = SubResource("RectangleShape2D_interact")

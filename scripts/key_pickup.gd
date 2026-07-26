@@ -1,5 +1,5 @@
 class_name KeyPickup
-extends Node2D
+extends PickupBase
 ## World key the player can walk over to collect. Place in levels or drop from enemies.
 
 
