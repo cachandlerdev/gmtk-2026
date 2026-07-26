@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://d2omxwyqm3ide" path="res://scenes/assets/arrow_pickup_bouncing.tscn" id="13_ey2yj"]
 [ext_resource type="PackedScene" uid="uid://d2omxwyqm3idd" path="res://scenes/assets/arrow_pickup_piercing.tscn" id="14_2iuaq"]
 [ext_resource type="PackedScene" uid="uid://cjn4tk418xti7" path="res://scenes/assets/tutorial_checkpoint.tscn" id="15_tutcp"]
+[ext_resource type="PackedScene" uid="uid://bjclvr2cm5rl6" path="res://scenes/assets/enemy_spawner.tscn" id="18_m2g2s"]
 
 [node name="Node2D" type="Node2D" unique_id=970357188]
 script = ExtResource("1_lvl")
@@ -429,3 +430,11 @@ position = Vector2(4258, -503)
 
 [node name="Enemy4" parent="." unique_id=573459367 instance=ExtResource("7_bmrm0")]
 position = Vector2(4174, -503)
+
+[node name="EnemySpawner" parent="." unique_id=1347671679 instance=ExtResource("18_m2g2s")]
+position = Vector2(3878, -480)
+spawn_on_alarm = true
+spawn_type = 1
+spawn_cooldown = 3.0
+number_of_enemies = 8
+enemy_prototype = "uid://bpna2cn0m2djl"

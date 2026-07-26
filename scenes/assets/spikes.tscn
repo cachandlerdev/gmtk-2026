@@ -1,10 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://behe8u4nr8h0h"]
+[gd_scene format=3 uid="uid://behe8u4nr8h0h"]
 
-[ext_resource type="Script" path="res://scripts/spikes.gd" id="1_spikes"]
+[ext_resource type="Script" uid="uid://dpj77ea2amv55" path="res://scripts/spikes.gd" id="1_spikes"]
 [ext_resource type="Texture2D" uid="uid://1rxj7n7tfow2" path="res://assets/sprites/spikes_animated_16x16.png" id="2_tex"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_spikes"]
-size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="frame_0"]
 atlas = ExtResource("2_tex")
@@ -41,19 +38,19 @@ region = Rect2(112, 0, 16, 16)
 [sub_resource type="SpriteFrames" id="SpriteFrames_spikes"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 4.0,
 "texture": SubResource("frame_0")
 }, {
-"duration": 1.0,
+"duration": 4.0,
 "texture": SubResource("frame_1")
 }, {
 "duration": 1.0,
 "texture": SubResource("frame_2")
 }, {
-"duration": 1.0,
+"duration": 4.0,
 "texture": SubResource("frame_3")
 }, {
-"duration": 1.0,
+"duration": 4.0,
 "texture": SubResource("frame_4")
 }, {
 "duration": 1.0,
@@ -65,29 +62,62 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("frame_7")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("frame_0")
+}],
+"loop": 0,
+"name": &"spikes_off",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("frame_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("frame_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("frame_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("frame_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("frame_3")
+}],
+"loop": 0,
+"name": &"spikes_on",
+"speed": 5.0
 }]
 
-[node name="Spikes" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_spikes"]
+size = Vector2(16, 16)
+
+[node name="Spikes" type="Node2D" unique_id=1443574666]
 script = ExtResource("1_spikes")
 starts_activated = true
 
-[node name="Visual" type="AnimatedSprite2D" parent="."]
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1582485377]
 texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_spikes")
+animation = &"spikes_off"
 centered = false
 offset = Vector2(-8, -16)
-sprite_frames = SubResource("SpriteFrames_spikes")
-autoplay = "default"
 
-[node name="HurtArea" type="Area2D" parent="."]
+[node name="HurtArea" type="Area2D" parent="." unique_id=2017667694]
 collision_layer = 0
 collision_mask = 19
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea" unique_id=2057854637]
 position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_spikes")
 
