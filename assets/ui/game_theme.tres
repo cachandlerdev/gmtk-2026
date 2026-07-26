@@ -1,0 +1,15 @@
+[gd_resource type="Theme" format=3 uid="uid://bgamefontstheme1"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans-Variable.ttf" id="1_body"]
+[ext_resource type="FontFile" path="res://assets/fonts/Jacquard24-Regular.ttf" id="2_title"]
+
+[resource]
+default_font = ExtResource("1_body")
+default_font_size = 18
+Button/font_sizes/font_size = 22
+Button/fonts/font = ExtResource("1_body")
+Label/font_sizes/font_size = 18
+Label/fonts/font = ExtResource("1_body")
+TitleLabel/base_type = &"Label"
+TitleLabel/font_sizes/font_size = 40
+TitleLabel/fonts/font = ExtResource("2_title")
