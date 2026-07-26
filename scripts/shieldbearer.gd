@@ -8,7 +8,8 @@ extends EnemyBase
 ## (and bounced back like off a wall). Land a hit by getting behind it (dash
 ## past), ricocheting a shot in from the rear, or arcing a plunging shot over
 ## the top of the shield. A full-draw piercing arrow can punch through the
-## shield; other arrows never can.
+## shield (dealing damage), but that spends its entire pierce budget so the
+## arrow stops there. Other arrows never pierce the shield.
 
 
 ## Speed a blocked arrow keeps when it bounces off the shield.
@@ -38,9 +39,10 @@ func _can_be_hit(source: Node = null) -> bool:
 	return true
 
 
-## Only a full-draw piercing arrow may pass through; everything else stops.
-func _can_be_pierced(source: Node = null) -> bool:
-	return _is_full_draw_piercing(source)
+## Shield hits always stop the arrow. A full-draw piercing shot can still
+## damage through the front via _can_be_hit, but that exhausts all pierces.
+func _can_be_pierced(_source: Node = null) -> bool:
+	return false
 
 
 ## Bounce a blocked arrow back off the shield, with a metallic glint.
