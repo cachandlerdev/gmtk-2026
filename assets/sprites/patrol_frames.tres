@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://bptrolframes01"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://dgu8iqp8tybwu"]
 
 [ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://cl1n87ykkckiu" path="res://assets/sprites/enemy_attack.png" id="2"]
