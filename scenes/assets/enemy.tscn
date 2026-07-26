@@ -15,7 +15,7 @@ size = Vector2(22, 32)
 collision_layer = 16
 collision_mask = 17
 script = ExtResource("1_enemy")
-attack_windup = 0.5
+attack_windup = 0.4
 
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=307105698]
 position = Vector2(0, 6)

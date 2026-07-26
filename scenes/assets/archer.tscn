@@ -15,7 +15,7 @@ size = Vector2(38, 48)
 collision_layer = 16
 collision_mask = 1
 script = ExtResource("1_archer")
-attack_cooldown = 1.5
+attack_cooldown = 0.6
 projectile_scene = ExtResource("4_arrow")
 
 [node name="Visual" type="Node2D" parent="."]
@@ -54,7 +54,7 @@ monitorable = false
 shape = SubResource("Shape_hit")
 
 [node name="VisionCone" parent="." instance=ExtResource("2_vision")]
-view_distance = 340.0
+view_distance = 410.0
 
 [node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
 

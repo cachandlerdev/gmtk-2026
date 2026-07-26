@@ -28,12 +28,12 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 ## before its detection meter starts to drain.
 @export var alert_linger: float = 1.5
 ## Detection meter fill rate per second at point-blank; scales down with range.
-@export var detection_fill_rate: float = 1.6
+@export var detection_fill_rate: float = 3.0
 ## Detection meter drain rate per second while the player is out of sight.
 @export var detection_decay_rate: float = 0.7
 ## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
-@export var patrol_speed: float = 90.0
-@export var chase_speed: float = 130.0
+@export var patrol_speed: float = 115.0
+@export var chase_speed: float = 185.0
 ## Horizontal speed of the brief backward knockback applied when the enemy is hit.
 @export var knockback_speed: float = 150.0
 ## How long that knockback lasts, in seconds.
