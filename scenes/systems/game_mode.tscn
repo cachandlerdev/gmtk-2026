@@ -16,6 +16,8 @@
 [ext_resource type="AudioStream" uid="uid://b5ufm2hwapdl" path="res://assets/sounds/zapsplat_impacts_body_hit_stab_squelch_of_blood_001_90699.mp3" id="14_r11h0"]
 [ext_resource type="AudioStream" uid="uid://dx7xl3g2bwgoh" path="res://assets/sounds/gmtk2026_damage_sfx.mp3" id="15_hct7a"]
 [ext_resource type="AudioStream" uid="uid://dptkq5gehy6cu" path="res://assets/sounds/30_Jump_03.wav" id="15_r11h0"]
+[ext_resource type="AudioStream" uid="uid://dplrwrhx28x2m" path="res://assets/sounds/zapsplat_impacts_body_hit_stab_squelch_of_blood_005_90703.mp3" id="17_f13tw"]
+[ext_resource type="AudioStream" uid="uid://bq0wa3mk7jn1j" path="res://assets/sounds/enemy_death.mp3" id="18_pfubd"]
 
 [node name="GameMode" type="Node" unique_id=1467712474]
 script = ExtResource("1_7i82y")
@@ -86,4 +88,13 @@ bus = &"SFX"
 
 [node name="PlayerJump" type="AudioStreamPlayer2D" parent="SFX" unique_id=1948347897]
 stream = ExtResource("15_r11h0")
+bus = &"SFX"
+
+[node name="MeleeDamage" type="AudioStreamPlayer2D" parent="SFX" unique_id=1834307493]
+stream = ExtResource("17_f13tw")
+bus = &"SFX"
+
+[node name="EnemyDeath" type="AudioStreamPlayer2D" parent="SFX" unique_id=943374018]
+stream = ExtResource("18_pfubd")
+volume_db = 15.0
 bus = &"SFX"

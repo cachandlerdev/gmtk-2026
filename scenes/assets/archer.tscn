@@ -1,61 +1,121 @@
 [gd_scene format=3 uid="uid://capt2b3tx4va4"]
 
-[ext_resource type="Script" path="res://scripts/archer.gd" id="1_archer"]
+[ext_resource type="Script" uid="uid://c8wk47payg1kk" path="res://scripts/archer.gd" id="1_archer"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
-[ext_resource type="PackedScene" uid="uid://carcherbrain0scn" path="res://scenes/ai/archer_brain.tscn" id="3_brain"]
-[ext_resource type="PackedScene" uid="uid://cenmyarrow0proj" path="res://scenes/assets/enemy_arrow.tscn" id="4_arrow"]
+[ext_resource type="PackedScene" uid="uid://dlb8ja8hm23td" path="res://scenes/ai/archer_brain.tscn" id="3_brain"]
+[ext_resource type="PackedScene" uid="uid://djirlu3ps34p6" path="res://scenes/assets/enemy_arrow.tscn" id="4_arrow"]
+[ext_resource type="Texture2D" uid="uid://tqxtkuksrwin" path="res://assets/sprites/enemy_attack.png" id="5_betck"]
+[ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="6_khpgo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4t1d"]
+atlas = ExtResource("5_betck")
+region = Rect2(0, 64, 40, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25xqe"]
+atlas = ExtResource("5_betck")
+region = Rect2(40, 64, 40, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ljru6"]
+atlas = ExtResource("5_betck")
+region = Rect2(80, 64, 40, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3nx23"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6tf4x"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_533ti"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74s2o"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c5ll8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g4t1d")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_25xqe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ljru6")
+}],
+"loop": 0,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3nx23")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6tf4x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_533ti")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74s2o")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
-size = Vector2(34, 44)
+size = Vector2(29.305185, 50.640274)
 
 [sub_resource type="RectangleShape2D" id="Shape_hit"]
 size = Vector2(38, 48)
 
-[node name="Archer" type="CharacterBody2D"]
+[node name="Archer" type="CharacterBody2D" unique_id=1649133593]
 collision_layer = 16
-collision_mask = 1
 script = ExtResource("1_archer")
-attack_cooldown = 0.6
 projectile_scene = ExtResource("4_arrow")
+muzzle_offset = Vector2(12, 6)
+attack_cooldown = 2.0
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=7603010]
+position = Vector2(0, 6)
+sprite_frames = SubResource("SpriteFrames_c5ll8")
+animation = &"attack"
+autoplay = "idle"
 
-[node name="Body" type="Polygon2D" parent="Visual"]
-color = Color(0.24, 0.5, 0.3, 1)
-polygon = PackedVector2Array(-16, 22, 16, 22, 16, -12, 7, -22, -7, -22, -16, -12)
-
-[node name="Bow" type="Polygon2D" parent="Visual"]
-color = Color(0.55, 0.4, 0.22, 1)
-polygon = PackedVector2Array(14, -18, 18, -14, 20, 0, 18, 14, 14, 18, 16, 14, 17, 0, 16, -14)
-
-[node name="Eye" type="Polygon2D" parent="Visual"]
-color = Color(1, 1, 1, 1)
-polygon = PackedVector2Array(3, -14, 13, -14, 13, -5, 3, -5)
-
-[node name="Pupil" type="Polygon2D" parent="Visual"]
-color = Color(0.05, 0.05, 0.05, 1)
-polygon = PackedVector2Array(8, -12, 12, -12, 12, -7, 8, -7)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=599658116]
+position = Vector2(-1.0000001, 7.0292673)
+scale = Vector2(0.6142258, 0.59356976)
 shape = SubResource("Shape_body")
 
-[node name="LedgeRay" type="RayCast2D" parent="."]
+[node name="LedgeRay" type="RayCast2D" parent="." unique_id=1220488689]
 position = Vector2(20, 0)
 target_position = Vector2(0, 34)
-collision_mask = 1
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=401150351]
 collision_layer = 0
 collision_mask = 7
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=152891937]
 shape = SubResource("Shape_hit")
 
-[node name="VisionCone" parent="." instance=ExtResource("2_vision")]
+[node name="VisionCone" parent="." unique_id=659367984 instance=ExtResource("2_vision")]
 view_distance = 410.0
 
-[node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
+[node name="BeehaveTree" parent="." unique_id=669277539 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
+enabled = false
+blackboard = NodePath("@Node@159449")
+actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

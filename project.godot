@@ -28,9 +28,9 @@ Hud="*uid://cgoesllp5258s"
 DeathMenu="*uid://b0dvrifn7dd6h"
 LevelManager="*res://scripts/level_manager.gd"
 LevelCompleteMenu="*res://scenes/ui/level_complete_menu.tscn"
-MessageFeed="*res://scenes/ui/message_feed.tscn"
 BeehaveGlobalMetrics="*uid://c3ktl6ontsdt7"
 BeehaveGlobalDebugger="*uid://bl3ma400hpvsh"
+MessageFeed="*res://scenes/ui/message_feed.tscn"
 
 [display]
 
@@ -41,13 +41,13 @@ window/stretch/aspect="expand"
 
 project/assembly_name="GMTK2026"
 
-[gui]
-
-theme/custom="res://assets/ui/game_theme.tres"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/beehave/plugin.cfg")
+
+[gui]
+
+theme/custom="res://assets/ui/game_theme.tres"
 
 [input]
 

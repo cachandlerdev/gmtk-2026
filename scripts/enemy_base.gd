@@ -189,9 +189,13 @@ func take_hit(source: Node = null, damage: int = 1) -> void:
 		return
 	cancel_attack()          # a hit staggers the enemy, cancelling any wind-up
 	_apply_knockback(source)
+	var player = get_tree().get_first_node_in_group("player")
 	_health -= damage
+	player.add_screen_shake(0.15)
+	GameMode.play_sound("melee_damage", global_position)
 	_flash()
 	if _health <= 0:
+		GameMode.play_sound("enemy_death", global_position)
 		die()
 
 

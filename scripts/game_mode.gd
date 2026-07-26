@@ -30,6 +30,8 @@ extends Node
 @onready var player_takes_damage = $SFX/PlayerTakesDamage
 @onready var player_takes_damage_music = $SFX/PlayerTakesDamageMusic
 @onready var player_jump = $SFX/PlayerJump
+@onready var melee_damage = $SFX/MeleeDamage
+@onready var enemy_death = $SFX/EnemyDeath
 
 
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}
