@@ -17,6 +17,10 @@ func _on_start_game_pressed() -> void:
 	LevelManager.start_game()
 
 
+func _on_levels_pressed() -> void:
+	LevelSelectMenu.open()
+
+
 func _on_controls_pressed() -> void:
 	ControlsMenu.open(false)
 

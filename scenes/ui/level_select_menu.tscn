@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://b0c74ka8fdmws"]
+
+[ext_resource type="Script" path="res://scenes/ui/level_select_menu.gd" id="1_level_select"]
+
+[node name="LevelSelectMenu" type="CanvasLayer"]
+layer = 110
+process_mode = 3
+script = ExtResource("1_level_select")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
+text = "Levels"
+horizontal_alignment = 1
+
+[node name="LevelList" type="VBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BackButton" type="Button" parent="Center/Menu"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back"
