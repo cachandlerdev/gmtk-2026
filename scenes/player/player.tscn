@@ -253,7 +253,7 @@ radius = 30.265491
 
 [node name="Player" type="CharacterBody2D" unique_id=1441560064]
 z_index = 5
-collision_mask = 65
+collision_mask = 97
 script = ExtResource("1_8afob")
 DIVE_MELEE_DAMAGE = 2
 DIVE_COOLDOWN = 0.2
@@ -343,6 +343,7 @@ one_shot = true
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
 target_position = Vector2(15, 0)
+collision_mask = 1
 
 [node name="RightEnemyRayCast" type="RayCast2D" parent="." unique_id=2067216317]
 position = Vector2(0, -13)
@@ -353,6 +354,7 @@ collide_with_areas = true
 [node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
 target_position = Vector2(-15, 0)
+collision_mask = 1
 
 [node name="LeftEnemyRayCast" type="RayCast2D" parent="." unique_id=972659502]
 position = Vector2(0, -13)
