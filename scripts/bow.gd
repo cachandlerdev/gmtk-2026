@@ -18,8 +18,13 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var aim_speed: float = 2.5          ## radians per second
 @export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
+## Pull the spawn back from a wall/door so the arrow collider starts outside it.
+@export var spawn_clearance: float = 12.0
 @export var COOLDOWN_TIME: float = 0.33
 @export var aim_deadzone: float = 0.25      ## stick deflection required to aim / face
+
+## World physics layer — walls, doors, tilemaps.
+const WORLD_COLLISION_MASK := 1
 
 @export_group("Input Actions")
 @export var shoot_action: StringName = &"shoot"
@@ -173,21 +178,51 @@ func _fire() -> void:
 
 	var arrow := arrow_scene.instantiate()
 	_projectile_parent().add_child(arrow)
-	arrow.global_position = global_position + dir * spawn_offset
+	arrow.global_position = _spawn_position(dir)
 	arrow.rotation = dir.angle()
 	arrow.velocity = dir * arrow_speed
+	# Player shares the world physics layer; don't let the shot bounce off the firer.
+	var firer := get_parent()
+	if firer is PhysicsBody2D and arrow is PhysicsBody2D:
+		arrow.add_collision_exception_with(firer)
 	if arrow.has_method("apply_type"):
 		arrow.apply_type(fired_type, ratio)
 	
 	if is_player:
 		var player = get_tree().get_first_node_in_group("player")
 		player.add_screen_shake(BOW_RELEASE_SCREEN_SHAKE)
+	
+	GameMode.play_sound("bow_release", global_position)
 
 	arrow_fired.emit(arrow, ratio)
 	# Fire cooldown
 	_can_shoot = false
 	await get_tree().create_timer(COOLDOWN_TIME).timeout
 	_can_shoot = true
+
+
+## Spawn ahead of the bow, but never past world geometry (walls / closed doors).
+## Spawning inside a collider lets move_and_collide tunnel through it.
+func _spawn_position(dir: Vector2) -> Vector2:
+	var from := global_position
+	var desired := from + dir * spawn_offset
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return desired
+
+	var query := PhysicsRayQueryParameters2D.create(from, desired)
+	query.collision_mask = WORLD_COLLISION_MASK
+	# Bow sits inside the firer's collider (player is on the world layer).
+	var firer := get_parent()
+	if firer is CollisionObject2D:
+		query.exclude = [firer.get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return desired
+
+	var safe_dist := maxf(0.0, from.distance_to(hit.position) - spawn_clearance)
+	return from + dir * safe_dist
+
 
 func _projectile_parent() -> Node:
 	var scene := get_tree().current_scene
@@ -198,7 +233,51 @@ func _draw() -> void:
 		return
 	var dir := _aim_direction()
 	var ratio := _charge / max_charge_time
-	var length := lerpf(34.0, 96.0, ratio)
+	#var length := lerpf(34.0, 96.0, ratio)
+	var length := lerpf(10.0, 30.0, ratio)
 	var col := Color(1.0, 1.0, 1.0, 0.85).lerp(Color(1.0, 0.55, 0.2, 0.95), ratio)
-	draw_line(Vector2.ZERO, dir * length, col, 3.0)
-	draw_circle(dir * length, 4.0, col)
+	#draw_line(Vector2.ZERO, dir * length, col, 3.0)
+	#draw_circle(dir * length, 4.0, col)
+	#draw_circle(dir * length, 4.0, col)
+	var size: float = 10
+
+	# This was going to be a cool aim feature but I couldn't get it to work and 
+	# we have bigger issues
+	#    x
+	#        x
+	#    x
+	var points_list = []
+	if facing >= 0:
+		points_list = [Vector2(dir.x * length - (size/2), dir.y * length + (size/2)), 
+						Vector2(dir.x * length - (size/2), dir.y * length - (size/2)), 
+						Vector2(dir.x * length + (size/2), dir.y * length)]
+	else:
+		points_list = [Vector2(dir.x * length + (size/2), dir.y * length + (size/2)), 
+						Vector2(dir.x * length + (size/2), dir.y * length - (size/2)), 
+						Vector2(dir.x * length - (size/2), dir.y * length)]
+	var rot_angle = clamp(-_aim_angle, -20, 20)
+	if facing < 0:
+		rot_angle *= -1
+	#var rot_angle = deg_to_rad(-_aim_angle)
+	var rotation_matrix = [[cos(rot_angle), -1 * sin(rot_angle)], 
+						   [sin(rot_angle), cos(rot_angle)]]
+	var transformed_points = []
+	for point in points_list:
+		# [a b] [x] = [ax + by]
+		# [c d] [y] = [cx + dy]
+		var a = rotation_matrix[0][0]
+		var b = rotation_matrix[0][1]
+		var c = rotation_matrix[1][0]
+		var d = rotation_matrix[1][1]
+		var x = point[0]
+		var y = point[1]
+		var transformed_x = a * x + b * y
+		var transformed_y = c * x + d * y
+		var transformed_point = Vector2(transformed_x, transformed_y)
+		transformed_points.append(transformed_point)
+
+	var packed_transformed_points = PackedVector2Array(transformed_points)
+	#get_parent().draw_colored_polygon(packed_transformed_points, col)
+	#draw_colored_polygon(packed_transformed_points, col)
+
+	#draw_arc(get_global_mouse_position(), 50, -PI, PI, 200, col, 10)

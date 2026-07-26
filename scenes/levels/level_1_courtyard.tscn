@@ -1,31 +1,44 @@
 [gd_scene format=3 uid="uid://b3pysvxnkqcs2"]
 
-[ext_resource type="Script" path="res://scripts/level.gd" id="1_lvl"]
+[ext_resource type="Script" uid="uid://rwandemlej0q" path="res://scripts/level.gd" id="1_lvl"]
 [ext_resource type="PackedScene" uid="uid://cbiwligtyk4rw" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://dflaegho8tscr" path="res://scenes/assets/floor.tscn" id="3_floor"]
 [ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
 [ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="5_count"]
+[ext_resource type="PackedScene" uid="uid://d0k1b4mo45a22" path="res://scenes/assets/shieldbearer.tscn" id="6_shield"]
+[ext_resource type="PackedScene" uid="uid://bf434gvd0age" path="res://scenes/assets/exit.tscn" id="7_exit"]
+[ext_resource type="PackedScene" uid="uid://capt2b3tx4va4" path="res://scenes/assets/archer.tscn" id="8_p5utp"]
 
-[node name="Level1Courtyard" type="Node2D"]
+[node name="Level1Courtyard" type="Node2D" unique_id=1507945206]
 script = ExtResource("1_lvl")
 
-[node name="Ground" parent="." instance=ExtResource("3_floor")]
+[node name="Ground" parent="." unique_id=56095205 instance=ExtResource("3_floor")]
 position = Vector2(700, 200)
 scale = Vector2(2.7, 1)
 
-[node name="WallLeft" parent="." instance=ExtResource("3_floor")]
+[node name="WallLeft" parent="." unique_id=2040948659 instance=ExtResource("3_floor")]
 position = Vector2(-380, 90)
 scale = Vector2(0.06, 2)
 
-[node name="WallRight" parent="." instance=ExtResource("3_floor")]
+[node name="WallRight" parent="." unique_id=2014501690 instance=ExtResource("3_floor")]
 position = Vector2(1780, 90)
 scale = Vector2(0.06, 2)
 
-[node name="Player" parent="." instance=ExtResource("2_player")]
+[node name="Player" parent="." unique_id=73668825 instance=ExtResource("2_player")]
 position = Vector2(0, 100)
 
-[node name="Patrol" parent="." instance=ExtResource("4_enemy")]
+[node name="Patrol" parent="." unique_id=657631246 instance=ExtResource("4_enemy")]
 position = Vector2(650, 100)
 
-[node name="Count" parent="." instance=ExtResource("5_count")]
+[node name="Shieldbearer" parent="." unique_id=124553713 instance=ExtResource("6_shield")]
+position = Vector2(1050, 100)
+
+[node name="Count" parent="." unique_id=276211569 instance=ExtResource("5_count")]
 position = Vector2(1400, 100)
+scale = Vector2(1.5, 1.5)
+
+[node name="Exit" parent="." unique_id=1786431470 instance=ExtResource("7_exit")]
+position = Vector2(1700, 101)
+
+[node name="Archer" parent="." unique_id=1649133593 instance=ExtResource("8_p5utp")]
+position = Vector2(183, 114)

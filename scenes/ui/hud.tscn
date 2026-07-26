@@ -31,12 +31,12 @@ position = Vector2(0, 65)
 scale = Vector2(2, 2)
 
 [node name="ObjectiveTracker" parent="HUD" unique_id=1212483230 instance=ExtResource("2_hqnrr")]
-layout_mode = 1
+layout_mode = 0
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -169.0
-offset_top = 50.0
-offset_right = -50.0
-offset_bottom = 85.0
+offset_left = -16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 16.0
 grow_horizontal = 0

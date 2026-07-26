@@ -41,13 +41,13 @@ func activate() -> void:
 	if is_activated:
 		return
 	if open_mode == OpenMode.SWITCH:
-		print("This door opens with a nearby switch")
+		MessageFeed.show_message("This door opens with a nearby switch.")
 		return
 	var player := get_tree().get_first_node_in_group("player")
 	if player == null or not player.has_method("try_consume_key"):
 		return
 	if not player.try_consume_key():
-		print("You need a key to open this door")
+		MessageFeed.show_message("You need a key to open this door.")
 		return
 	# Bypass the switch-only guard in set_activated.
 	_force_set_activated(true)

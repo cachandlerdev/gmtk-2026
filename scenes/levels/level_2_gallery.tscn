@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bpna2cn0m2djl" path="res://scenes/assets/enemy.tscn" id="4_enemy"]
 [ext_resource type="PackedScene" uid="uid://capt2b3tx4va4" path="res://scenes/assets/archer.tscn" id="5_archer"]
 [ext_resource type="PackedScene" uid="uid://ct5whhvkdecon" path="res://scenes/assets/count.tscn" id="6_count"]
+[ext_resource type="PackedScene" uid="uid://bf434gvd0age" path="res://scenes/assets/exit.tscn" id="7_exit"]
 
 [node name="Level2Gallery" type="Node2D"]
 script = ExtResource("1_lvl")
@@ -41,3 +42,6 @@ position = Vector2(700, 160)
 
 [node name="Count" parent="." instance=ExtResource("6_count")]
 position = Vector2(1350, 60)
+
+[node name="Exit" parent="." instance=ExtResource("7_exit")]
+position = Vector2(1700, 161)

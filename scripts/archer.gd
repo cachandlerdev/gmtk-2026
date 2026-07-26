@@ -6,9 +6,11 @@ extends EnemyBase
 
 
 @export var projectile_scene: PackedScene
-@export var projectile_speed: float = 340.0
+@export var projectile_speed: float = 420.0
 ## Muzzle position relative to the archer; x is mirrored to the facing side.
 @export var muzzle_offset: Vector2 = Vector2(12, -16)
+
+@onready var animated_sprite = $Visual
 
 
 ## Called by ShootAction each frame the archer is alerted. Holds position, faces
@@ -22,18 +24,28 @@ func shoot_step() -> void:
 	if _attack_cooldown_left > 0.0 or not can_see_player():
 		return
 	_attack_cooldown_left = attack_cooldown
+	_attacking = true
 	_on_attack()
+	await get_tree().create_timer(attack_windup).timeout
+	GameMode.play_sound("bow_draw", global_position)
 	_fire_at(player)
+
+func _on_attack() -> void:
+	super()
+	print(animated_sprite)
+	animated_sprite.play("attack")
 
 
 func _fire_at(player: Node2D) -> void:
 	if projectile_scene == null:
 		return
+	print("fire")
 	var arrow := projectile_scene.instantiate()
 	arrow.speed = projectile_speed
 	var origin := global_position + Vector2(absf(muzzle_offset.x) * facing, muzzle_offset.y)
 	# Aim at the player's body rather than their feet.
 	arrow.direction = ((player.global_position + Vector2(0, -12)) - origin).normalized()
+	GameMode.play_sound("bow_release", global_position)
 
 	# Spawn into the level and place it at the muzzle.
 	var parent := get_tree().current_scene
@@ -41,3 +53,5 @@ func _fire_at(player: Node2D) -> void:
 		parent = get_parent()
 	parent.add_child(arrow)
 	arrow.global_position = origin
+	await get_tree().create_timer(0.2).timeout
+	_attacking = false

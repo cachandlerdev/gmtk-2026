@@ -20,6 +20,7 @@ func _ready() -> void:
 
 func show_menu() -> void:
 	visible = true
+	$AnimationPlayer.play("fade_in")
 
 
 func hide_menu() -> void:

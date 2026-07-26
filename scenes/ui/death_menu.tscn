@@ -2,6 +2,67 @@
 
 [ext_resource type="Script" uid="uid://dy2qkndk86jyo" path="res://scenes/ui/death_menu.gd" id="1_mt1vs"]
 
+[sub_resource type="Animation" id="Animation_mt1vs"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Dim:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Center:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_pyvjv"]
+resource_name = "fade_in"
+length = 0.26666668
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Dim:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Center:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.26666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dsday"]
+_data = {
+&"RESET": SubResource("Animation_mt1vs"),
+&"fade_in": SubResource("Animation_pyvjv")
+}
+
 [node name="DeathMenu" type="CanvasLayer" unique_id=668839730]
 process_mode = 3
 layer = 100
@@ -13,7 +74,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.6)
+color = Color(0, 0, 0, 1)
 
 [node name="Center" type="CenterContainer" parent="." unique_id=444388904]
 anchors_preset = 15
@@ -28,6 +89,8 @@ theme_override_constants/separation = 18
 
 [node name="Title" type="Label" parent="Center/Menu" unique_id=286636442]
 layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
 text = "The Count Lives On..."
 horizontal_alignment = 1
 
@@ -40,3 +103,6 @@ text = "Restart"
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "Main Menu"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2058931021]
+libraries/ = SubResource("AnimationLibrary_dsday")

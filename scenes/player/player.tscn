@@ -19,6 +19,10 @@ region = Rect2(32, 96, 32, 32)
 atlas = ExtResource("3_p47bc")
 region = Rect2(0, 96, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvlxm"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 32, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_p47bc"]
 atlas = ExtResource("3_p47bc")
 region = Rect2(0, 0, 32, 32)
@@ -58,10 +62,6 @@ region = Rect2(64, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_5gtgg"]
 atlas = ExtResource("3_p47bc")
 region = Rect2(96, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kvlxm"]
-atlas = ExtResource("3_p47bc")
-region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_uf5tr"]
 atlas = ExtResource("3_p47bc")
@@ -131,6 +131,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_kvlxm")
+}],
+"loop": 1,
+"name": &"clinging",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_p47bc")
 }, {
 "duration": 1.0,
@@ -138,7 +146,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"dash",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -149,7 +157,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"dive_end",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -181,9 +189,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kvlxm")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_uf5tr")
 }, {
 "duration": 1.0,
@@ -191,7 +196,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"jump",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -202,7 +207,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"melee_attack",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -219,7 +224,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"run",
-"speed": 5.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -230,7 +235,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"wall_jump",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_h17s1"]
@@ -257,13 +262,14 @@ aim_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
-zoom = Vector2(2, 2)
+zoom = Vector2(1.75, 1.75)
+process_callback = 0
 position_smoothing_enabled = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=187761564]
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_viskr")
-animation = &"aim_bow_down"
+animation = &"clinging"
 autoplay = "idle"
 
 [node name="TempSprite" type="Polygon2D" parent="." unique_id=1734986798]
@@ -289,14 +295,14 @@ shape = SubResource("CapsuleShape2D_h17s1")
 [node name="Timers" type="Node" parent="." unique_id=151467907]
 
 [node name="DashDurationTimer" type="Timer" parent="Timers" unique_id=170080345]
-wait_time = 0.1
+wait_time = 0.2
 one_shot = true
 
 [node name="DashCooldownTimer" type="Timer" parent="Timers" unique_id=1481206998]
 one_shot = true
 
 [node name="MeleeDurationTimer" type="Timer" parent="Timers" unique_id=833370498]
-wait_time = 0.05
+wait_time = 0.15
 one_shot = true
 
 [node name="DiveUpdateTimer" type="Timer" parent="Timers" unique_id=1052761966]
@@ -329,15 +335,27 @@ one_shot = true
 
 [node name="ArrowsHUD" parent="." unique_id=185083823 instance=ExtResource("4_arrows")]
 
-[node name="KeysHUD" parent="." instance=ExtResource("5_keys")]
+[node name="KeysHUD" parent="." unique_id=748817123 instance=ExtResource("5_keys")]
 
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
 target_position = Vector2(15, 0)
 
+[node name="RightEnemyRayCast" type="RayCast2D" parent="." unique_id=2067216317]
+position = Vector2(0, -13)
+target_position = Vector2(15, 0)
+collision_mask = 17
+collide_with_areas = true
+
 [node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
 target_position = Vector2(-15, 0)
+
+[node name="LeftEnemyRayCast" type="RayCast2D" parent="." unique_id=972659502]
+position = Vector2(0, -13)
+target_position = Vector2(-15, 0)
+collision_mask = 17
+collide_with_areas = true
 
 [node name="RightAttackRayCast" type="RayCast2D" parent="." unique_id=659439326]
 position = Vector2(0, -13)

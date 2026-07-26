@@ -19,6 +19,9 @@ extends CharacterBody2D
 ## filling) → ALERTED (full chase). Drives the behaviour tree.
 enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 
+# Only enable this on the base class
+@export var use_base_melee_sound: bool = true
+
 @export var max_health: int = 2
 @export var gravity_factor: float = 1.0
 ## If true, merely touching the player damages them. Off by default so the
@@ -28,12 +31,12 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 ## before its detection meter starts to drain.
 @export var alert_linger: float = 1.5
 ## Detection meter fill rate per second at point-blank; scales down with range.
-@export var detection_fill_rate: float = 1.6
+@export var detection_fill_rate: float = 3.0
 ## Detection meter drain rate per second while the player is out of sight.
 @export var detection_decay_rate: float = 0.7
 ## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
-@export var patrol_speed: float = 90.0
-@export var chase_speed: float = 130.0
+@export var patrol_speed: float = 115.0
+@export var chase_speed: float = 185.0
 ## Horizontal speed of the brief backward knockback applied when the enemy is hit.
 @export var knockback_speed: float = 150.0
 ## How long that knockback lasts, in seconds.
@@ -46,10 +49,14 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export var attack_windup: float = 0.35
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
+## How long the enemy stands still recovering after a swing lands, before it
+## resumes chasing/patrolling.
+@export var attack_recovery: float = 0.35
 
 @export_group("Loot")
-## Scenes to spawn at this enemy's position on death (e.g. key pickups). Assign per-instance in the editor.
+## Scenes to spawn at this enemy's position on death (keys, hearts, arrow pickups, ...). Assign per-instance in the editor.
 @export var loot_drops: Array[PackedScene] = []
+@export var DEATH_DURATION: float = 0.5
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## Current awareness state (see the Awareness enum).
@@ -67,6 +74,11 @@ var _attack_cooldown_left: float = 0.0
 var _attacking: bool = false
 var _windup_left: float = 0.0
 var _knockback_left: float = 0.0
+## Keeps the attack animation on screen briefly through the strike (the attack
+## state itself ends the instant the blow lands).
+var _anim_lock_left: float = 0.0
+## Counts down a stand-still recovery pause after a swing lands.
+var _recover_left: float = 0.0
 
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
@@ -90,14 +102,19 @@ func _physics_process(delta: float) -> void:
 	if _knockback_left > 0.0:
 		# Staggered: skip behaviour and let the knockback velocity carry it.
 		_knockback_left -= delta
+	elif _recover_left > 0.0:
+		# Recovery pause after a swing — hold position before resuming behaviour.
+		_recover_left -= delta
+		velocity.x = 0.0
 	elif _tree != null:
 		# A BeehaveTree child drives behaviour. It is set to MANUAL so we tick it
 		# here — after perception, before move_and_slide.
 		_tree.tick()
 	else:
 		_behaviour(delta)
-	
+
 	move_and_slide()
+	_update_animation(delta)
 
 
 func _exit_tree() -> void:
@@ -137,6 +154,7 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
+	_visual.play("death")
 	if is_alerted:
 		is_alerted = false
 		GameMode.remove_watching_guard()
@@ -146,6 +164,11 @@ func _on_death() -> void:
 func die() -> void:
 	_on_death()
 	_spawn_loot()
+	set_physics_process(false)
+	$CollisionShape2D.set_deferred("disabled", true)
+	# Yeah sorry I'm not doing all of the checks and putting it in the existing 
+	# system because it's 1am and the deadline is in 9 hours
+	await get_tree().create_timer(DEATH_DURATION).timeout
 	queue_free()
 
 
@@ -172,13 +195,18 @@ func _spawn_loot() -> void:
 ## Damageable interface. `source` is the projectile/attacker; may be null.
 func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
+		GameMode.play_sound("shield_block", global_position)
 		_on_hit_blocked(source)
 		return
 	cancel_attack()          # a hit staggers the enemy, cancelling any wind-up
 	_apply_knockback(source)
+	var player = get_tree().get_first_node_in_group("player")
 	_health -= damage
+	player.add_screen_shake(0.125)
+	GameMode.play_sound("melee_damage", global_position)
 	_flash()
 	if _health <= 0:
+		GameMode.play_sound("enemy_death", global_position)
 		die()
 
 
@@ -313,7 +341,10 @@ func can_attack() -> bool:
 	if player == null:
 		return false
 	# Horizontal reach (see _strike) — the enemy pauses this far out to wind up.
-	return absf(player.global_position.x - global_position.x) <= attack_range
+	var x_diff = absf(player.global_position.x - global_position.x)
+	var y_diff = absf(player.global_position.y - global_position.y)
+	var total_diff = sqrt(x_diff * x_diff + y_diff * y_diff)
+	return total_diff <= attack_range
 
 
 ## Drive one frame of an attack: pause (stationary) for attack_windup, then land
@@ -333,6 +364,8 @@ func attack_step(delta: float) -> bool:
 		return true
 	_attacking = false
 	_attack_cooldown_left = attack_cooldown
+	_anim_lock_left = 0.2   # hold the attack animation through the strike frame
+	_recover_left = attack_recovery   # stand still briefly after the swing
 	_strike()
 	return false
 
@@ -385,6 +418,10 @@ func _on_attack_windup() -> void:
 		return
 	_visual.modulate = Color(1.7, 1.4, 0.5)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, attack_windup)
+	# hacky but don't question it :)
+	if use_base_melee_sound:
+		await get_tree().create_timer(attack_windup).timeout
+		GameMode.play_sound("enemy_sword_melee")
 
 
 ## Strike feedback hook — override for an animation. Defaults to a brief tint.
@@ -393,6 +430,31 @@ func _on_attack() -> void:
 		return
 	_visual.modulate = Color(1.6, 0.5, 0.4)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)
+
+
+## Pick the animation on the Visual when it is an AnimatedSprite2D: attack during
+## a wind-up (held briefly through the strike), walk while moving on the ground,
+## idle otherwise. Missing animations fall back to idle, so a single-frame enemy
+## (the Count) just holds its one frame.
+func _update_animation(delta: float) -> void:
+	var spr := _visual as AnimatedSprite2D
+	if spr == null or spr.sprite_frames == null:
+		return
+	_anim_lock_left = maxf(0.0, _anim_lock_left - delta)
+	var want := &"idle"
+	if _attacking or _anim_lock_left > 0.0:
+		want = &"attack"
+	elif is_on_floor() and absf(velocity.x) > 5.0:
+		want = &"walk"
+	if not spr.sprite_frames.has_animation(want):
+		want = &"idle"
+	if not spr.sprite_frames.has_animation(want):
+		return
+	# Only (re)start on a change of animation. Looping clips (walk/idle) keep
+	# playing; a one-shot attack plays through and holds its last (strike) frame
+	# rather than restarting each frame while the attack state lingers.
+	if spr.animation != want:
+		spr.play(want)
 
 
 func _align_ledge_ray() -> void:
