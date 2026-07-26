@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://bcountframes01"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bv6tiwh0jkw65"]
 
 [ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="1"]
 
@@ -8,8 +8,11 @@ region = Rect2(0, 64, 32, 32)
 
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": SubResource("c0")}],
-"loop": true,
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("c0")
+}],
+"loop": 1,
 "name": &"idle",
 "speed": 5.0
 }]
