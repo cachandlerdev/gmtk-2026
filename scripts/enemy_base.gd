@@ -195,6 +195,7 @@ func _spawn_loot() -> void:
 ## Damageable interface. `source` is the projectile/attacker; may be null.
 func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
+		GameMode.play_sound("shield_block", global_position)
 		_on_hit_blocked(source)
 		return
 	cancel_attack()          # a hit staggers the enemy, cancelling any wind-up
