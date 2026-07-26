@@ -15,6 +15,23 @@ extends Node
 @export var alarm_raised_music_index: int = 8
 
 
+@onready var melee_slash = $SFX/MeleeSlash
+@onready var shield_block = $SFX/ShieldBlock
+@onready var bow_draw = $SFX/BowDraw
+@onready var bow_release = $SFX/BowRelease
+@onready var arrow_hit = $SFX/ArrowHit
+@onready var arrow_break = $SFX/ArrowBreak
+@onready var arrow_collect = $SFX/ArrowCollect
+@onready var arrow_bounce = $SFX/ArrowBounce
+@onready var dodge = $SFX/Dodge
+@onready var arrow_hit_flesh = $SFX/ArrowHitFlesh
+@onready var dive_attack = $SFX/DiveAttack
+@onready var shing = $SFX/Shing
+@onready var player_takes_damage = $SFX/PlayerTakesDamage
+@onready var player_takes_damage_music = $SFX/PlayerTakesDamageMusic
+@onready var player_jump = $SFX/PlayerJump
+
+
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}
 var _game_mode_state := Stealth
 var _num_of_alert_guards: int = 0
@@ -123,3 +140,16 @@ func remove_watching_guard() -> void:
 	_num_of_alert_guards -= 1
 	if _num_of_alert_guards == 0 and _game_mode_state == Battle:
 		set_state(Stealth)
+
+
+## Plays a sound effect
+## Credit to https://forum.godotengine.org/t/playing-sound-fx/57980/6
+func play_sound(key, position: Vector2 = Vector2(0, 0)) -> void:
+	var sound = get(key)
+	if sound is AudioStreamPlayer2D:
+		sound.global_position = position
+		sound.play()
+	elif sound is AudioStreamPlayer:
+		sound.play()
+	else:
+		print("Sound " + key + " not found!")

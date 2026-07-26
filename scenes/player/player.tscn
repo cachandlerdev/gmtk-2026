@@ -325,9 +325,21 @@ one_shot = true
 position = Vector2(0, -13)
 target_position = Vector2(15, 0)
 
+[node name="RightEnemyRayCast" type="RayCast2D" parent="." unique_id=2067216317]
+position = Vector2(0, -13)
+target_position = Vector2(15, 0)
+collision_mask = 17
+collide_with_areas = true
+
 [node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
 target_position = Vector2(-15, 0)
+
+[node name="LeftEnemyRayCast" type="RayCast2D" parent="." unique_id=972659502]
+position = Vector2(0, -13)
+target_position = Vector2(-15, 0)
+collision_mask = 17
+collide_with_areas = true
 
 [node name="RightAttackRayCast" type="RayCast2D" parent="." unique_id=659439326]
 position = Vector2(0, -13)

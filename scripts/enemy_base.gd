@@ -93,6 +93,17 @@ func _physics_process(delta: float) -> void:
 	else:
 		_behaviour(delta)
 	
+	#var scratch_collision := KinematicCollision2D.new()
+	#var motion := velocity * delta
+	##if not test_move(transform, motion, scratch_collision):
+	##	move_and_collide(motion)
+	##else:
+	##	# Slide along whatever blocked us
+	##	move_and_collide(motion.slide(scratch_collision.get_normal()))
+	#var collision := move_and_collide(velocity * delta)
+	#if collision:
+	#	velocity = velocity.slide(collision.get_normal())
+	
 	move_and_slide()
 
 
@@ -290,7 +301,10 @@ func can_attack() -> bool:
 	if player == null:
 		return false
 	# Horizontal reach (see _strike) — the enemy pauses this far out to wind up.
-	return absf(player.global_position.x - global_position.x) <= attack_range
+	var x_diff = absf(player.global_position.x - global_position.x)
+	var y_diff = absf(player.global_position.y - global_position.y)
+	var total_diff = sqrt(x_diff * x_diff + y_diff * y_diff)
+	return total_diff <= attack_range
 
 
 ## Drive one frame of an attack: pause (stationary) for attack_windup, then land

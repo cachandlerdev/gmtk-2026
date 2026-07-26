@@ -143,6 +143,8 @@ func _fire() -> void:
 	if is_player:
 		var player = get_tree().get_first_node_in_group("player")
 		player.add_screen_shake(BOW_RELEASE_SCREEN_SHAKE)
+	
+	GameMode.play_sound("bow_release", global_position)
 
 	arrow_fired.emit(arrow, ratio)
 	# Fire cooldown

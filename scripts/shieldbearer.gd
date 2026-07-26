@@ -49,3 +49,4 @@ func _on_hit_blocked(source: Node = null) -> void:
 	if _visual != null:
 		_visual.modulate = Color(1.4, 1.4, 1.6)
 		create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.12)
+	GameMode.play_sound("shield_block", global_position)
