@@ -36,6 +36,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Start"
 
+[node name="Controls" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Controls"
+
 [node name="Settings" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
@@ -47,5 +52,6 @@ theme_override_font_sizes/font_size = 25
 text = "Quit"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Start Game" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Controls" to="." method="_on_controls_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Quit Game" to="." method="_on_quit_game_pressed"]

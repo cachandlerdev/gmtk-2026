@@ -102,10 +102,15 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var dive_collider = $DiveCollider
 
 @onready var interact_range: Area2D = $InteractRange
+@onready var interact_prompt_range: Area2D = $InteractPromptRange
 @onready var hearts_hud = $HeartsHUD
 @onready var arrows_hud = $ArrowsHUD
 @onready var keys_hud = $KeysHUD
 @onready var bow = $Bow
+
+const INTERACT_PROMPT_SCENE: PackedScene = preload("res://scenes/ui/interact_prompt.tscn")
+## Weak prompt references keyed by the interactable's stable instance ID.
+var _interact_prompts: Dictionary = {}
 
 enum {Idle, Clinging, Run, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
 
@@ -268,6 +273,7 @@ func _physics_process(delta: float) -> void:
 		cycle_arrow_prev()
 
 	_auto_loot_items()
+	_update_interact_prompts()
 	_sync_hover_aim_with_bow()
 	_update_jump_count()
 	_update_player_sprite()
@@ -361,6 +367,7 @@ func die() -> void:
 	died.emit()
 	GameMode.set_state(GameMode.Defeat)
 	collision.set_deferred("disabled", true)
+	_clear_interact_prompts()
 	set_physics_process(false)
 
 
@@ -399,6 +406,54 @@ func _auto_loot_items() -> void:
 		var target := area.get_parent()
 		if target != null and target.has_method("try_loot"):
 			target.try_loot(self)
+
+
+## Show bobbing gloves icons above levers/doors within 2x interact range.
+func _update_interact_prompts() -> void:
+	var in_range: Dictionary = {}
+	for area in interact_prompt_range.get_overlapping_areas():
+		var target := area.get_parent() as Node2D
+		if target == null or not _is_promptable(target):
+			continue
+		var shape := area.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if shape != null and shape.disabled:
+			continue
+		var target_id := target.get_instance_id()
+		in_range[target_id] = true
+		if _interact_prompts.has(target_id):
+			var prompt_ref: WeakRef = _interact_prompts[target_id]
+			var existing := prompt_ref.get_ref() as InteractPrompt
+			if existing != null:
+				existing.appear()
+				continue
+			_interact_prompts.erase(target_id)
+		var prompt: InteractPrompt = INTERACT_PROMPT_SCENE.instantiate()
+		target.add_child(prompt)
+		prompt.setup(target)
+		_interact_prompts[target_id] = weakref(prompt)
+
+	var stale: Array = []
+	for target_id in _interact_prompts.keys():
+		var prompt_ref: WeakRef = _interact_prompts[target_id]
+		var prompt := prompt_ref.get_ref() as InteractPrompt
+		if prompt == null:
+			stale.append(target_id)
+			continue
+		if not in_range.has(target_id):
+			prompt.dismiss()
+	for target_id in stale:
+		_interact_prompts.erase(target_id)
+
+func _is_promptable(target: Node) -> bool:
+	return target is Switch or target is Door
+
+
+func _clear_interact_prompts() -> void:
+	for prompt_ref: WeakRef in _interact_prompts.values():
+		var prompt := prompt_ref.get_ref() as InteractPrompt
+		if prompt != null:
+			prompt.dismiss()
+	_interact_prompts.clear()
 
 
 ## Returns true if at least one arrow of this type was added.

@@ -6,6 +6,7 @@ extends CanvasLayer
 ## you could never un-pause.
 
 @onready var resume_button: Button = $Center/Menu/ResumeButton
+@onready var controls_button: Button = $Center/Menu/ControlsButton
 @onready var settings_button: Button = $Center/Menu/SettingsButton
 @onready var quit_button: Button = $Center/Menu/QuitButton
 
@@ -16,11 +17,12 @@ var _suppress_dash_until_release: bool = false
 func _ready() -> void:
 	visible = false
 	resume_button.pressed.connect(_resume)
+	controls_button.pressed.connect(_open_controls)
 	settings_button.pressed.connect(_open_settings)
 	quit_button.pressed.connect(_quit)
 
 func _input(event: InputEvent) -> void:
-	if SettingsMenu.visible:
+	if SettingsMenu.visible or ControlsMenu.visible:
 		return
 	if event.is_action_pressed("pause"):
 		_toggle()
@@ -67,6 +69,10 @@ func _resume() -> void:
 func show_from_settings() -> void:
 	visible = true
 	resume_button.grab_focus()
+
+func _open_controls() -> void:
+	visible = false
+	ControlsMenu.open(true)
 
 func _open_settings() -> void:
 	visible = false
