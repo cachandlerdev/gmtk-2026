@@ -10,7 +10,7 @@ extends Node2D
 signal player_spotted(player: Node2D)
 signal player_lost
 
-@export var view_distance: float = 240.0
+@export var view_distance: float = 300.0
 @export var fov_degrees: float = 100.0
 ## Where the "eyes" sit, relative to this node.
 @export var eye_offset: Vector2 = Vector2(0, -16)

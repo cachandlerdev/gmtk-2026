@@ -12,7 +12,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("c0")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
 "speed": 5.0
 }]
