@@ -7,6 +7,8 @@ const MARGIN := 16.0
 @onready var _body: Label = $Margin/VBox/Body
 
 var _last_text := ""
+var _override_text := ""
+var _use_override := false
 
 
 func _ready() -> void:
@@ -15,18 +17,35 @@ func _ready() -> void:
 	grow_vertical = Control.GROW_DIRECTION_END
 
 
+func set_objective(text: String) -> void:
+	_use_override = true
+	_override_text = text
+
+
+## Resume following GameMode-derived text.
+func clear_objective() -> void:
+	_use_override = false
+	_override_text = ""
+
+
 func _process(_delta: float) -> void:
 	var next := ""
 	var show := true
-	match GameMode.get_state():
+	var state = GameMode.get_state()
+	match state:
 		GameMode.MainMenu, GameMode.Victory, GameMode.Defeat:
 			show = false
+			_use_override = false
+			_override_text = ""
 		GameMode.AlarmRaised:
 			next = "The alarm has been raised. Escape!"
 		GameMode.Escape:
 			next = "The count is down. Escape!"
 		_:
-			next = "Find the count."
+			if _use_override:
+				next = _override_text
+			else:
+				next = "Find the count."
 
 	visible = show
 	if not show:
