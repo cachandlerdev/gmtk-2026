@@ -102,6 +102,7 @@ func set_state(new_state) -> void:
 				print("Escape stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(escape_music_index)
 				can_change = true
+				MessageFeed.show_message("The count is dead. Escape!")
 		Victory:
 			print("TODO: Victory stage")
 			MusicPlayer.get_stream_playback().switch_to_clip(victory_music_index)

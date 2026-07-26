@@ -14,6 +14,17 @@ func _on_activation_changed(active: bool) -> void:
 	_visual.visible = active
 	_hurt_area.monitoring = active
 
+	var flip = true
+	while  true:
+		await get_tree().create_timer(1).timeout
+		if flip:
+			_hurt_area.monitoring = active
+			_visual.play("spikes_on")
+		else:
+			_hurt_area.monitoring = false
+			_visual.play("spikes_off")
+		flip = not flip
+
 
 func _on_hurt_area_body_entered(body: Node2D) -> void:
 	if not is_activated:
