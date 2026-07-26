@@ -18,7 +18,12 @@ signal arrow_fired(arrow: Node, charge_ratio: float)
 @export var aim_speed: float = 2.5          ## radians per second
 @export var max_aim_angle: float = 85.0     ## degrees up/down from horizontal
 @export var spawn_offset: float = 44.0      ## how far in front the arrow spawns
+## Pull the spawn back from a wall/door so the arrow collider starts outside it.
+@export var spawn_clearance: float = 12.0
 @export var COOLDOWN_TIME: float = 0.33
+
+## World physics layer — walls, doors, tilemaps.
+const WORLD_COLLISION_MASK := 1
 
 @export_group("Input Actions")
 @export var shoot_action: StringName = &"shoot"
@@ -134,9 +139,13 @@ func _fire() -> void:
 
 	var arrow := arrow_scene.instantiate()
 	_projectile_parent().add_child(arrow)
-	arrow.global_position = global_position + dir * spawn_offset
+	arrow.global_position = _spawn_position(dir)
 	arrow.rotation = dir.angle()
 	arrow.velocity = dir * arrow_speed
+	# Player shares the world physics layer; don't let the shot bounce off the firer.
+	var firer := get_parent()
+	if firer is PhysicsBody2D and arrow is PhysicsBody2D:
+		arrow.add_collision_exception_with(firer)
 	if arrow.has_method("apply_type"):
 		arrow.apply_type(fired_type, ratio)
 	
@@ -151,6 +160,30 @@ func _fire() -> void:
 	_can_shoot = false
 	await get_tree().create_timer(COOLDOWN_TIME).timeout
 	_can_shoot = true
+
+
+## Spawn ahead of the bow, but never past world geometry (walls / closed doors).
+## Spawning inside a collider lets move_and_collide tunnel through it.
+func _spawn_position(dir: Vector2) -> Vector2:
+	var from := global_position
+	var desired := from + dir * spawn_offset
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return desired
+
+	var query := PhysicsRayQueryParameters2D.create(from, desired)
+	query.collision_mask = WORLD_COLLISION_MASK
+	# Bow sits inside the firer's collider (player is on the world layer).
+	var firer := get_parent()
+	if firer is CollisionObject2D:
+		query.exclude = [firer.get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return desired
+
+	var safe_dist := maxf(0.0, from.distance_to(hit.position) - spawn_clearance)
+	return from + dir * safe_dist
+
 
 func _projectile_parent() -> Node:
 	var scene := get_tree().current_scene

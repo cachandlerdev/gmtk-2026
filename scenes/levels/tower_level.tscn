@@ -15,6 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://behe8u4nr8h0h" path="res://scenes/assets/spikes.tscn" id="11_khx8i"]
 [ext_resource type="PackedScene" uid="uid://d047j530r088n" path="res://scenes/assets/projectile_thrower.tscn" id="12_ntmx2"]
 [ext_resource type="PackedScene" uid="uid://c5afh6q0fabxh" path="res://scenes/assets/projectile.tscn" id="13_x57el"]
+[ext_resource type="PackedScene" uid="uid://cxdyos48ioqts" path="res://scenes/assets/heart_pickup.tscn" id="16_qnwhi"]
+[ext_resource type="PackedScene" uid="uid://d2omxwyqm3idd" path="res://scenes/assets/arrow_pickup_piercing.tscn" id="17_amqg8"]
+[ext_resource type="PackedScene" uid="uid://d2omxwyqm3ide" path="res://scenes/assets/arrow_pickup_bouncing.tscn" id="18_8xsff"]
 
 [node name="TowerLevel" type="Node2D" unique_id=1627907500]
 
@@ -469,3 +472,36 @@ spawn_type = 2
 spawn_cooldown = 3.0
 number_of_enemies = 6
 enemy_prototype = "uid://capt2b3tx4va4"
+
+[node name="HeartPickup" parent="." unique_id=1783640765 instance=ExtResource("16_qnwhi")]
+position = Vector2(731, -727)
+
+[node name="ArrowPickupPiercing" parent="." unique_id=1542140278 instance=ExtResource("17_amqg8")]
+position = Vector2(269, -810)
+
+[node name="ArrowPickupBouncing" parent="." unique_id=448765654 instance=ExtResource("18_8xsff")]
+position = Vector2(1227, 146)
+
+[node name="HeartPickup2" parent="." unique_id=1726145380 instance=ExtResource("16_qnwhi")]
+position = Vector2(1286, -1255)
+
+[node name="HeartPickup3" parent="." unique_id=172622858 instance=ExtResource("16_qnwhi")]
+position = Vector2(15, -1404)
+
+[node name="ArrowPickupPiercing2" parent="." unique_id=469828050 instance=ExtResource("17_amqg8")]
+position = Vector2(1031, -1511)
+
+[node name="ArrowPickupBouncing2" parent="." unique_id=297925963 instance=ExtResource("18_8xsff")]
+position = Vector2(628, -1016)
+
+[node name="ArrowPickupBouncing3" parent="." unique_id=931452968 instance=ExtResource("18_8xsff")]
+position = Vector2(880, -1515)
+
+[node name="ArrowPickupPiercing3" parent="." unique_id=1748323562 instance=ExtResource("17_amqg8")]
+position = Vector2(793, -1515)
+
+[node name="HeartPickup4" parent="." unique_id=952277641 instance=ExtResource("16_qnwhi")]
+position = Vector2(976, -1001)
+
+[node name="HeartPickup5" parent="." unique_id=354191902 instance=ExtResource("16_qnwhi")]
+position = Vector2(1115, -347)
