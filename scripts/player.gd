@@ -245,7 +245,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and _num_of_jumps > 0 and not _surface_mods.blocks_jump:
 		_is_jumping = true
 		_jump()
-	if Input.is_action_just_pressed("dash") and _can_dash:
+	if Input.is_action_just_pressed("dash") and _can_dash and not PauseMenu.should_suppress_dash():
 		animated_sprite.play("dash")
 		_anim_state = Dash
 		_dash()

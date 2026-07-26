@@ -38,6 +38,14 @@ const WORLD_COLLISION_MASK := 1
 @export_group("Camera")
 @export var BOW_RELEASE_SCREEN_SHAKE: float = 0.15
 
+@export_group("Aim Indicator")
+@export var aim_indicator_radius: float = 28.0
+@export var aim_indicator_max_arc_degrees: float = 105.0
+@export var aim_indicator_arc_width: float = 0.8
+@export var aim_indicator_triangle_size: float = 7.0
+@export var aim_indicator_color_min: Color = Color(0.65, 0.65, 0.65, 0.85)
+@export var aim_indicator_color_max: Color = Color(0.9, 0.15, 0.15, 0.9)
+
 ## 1 = facing right, -1 = facing left. Set by the host when auto_facing is off.
 var facing: int = 1
 
@@ -124,7 +132,8 @@ func _handle_bow(delta: float) -> void:
 			var x_diff: float = absf(mouse_location.x - global_position.x)
 			var y_diff: float = global_position.y - mouse_location.y
 			var target := atan2(y_diff, x_diff)
-			_aim_angle = clampf(lerp(_aim_angle, target, aim_speed * delta), -limit, limit)
+			var mouse_speed := aim_speed * Settings.mouse_sensitivity
+			_aim_angle = clampf(lerp(_aim_angle, target, mouse_speed * delta), -limit, limit)
 		elif is_player:
 			# Absolute aim from the right stick; hold last angle when stick is neutral.
 			var stick := _get_aim_stick()
@@ -132,7 +141,8 @@ func _handle_bow(delta: float) -> void:
 				if absf(stick.x) >= aim_deadzone:
 					facing = 1 if stick.x > 0.0 else -1
 				var target := atan2(stick.y, maxf(absf(stick.x), 0.001))
-				_aim_angle = clampf(lerp(_aim_angle, target, aim_speed * delta), -limit, limit)
+				var stick_speed := aim_speed * Settings.controller_aim_sensitivity
+				_aim_angle = clampf(lerp(_aim_angle, target, stick_speed * delta), -limit, limit)
 		else:
 			# Incremental aim (keyboard / non-player).
 			var aim_input := Input.get_axis(aim_down_action, aim_up_action)
@@ -229,55 +239,38 @@ func _projectile_parent() -> Node:
 	return scene if scene != null else get_tree().root
 
 func _draw() -> void:
-	if not _charging:
+	if not is_player or not _charging:
 		return
-	var dir := _aim_direction()
-	var ratio := _charge / max_charge_time
-	#var length := lerpf(34.0, 96.0, ratio)
-	var length := lerpf(10.0, 30.0, ratio)
-	var col := Color(1.0, 1.0, 1.0, 0.85).lerp(Color(1.0, 0.55, 0.2, 0.95), ratio)
-	#draw_line(Vector2.ZERO, dir * length, col, 3.0)
-	#draw_circle(dir * length, 4.0, col)
-	#draw_circle(dir * length, 4.0, col)
-	var size: float = 10
 
-	# This was going to be a cool aim feature but I couldn't get it to work and 
-	# we have bigger issues
-	#    x
-	#        x
-	#    x
-	var points_list = []
-	if facing >= 0:
-		points_list = [Vector2(dir.x * length - (size/2), dir.y * length + (size/2)), 
-						Vector2(dir.x * length - (size/2), dir.y * length - (size/2)), 
-						Vector2(dir.x * length + (size/2), dir.y * length)]
-	else:
-		points_list = [Vector2(dir.x * length + (size/2), dir.y * length + (size/2)), 
-						Vector2(dir.x * length + (size/2), dir.y * length - (size/2)), 
-						Vector2(dir.x * length - (size/2), dir.y * length)]
-	var rot_angle = clamp(-_aim_angle, -20, 20)
-	if facing < 0:
-		rot_angle *= -1
-	#var rot_angle = deg_to_rad(-_aim_angle)
-	var rotation_matrix = [[cos(rot_angle), -1 * sin(rot_angle)], 
-						   [sin(rot_angle), cos(rot_angle)]]
-	var transformed_points = []
-	for point in points_list:
-		# [a b] [x] = [ax + by]
-		# [c d] [y] = [cx + dy]
-		var a = rotation_matrix[0][0]
-		var b = rotation_matrix[0][1]
-		var c = rotation_matrix[1][0]
-		var d = rotation_matrix[1][1]
-		var x = point[0]
-		var y = point[1]
-		var transformed_x = a * x + b * y
-		var transformed_y = c * x + d * y
-		var transformed_point = Vector2(transformed_x, transformed_y)
-		transformed_points.append(transformed_point)
+	var aim_direction := _aim_direction()
+	var pull_strength := charge_ratio
+	var indicator_color := aim_indicator_color_min.lerp(aim_indicator_color_max, pull_strength)
+	var aim_direction_angle := aim_direction.angle()
+	var half_arc_radians := deg_to_rad(aim_indicator_max_arc_degrees * 0.5 * pull_strength)
 
-	var packed_transformed_points = PackedVector2Array(transformed_points)
-	#get_parent().draw_colored_polygon(packed_transformed_points, col)
-	#draw_colored_polygon(packed_transformed_points, col)
+	# Pull-strength arc, centered on the aim direction (0° → 120°).
+	if half_arc_radians > 0.001:
+		var arc_point_count := maxi(8, int(ceil(aim_indicator_max_arc_degrees * pull_strength / 3.0)))
+		draw_arc(
+			Vector2.ZERO,
+			aim_indicator_radius,
+			aim_direction_angle - half_arc_radians,
+			aim_direction_angle + half_arc_radians,
+			arc_point_count,
+			indicator_color,
+			aim_indicator_arc_width,
+			true
+		)
 
-	#draw_arc(get_global_mouse_position(), 50, -PI, PI, 200, col, 10)
+	# Aim triangle nested into the arc: base on the stroke, tip pointing out.
+	var aim_perpendicular := Vector2(-aim_direction.y, aim_direction.x)
+	var triangle_half_base := aim_indicator_triangle_size * 0.5
+	var half_arc_width := aim_indicator_arc_width * 0.5
+	var triangle_base_center := aim_direction * (aim_indicator_radius - half_arc_width)
+	var triangle_tip := aim_direction * (aim_indicator_radius + half_arc_width + aim_indicator_triangle_size * 0.55)
+	var triangle_base_left := triangle_base_center + aim_perpendicular * triangle_half_base
+	var triangle_base_right := triangle_base_center - aim_perpendicular * triangle_half_base
+	draw_colored_polygon(
+		PackedVector2Array([triangle_tip, triangle_base_left, triangle_base_right]),
+		indicator_color
+	)

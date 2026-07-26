@@ -83,3 +83,7 @@ func _clear_overlays() -> void:
 	get_tree().paused = false
 	LevelCompleteMenu.hide_menu()
 	DeathMenu.hide_menu()
+	if SettingsMenu.visible:
+		SettingsMenu.visible = false
+	if PauseMenu.visible:
+		PauseMenu.visible = false
