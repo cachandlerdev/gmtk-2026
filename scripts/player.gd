@@ -186,6 +186,7 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	if _is_dead:
+		velocity.y = get_gravity().y
 		return
 
 	# Take care of gravity
@@ -324,9 +325,9 @@ func die() -> void:
 		return
 	_is_dead = true
 	died.emit()
-	collision.disabled = true
-	set_physics_process(false)
 	GameMode.set_state(GameMode.Defeat)
+	collision.set_deferred("disabled", true)
+	set_physics_process(false)
 
 
 func _check_out_of_bounds() -> void:
@@ -626,6 +627,7 @@ func _update_player_movement(delta: float) -> void:
 	if _is_dive_hovering or _is_dive_attacking:
 		velocity.x = 0
 	
+	# Stop enemies from feeling like paperweights
 	if left_enemy_ray_cast.is_colliding():
 		velocity.x = max(0, velocity.x)
 	if right_enemy_ray_cast.is_colliding():

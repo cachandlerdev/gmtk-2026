@@ -77,24 +77,24 @@ func set_state(new_state) -> void:
 				can_change = true
 		Battle:
 			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
-				print("TODO: Battle stage")
+				print("Battle stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(battle_music_index)
 				can_change = true
 		NearDeath:
 			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
-				print("TODO: Near Death stage")
+				print("Near Death stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(near_death_music_index)
 				can_change = true
 		AlarmRaised:
 			if not player._is_dead:
-				print("TODO: Alarm Raised stage")
+				print("Alarm Raised stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(alarm_raised_music_index)
 				can_change = true
 		Escape:
 			# We don't check AlarmRaised here so that if the count is killed 
 			# after the alarm is raised, it updates to say that the count is dead.
 			if not player._is_dead and _game_mode_state != Escape:
-				print("TODO: Escape stage")
+				print("Escape stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(escape_music_index)
 				can_change = true
 		Victory:
@@ -102,12 +102,13 @@ func set_state(new_state) -> void:
 			MusicPlayer.get_stream_playback().switch_to_clip(victory_music_index)
 			can_change = true
 		Defeat:
-			print("TODO: Defeat stage")
+			print("Defeat stage")
 			_num_of_alert_guards = 0
 			MusicPlayer.get_stream_playback().switch_to_clip(defeat_music_index)
 			can_change = true
+			#await get_tree().create_timer(1).timeout
 		MainMenu:
-			print("TODO: Main Menu stage")
+			print("Main Menu stage")
 			MusicPlayer.get_stream_playback().switch_to_clip(main_menu_music_index)
 			can_change = true
 
