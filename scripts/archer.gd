@@ -6,7 +6,7 @@ extends EnemyBase
 
 
 @export var projectile_scene: PackedScene
-@export var projectile_speed: float = 340.0
+@export var projectile_speed: float = 420.0
 ## Muzzle position relative to the archer; x is mirrored to the facing side.
 @export var muzzle_offset: Vector2 = Vector2(12, -16)
 
