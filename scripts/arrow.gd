@@ -21,6 +21,8 @@ const SPRITE_ANGLE_OFFSET := 3.0 * PI / 4.0
 @export var min_bounce_speed: float = 120.0  # below this after a bounce, stop
 ## Velocity kept when an arrow drops after its last enemy hit.
 @export var drop_speed: float = 0.25
+@export var despawn_rate: float = 0.05
+# 30% of the time, arrows will despawn after hitting the ground
 
 @export_group("Sprites")
 @export var basic_texture: Texture2D
@@ -49,6 +51,8 @@ var _cancel_lifetime: bool = false
 var _lifetime_generation: int = 0
 var _spawned_impact: bool = false
 
+var _can_be_picked_up: bool = true
+
 @onready var _collision: CollisionShape2D = $CollisionShape2D
 @onready var _sprite: Sprite2D = $Visual
 @onready var _interact_collision: CollisionShape2D = $InteractArea/CollisionShape2D
@@ -73,6 +77,7 @@ func apply_type(type: Type, charge_ratio: float = 0.0) -> void:
 			max_bounces = 2
 			min_bounce_speed = 120.0
 			pierces_remaining = 1 if full_draw else 0
+			despawn_rate = 0.05
 			_set_texture(basic_texture)
 		Type.PIERCING:
 			lifetime = 6.0
@@ -80,12 +85,14 @@ func apply_type(type: Type, charge_ratio: float = 0.0) -> void:
 			max_bounces = 2
 			min_bounce_speed = 120.0
 			pierces_remaining = 2 if full_draw else 1
+			despawn_rate = 0.02
 			_set_texture(piercing_texture)
 		Type.BOUNCING:
 			lifetime = 10.0
 			bounciness = 0.85
 			max_bounces = 5
 			min_bounce_speed = 80.0
+			despawn_rate = 0.01
 			pierces_remaining = 1 if full_draw else 0
 			_set_texture(bouncing_texture)
 		Type.FIRE:
@@ -93,6 +100,7 @@ func apply_type(type: Type, charge_ratio: float = 0.0) -> void:
 			bounciness = 0.0
 			max_bounces = 1
 			min_bounce_speed = 9999.0
+			despawn_rate = 0.03
 			pierces_remaining = 1 if full_draw else 0
 			_set_texture(fire_texture)
 		Type.ICE:
@@ -100,6 +108,7 @@ func apply_type(type: Type, charge_ratio: float = 0.0) -> void:
 			bounciness = 0.0
 			max_bounces = 1
 			min_bounce_speed = 9999.0
+			despawn_rate = 0.03
 			pierces_remaining = 1 if full_draw else 0
 			_set_texture(ice_texture)
 	# Full draw: one extra ricochet on top of the type base.
@@ -138,17 +147,29 @@ func _physics_process(delta: float) -> void:
 	var collision := move_and_collide(velocity * delta)
 	if collision != null:
 		if _creates_impact_surface():
+			GameMode.play_sound("arrow_hit", global_position)
 			_spawn_impact_surface(collision)
 			_stop()
 		elif _dropping:
 			# Stick on first contact with the world after dropping.
+			GameMode.play_sound("arrow_hit", global_position)
 			_stop()
 		elif _is_tip_collision(collision):
-			_ricochet(collision.get_normal())
+			var break_roll: float = randf()
+			if break_roll < despawn_rate:
+				GameMode.play_sound("arrow_break", global_position)
+				var time_before_despawn = 1
+				_can_be_picked_up = false
+				$Visual.modulate = Color(0.1, 0.1, 0.1, 1)
+				await get_tree().create_timer(time_before_despawn).timeout
+				queue_free()
+			else:
+				_ricochet(collision.get_normal())
 		else:
 			# Butt/side scrape: deflect without spending a bounce charge.
 			velocity = velocity.bounce(collision.get_normal()) * bounciness
 			if velocity.length() < min_bounce_speed:
+				GameMode.play_sound("arrow_hit", global_position)
 				_stop()
 
 	if not _stopped:
@@ -179,8 +200,11 @@ func try_hit_enemy(_enemy: Node = null, allow_pierce: bool = true) -> bool:
 		return false
 	if allow_pierce and pierces_remaining > 0:
 		pierces_remaining -= 1
+		GameMode.play_sound("arrow_hit_flesh")
 		return true
 	_drop()
+	GameMode.play_sound("arrow_hit_flesh")
+
 	return true
 
 
@@ -195,7 +219,10 @@ func _ricochet(normal: Vector2) -> void:
 	velocity = velocity.bounce(normal) * bounciness
 	_bounces += 1
 	if _bounces >= max_bounces or velocity.length() < min_bounce_speed:
+		GameMode.play_sound("arrow_hit", global_position)
 		_stop()
+	else:
+		GameMode.play_sound("arrow_bounce", global_position)
 
 # WIP
 func _spawn_impact_surface(collision: KinematicCollision2D) -> void:
@@ -244,11 +271,12 @@ func _on_lifetime_expired(generation: int) -> void:
 
 ## Return this arrow to inventory if there is space. Returns true when looted.
 func try_loot(player: Node) -> bool:
-	if not _stopped or player == null:
+	if not _stopped or player == null or not _can_be_picked_up:
 		return false
 	if not player.has_method("try_add_arrow"):
 		return false
 	if not player.try_add_arrow(arrow_type):
 		return false
+	GameMode.play_sound("arrow_collect", global_position)
 	queue_free()
 	return true

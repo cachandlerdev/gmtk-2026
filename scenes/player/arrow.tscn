@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://qb172ohoprer"]
+[gd_scene format=3 uid="uid://qb172ohoprer"]
 
 [ext_resource type="Script" uid="uid://mwe1jfgoh34j" path="res://scripts/arrow.gd" id="1_arrow"]
 [ext_resource type="Texture2D" uid="uid://dyfkisgyv3lem" path="res://assets/sprites/arrow_16x16.png" id="2_basic"]
@@ -6,17 +6,16 @@
 [ext_resource type="Texture2D" uid="uid://b0makld8osljr" path="res://assets/sprites/arrow_bouncing_16x16.png" id="4_bounce"]
 [ext_resource type="Texture2D" uid="uid://b5j3k2txr5a42" path="res://assets/sprites/arrow_fire_16x16.png" id="5_fire"]
 [ext_resource type="Texture2D" uid="uid://bltiio0287hty" path="res://assets/sprites/arrow_ice_16x16.png" id="6_ice"]
-[ext_resource type="PackedScene" path="res://scenes/assets/ice_patch.tscn" id="7_ice_patch"]
+[ext_resource type="PackedScene" uid="uid://dlcs1nuc83m5c" path="res://scenes/assets/ice_patch.tscn" id="7_ice_patch"]
 
 [sub_resource type="RectangleShape2D" id="Shape_arrow"]
-size = Vector2(20, 8)
+size = Vector2(20, 6.35583)
 
 [sub_resource type="RectangleShape2D" id="Shape_interact"]
 size = Vector2(28, 20)
 
-[node name="Arrow" type="CharacterBody2D"]
+[node name="Arrow" type="CharacterBody2D" unique_id=366153717]
 collision_layer = 4
-collision_mask = 1
 script = ExtResource("1_arrow")
 basic_texture = ExtResource("2_basic")
 piercing_texture = ExtResource("3_pierce")
@@ -25,21 +24,18 @@ fire_texture = ExtResource("5_fire")
 ice_texture = ExtResource("6_ice")
 ice_patch_scene = ExtResource("7_ice_patch")
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=793387203]
 texture_filter = 1
-scale = Vector2(2, 2)
 texture = ExtResource("2_basic")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(5, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=578979074]
 shape = SubResource("Shape_arrow")
 
-[node name="InteractArea" type="Area2D" parent="."]
+[node name="InteractArea" type="Area2D" parent="." unique_id=651525866]
 collision_layer = 8
 collision_mask = 0
 monitoring = false
-monitorable = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea" unique_id=646250219]
 shape = SubResource("Shape_interact")
 disabled = true

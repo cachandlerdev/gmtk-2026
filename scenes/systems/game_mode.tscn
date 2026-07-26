@@ -1,6 +1,89 @@
 [gd_scene format=3 uid="uid://b06epmfr0ogfd"]
 
 [ext_resource type="Script" uid="uid://cqjdwtagkjkjy" path="res://scripts/game_mode.gd" id="1_7i82y"]
+[ext_resource type="AudioStream" uid="uid://d2v8a2uewmxdw" path="res://assets/sounds/31_swoosh_sword_1.wav" id="2_wx07s"]
+[ext_resource type="AudioStream" uid="uid://bruv037idhjx3" path="res://assets/sounds/38_Block_02.wav" id="3_fwvg3"]
+[ext_resource type="AudioStream" uid="uid://bjxjjm4y4k7cp" path="res://assets/sounds/41_bow_draw_01.wav" id="4_s4bh1"]
+[ext_resource type="AudioStream" uid="uid://d2b3gnn4patcu" path="res://assets/sounds/45_bow_shot_02.wav" id="5_203sj"]
+[ext_resource type="AudioStream" uid="uid://dofgkp4n58y5m" path="res://assets/sounds/zapsplat_cartoon_ruler_twang_low_pitched_arrow_impact_003_97139.mp3" id="6_iqgsh"]
+[ext_resource type="AudioStream" uid="uid://ssg3a5n66v5f" path="res://assets/sounds/35_Miss_Evade_02.wav" id="7_iqgsh"]
+[ext_resource type="AudioStream" uid="uid://bjrfs8eewbyma" path="res://assets/sounds/arrow_break.mp3" id="7_o5pti"]
+[ext_resource type="AudioStream" uid="uid://bwiisj3gk0lgj" path="res://assets/sounds/zapsplat_cartoon_arrow_impact_hit_tawng_ruler_002_97122.mp3" id="7_tayw2"]
+[ext_resource type="AudioStream" uid="uid://btnh4ehmg42vb" path="res://assets/sounds/pickup_arrow.mp3" id="8_4ittn"]
+[ext_resource type="AudioStream" uid="uid://pagfnvhg3mo4" path="res://assets/sounds/zapsplat_warfare_arrow_incoming_whoosh_hit_body_squelch_blood_007_90728.mp3" id="9_ls1g5"]
+[ext_resource type="AudioStream" uid="uid://cvkvwlbsfn5wb" path="res://assets/sounds/dive_attack.mp3" id="12_ennmu"]
+[ext_resource type="AudioStream" uid="uid://cfdjhlqhpnpfq" path="res://assets/sounds/66_Dash_evade_02.wav" id="13_r11h0"]
+[ext_resource type="AudioStream" uid="uid://b5ufm2hwapdl" path="res://assets/sounds/zapsplat_impacts_body_hit_stab_squelch_of_blood_001_90699.mp3" id="14_r11h0"]
+[ext_resource type="AudioStream" uid="uid://dx7xl3g2bwgoh" path="res://assets/sounds/gmtk2026_damage_sfx.mp3" id="15_hct7a"]
+[ext_resource type="AudioStream" uid="uid://dptkq5gehy6cu" path="res://assets/sounds/30_Jump_03.wav" id="15_r11h0"]
 
 [node name="GameMode" type="Node" unique_id=1467712474]
 script = ExtResource("1_7i82y")
+
+[node name="SFX" type="Node" parent="." unique_id=636444971]
+
+[node name="MeleeSlash" type="AudioStreamPlayer2D" parent="SFX" unique_id=915916073]
+stream = ExtResource("2_wx07s")
+bus = &"SFX"
+
+[node name="ShieldBlock" type="AudioStreamPlayer2D" parent="SFX" unique_id=1092183048]
+stream = ExtResource("3_fwvg3")
+bus = &"SFX"
+
+[node name="BowDraw" type="AudioStreamPlayer2D" parent="SFX" unique_id=293741019]
+stream = ExtResource("4_s4bh1")
+bus = &"SFX"
+
+[node name="BowRelease" type="AudioStreamPlayer2D" parent="SFX" unique_id=1808706472]
+stream = ExtResource("5_203sj")
+bus = &"SFX"
+
+[node name="ArrowHit" type="AudioStreamPlayer2D" parent="SFX" unique_id=1471429988]
+stream = ExtResource("6_iqgsh")
+volume_db = -2.0
+bus = &"SFX"
+
+[node name="ArrowBreak" type="AudioStreamPlayer2D" parent="SFX" unique_id=670408295]
+stream = ExtResource("7_o5pti")
+volume_db = -5.0
+bus = &"SFX"
+
+[node name="ArrowCollect" type="AudioStreamPlayer2D" parent="SFX" unique_id=591014137]
+stream = ExtResource("8_4ittn")
+volume_db = 2.0
+bus = &"SFX"
+
+[node name="ArrowBounce" type="AudioStreamPlayer2D" parent="SFX" unique_id=1460702983]
+stream = ExtResource("7_tayw2")
+volume_db = -3.0
+bus = &"SFX"
+
+[node name="Dodge" type="AudioStreamPlayer2D" parent="SFX" unique_id=2067059978]
+stream = ExtResource("7_iqgsh")
+bus = &"SFX"
+
+[node name="ArrowHitFlesh" type="AudioStreamPlayer2D" parent="SFX" unique_id=1725935285]
+stream = ExtResource("9_ls1g5")
+bus = &"SFX"
+
+[node name="DiveAttack" type="AudioStreamPlayer2D" parent="SFX" unique_id=813765362]
+stream = ExtResource("12_ennmu")
+bus = &"SFX"
+
+[node name="Shing" type="AudioStreamPlayer2D" parent="SFX" unique_id=399502745]
+stream = ExtResource("13_r11h0")
+bus = &"SFX"
+
+[node name="PlayerTakesDamage" type="AudioStreamPlayer2D" parent="SFX" unique_id=1879376324]
+stream = ExtResource("14_r11h0")
+volume_db = 5.0
+bus = &"SFX"
+
+[node name="PlayerTakesDamageMusic" type="AudioStreamPlayer2D" parent="SFX" unique_id=128119875]
+stream = ExtResource("15_hct7a")
+volume_db = -5.0
+bus = &"SFX"
+
+[node name="PlayerJump" type="AudioStreamPlayer2D" parent="SFX" unique_id=1948347897]
+stream = ExtResource("15_r11h0")
+bus = &"SFX"
