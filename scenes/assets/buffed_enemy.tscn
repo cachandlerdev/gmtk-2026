@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://xdw0t44spo51"]
+
+[ext_resource type="Script" uid="uid://p5ogpg8fo875" path="res://scripts/enemy_base.gd" id="1_0puxl"]
+[ext_resource type="SpriteFrames" uid="uid://dgu8iqp8tybwu" path="res://assets/sprites/patrol_frames.tres" id="2_y8htw"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="3_vpni3"]
+[ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="4_ox6pi"]
+
+[sub_resource type="RectangleShape2D" id="Shape_body"]
+size = Vector2(27, 44)
+
+[sub_resource type="RectangleShape2D" id="Shape_hit"]
+size = Vector2(27, 44)
+
+[node name="BuffedEnemy" type="CharacterBody2D" unique_id=245799776]
+z_index = 2
+collision_layer = 16
+script = ExtResource("1_0puxl")
+max_health = 5
+patrol_speed = 145.0
+chase_speed = 215.0
+attack_windup = 0.4
+attack_cooldown = 0.8
+
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=307105698]
+position = Vector2(0, -2)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("2_y8htw")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498682953]
+position = Vector2(-1.5, 0)
+shape = SubResource("Shape_body")
+
+[node name="LedgeRay" type="RayCast2D" parent="." unique_id=1815644042]
+position = Vector2(20, 0)
+target_position = Vector2(0, 34)
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=2002285091]
+collision_layer = 0
+collision_mask = 7
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1027005596]
+position = Vector2(-1.5, 0)
+shape = SubResource("Shape_hit")
+
+[node name="VisionCone" parent="." unique_id=874998519 instance=ExtResource("3_vpni3")]
+
+[node name="DeathDespawnTimer" type="Timer" parent="." unique_id=229173128]
+
+[node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("4_ox6pi")]
+enabled = false
+blackboard = NodePath("@Node@327510")
+actor = NodePath("..")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

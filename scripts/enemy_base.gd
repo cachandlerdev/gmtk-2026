@@ -19,6 +19,9 @@ extends CharacterBody2D
 ## filling) → ALERTED (full chase). Drives the behaviour tree.
 enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 
+# Only enable this on the base class
+@export var use_base_melee_sound: bool = true
+
 @export var max_health: int = 2
 @export var gravity_factor: float = 1.0
 ## If true, merely touching the player damages them. Off by default so the
@@ -162,7 +165,7 @@ func die() -> void:
 	_on_death()
 	_spawn_loot()
 	set_physics_process(false)
-	$CollisionShape2D.disabled = true
+	$CollisionShape2D.set_deferred("disabled", true)
 	# Yeah sorry I'm not doing all of the checks and putting it in the existing 
 	# system because it's 1am and the deadline is in 9 hours
 	await get_tree().create_timer(DEATH_DURATION).timeout
@@ -198,7 +201,7 @@ func take_hit(source: Node = null, damage: int = 1) -> void:
 	_apply_knockback(source)
 	var player = get_tree().get_first_node_in_group("player")
 	_health -= damage
-	player.add_screen_shake(0.15)
+	player.add_screen_shake(0.125)
 	GameMode.play_sound("melee_damage", global_position)
 	_flash()
 	if _health <= 0:
@@ -414,6 +417,10 @@ func _on_attack_windup() -> void:
 		return
 	_visual.modulate = Color(1.7, 1.4, 0.5)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, attack_windup)
+	# hacky but don't question it :)
+	if use_base_melee_sound:
+		await get_tree().create_timer(attack_windup).timeout
+		GameMode.play_sound("enemy_sword_melee")
 
 
 ## Strike feedback hook — override for an animation. Defaults to a brief tint.

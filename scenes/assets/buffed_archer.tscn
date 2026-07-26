@@ -1,50 +1,50 @@
-[gd_scene format=3 uid="uid://capt2b3tx4va4"]
+[gd_scene format=3 uid="uid://bgcowc7xaq0lk"]
 
-[ext_resource type="Script" uid="uid://c8wk47payg1kk" path="res://scripts/archer.gd" id="1_archer"]
-[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
-[ext_resource type="PackedScene" uid="uid://dlb8ja8hm23td" path="res://scenes/ai/archer_brain.tscn" id="3_brain"]
-[ext_resource type="PackedScene" uid="uid://djirlu3ps34p6" path="res://scenes/assets/enemy_arrow.tscn" id="4_arrow"]
-[ext_resource type="Texture2D" uid="uid://tqxtkuksrwin" path="res://assets/sprites/enemy_attack.png" id="5_betck"]
-[ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="6_khpgo"]
+[ext_resource type="Script" uid="uid://c8wk47payg1kk" path="res://scripts/archer.gd" id="1_kyh5f"]
+[ext_resource type="PackedScene" uid="uid://djirlu3ps34p6" path="res://scenes/assets/enemy_arrow.tscn" id="2_66of7"]
+[ext_resource type="Texture2D" uid="uid://tqxtkuksrwin" path="res://assets/sprites/enemy_attack.png" id="3_dt1sn"]
+[ext_resource type="Texture2D" uid="uid://dsod8m42sc7xk" path="res://assets/sprites/enemies.png" id="4_cxjcn"]
+[ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="5_gpul3"]
+[ext_resource type="PackedScene" uid="uid://dlb8ja8hm23td" path="res://scenes/ai/archer_brain.tscn" id="6_2o3pw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g4t1d"]
-atlas = ExtResource("5_betck")
+atlas = ExtResource("3_dt1sn")
 region = Rect2(0, 64, 40, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_25xqe"]
-atlas = ExtResource("5_betck")
+atlas = ExtResource("3_dt1sn")
 region = Rect2(40, 64, 40, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ljru6"]
-atlas = ExtResource("5_betck")
+atlas = ExtResource("3_dt1sn")
 region = Rect2(80, 64, 40, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tnbij"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(0, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ipimd"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(32, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xdl35"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(64, 128, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3nx23"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(0, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6tf4x"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(0, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_533ti"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(32, 96, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_74s2o"]
-atlas = ExtResource("6_khpgo")
+atlas = ExtResource("4_cxjcn")
 region = Rect2(64, 96, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_c5ll8"]
@@ -101,28 +101,32 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
-size = Vector2(29.305185, 50.640274)
+size = Vector2(42.329712, 75.9111)
 
 [sub_resource type="RectangleShape2D" id="Shape_hit"]
 size = Vector2(38, 48)
 
-[node name="Archer" type="CharacterBody2D" unique_id=1649133593]
+[node name="BuffedArcher" type="CharacterBody2D" unique_id=1649133593]
+z_index = 2
 collision_layer = 16
-script = ExtResource("1_archer")
-projectile_scene = ExtResource("4_arrow")
+script = ExtResource("1_kyh5f")
+projectile_scene = ExtResource("2_66of7")
 muzzle_offset = Vector2(12, 6)
 use_base_melee_sound = false
-attack_cooldown = 2.0
+max_health = 5
+knockback_time = 0.04
+attack_range = 88.0
+attack_cooldown = 0.8
 
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=7603010]
-z_index = 2
-position = Vector2(0, 6)
+position = Vector2(0, -2)
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_c5ll8")
-animation = &"walk"
+animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=599658116]
-position = Vector2(-1.0000001, 7.0292673)
+position = Vector2(3.5762787e-07, -0.4707322)
 scale = Vector2(0.6142258, 0.59356976)
 shape = SubResource("Shape_body")
 
@@ -138,12 +142,12 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=152891937]
 shape = SubResource("Shape_hit")
 
-[node name="VisionCone" parent="." unique_id=659367984 instance=ExtResource("2_vision")]
+[node name="VisionCone" parent="." unique_id=659367984 instance=ExtResource("5_gpul3")]
 view_distance = 410.0
 
-[node name="BeehaveTree" parent="." unique_id=669277539 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
+[node name="BeehaveTree" parent="." unique_id=669277539 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("6_2o3pw")]
 enabled = false
-blackboard = NodePath("@Node@273600")
+blackboard = NodePath("@Node@309003")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

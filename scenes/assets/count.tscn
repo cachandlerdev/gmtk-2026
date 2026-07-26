@@ -14,6 +14,7 @@ size = Vector2(22, 28)
 [node name="Count" type="CharacterBody2D" unique_id=547891606]
 collision_layer = 16
 script = ExtResource("1_count")
+use_base_melee_sound = false
 max_health = 8
 patrol_speed = 83.0
 chase_speed = 153.0
@@ -21,10 +22,12 @@ attack_range = 48.0
 attack_cooldown = 1.2
 
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=69831167]
+z_index = 2
 position = Vector2(0, 12)
 sprite_frames = ExtResource("4_frames")
-animation = &"death"
+animation = &"idle"
 autoplay = "idle"
+frame_progress = 0.28711668
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1465886253]
 position = Vector2(0, 15)

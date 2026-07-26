@@ -44,6 +44,11 @@ func _can_be_hit(source: Node = null) -> bool:
 func _can_be_pierced(_source: Node = null) -> bool:
 	return false
 
+func _on_attack_windup() -> void:
+	super()
+	await get_tree().create_timer(attack_windup).timeout
+	GameMode.play_sound("shield_bash", global_position)
+
 
 ## Bounce a blocked arrow back off the shield, with a metallic glint.
 func _on_hit_blocked(source: Node = null) -> void:

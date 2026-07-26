@@ -18,6 +18,8 @@
 [ext_resource type="AudioStream" uid="uid://dptkq5gehy6cu" path="res://assets/sounds/30_Jump_03.wav" id="15_r11h0"]
 [ext_resource type="AudioStream" uid="uid://dplrwrhx28x2m" path="res://assets/sounds/zapsplat_impacts_body_hit_stab_squelch_of_blood_005_90703.mp3" id="17_f13tw"]
 [ext_resource type="AudioStream" uid="uid://bq0wa3mk7jn1j" path="res://assets/sounds/enemy_death.mp3" id="18_pfubd"]
+[ext_resource type="AudioStream" uid="uid://16sd2r5mk8fi" path="res://assets/sounds/dog_bark_processed.mp3" id="19_io4mw"]
+[ext_resource type="AudioStream" uid="uid://15g4oy5fng82" path="res://assets/sounds/shield_bash.mp3" id="20_ymwhs"]
 
 [node name="GameMode" type="Node" unique_id=1467712474]
 script = ExtResource("1_7i82y")
@@ -97,4 +99,18 @@ bus = &"SFX"
 [node name="EnemyDeath" type="AudioStreamPlayer2D" parent="SFX" unique_id=943374018]
 stream = ExtResource("18_pfubd")
 volume_db = 15.0
+bus = &"SFX"
+
+[node name="CountBark" type="AudioStreamPlayer2D" parent="SFX" unique_id=224104264]
+stream = ExtResource("19_io4mw")
+volume_db = 15.0
+bus = &"SFX"
+
+[node name="EnemySwordMelee" type="AudioStreamPlayer2D" parent="SFX" unique_id=1955568825]
+stream = ExtResource("2_wx07s")
+volume_db = 15.0
+bus = &"SFX"
+
+[node name="ShieldBash" type="AudioStreamPlayer2D" parent="SFX" unique_id=1513403745]
+stream = ExtResource("20_ymwhs")
 bus = &"SFX"

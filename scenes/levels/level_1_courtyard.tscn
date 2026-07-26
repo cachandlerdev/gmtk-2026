@@ -35,6 +35,7 @@ position = Vector2(1050, 100)
 
 [node name="Count" parent="." unique_id=276211569 instance=ExtResource("5_count")]
 position = Vector2(1400, 100)
+scale = Vector2(1.5, 1.5)
 
 [node name="Exit" parent="." unique_id=1786431470 instance=ExtResource("7_exit")]
 position = Vector2(1700, 101)

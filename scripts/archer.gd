@@ -27,6 +27,7 @@ func shoot_step() -> void:
 	_attacking = true
 	_on_attack()
 	await get_tree().create_timer(attack_windup).timeout
+	GameMode.play_sound("bow_draw", global_position)
 	_fire_at(player)
 
 func _on_attack() -> void:
@@ -44,6 +45,7 @@ func _fire_at(player: Node2D) -> void:
 	var origin := global_position + Vector2(absf(muzzle_offset.x) * facing, muzzle_offset.y)
 	# Aim at the player's body rather than their feet.
 	arrow.direction = ((player.global_position + Vector2(0, -12)) - origin).normalized()
+	GameMode.play_sound("bow_release", global_position)
 
 	# Spawn into the level and place it at the muzzle.
 	var parent := get_tree().current_scene

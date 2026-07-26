@@ -15,6 +15,10 @@ signal defeated
 func _ready_enemy() -> void:
 	add_to_group("objective")
 
+func _on_attack_windup() -> void:
+	super()
+	GameMode.play_sound("count_bark", global_position)
+
 
 func _on_death() -> void:
 	# Keep the base's alert/GameMode cleanup, then announce the kill.

@@ -14,11 +14,13 @@ size = Vector2(26, 32)
 [node name="Shieldbearer" type="CharacterBody2D" unique_id=1659630430]
 collision_layer = 16
 script = ExtResource("1_shield")
+use_base_melee_sound = false
 patrol_speed = 75.0
 chase_speed = 135.0
 attack_windup = 0.5
 
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1413428675]
+z_index = 2
 position = Vector2(0, 10)
 sprite_frames = ExtResource("4_frames")
 animation = &"death"
