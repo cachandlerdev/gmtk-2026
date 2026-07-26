@@ -35,6 +35,7 @@ extends Node
 @onready var count_bark = $SFX/CountBark
 @onready var enemy_sword_melee = $SFX/EnemySwordMelee
 @onready var shield_bash = $SFX/ShieldBash
+@onready var heart_pickup = $SFX/HeartPickup
 
 
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}

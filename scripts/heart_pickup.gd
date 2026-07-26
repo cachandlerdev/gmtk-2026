@@ -15,5 +15,6 @@ func try_loot(player: Node) -> bool:
 	if not player.try_heal(amount):
 		MessageFeed.show_message("Health is full.")
 		return false
+	GameMode.play_sound("heart_pickup", global_position)
 	queue_free()
 	return true
