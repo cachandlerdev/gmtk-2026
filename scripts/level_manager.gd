@@ -22,6 +22,13 @@ extends Node
 	"res://scenes/levels/tower_level.tscn",
 ]
 
+
+@export var level_names: Array[String] = [
+	"Tutorial",
+	"Castle",
+	"Tower",
+]
+
 const MAIN_MENU := "res://scenes/levels/main_menu_level.tscn"
 const VICTORY_SCREEN := "res://scenes/ui/victory_menu.tscn"
 
@@ -32,6 +39,12 @@ var _index: int = 0
 ## Begin a fresh run from the first level. Called by the main menu's Start button.
 func start_game() -> void:
 	_index = 0
+	_load_level(_index)
+
+
+## Begin a run from a specific level index. Called by the level-select menu.
+func start_at_level(i: int) -> void:
+	_index = clampi(i, 0, levels.size() - 1)
 	_load_level(_index)
 
 
@@ -91,5 +104,9 @@ func _clear_overlays() -> void:
 	DeathMenu.hide_menu()
 	if SettingsMenu.visible:
 		SettingsMenu.visible = false
+	if ControlsMenu.visible:
+		ControlsMenu.visible = false
+	if LevelSelectMenu.visible:
+		LevelSelectMenu.visible = false
 	if PauseMenu.visible:
 		PauseMenu.visible = false
