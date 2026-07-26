@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://d047j530r088n"]
 
 [ext_resource type="Script" path="res://scripts/projectile_thrower.gd" id="1_thrower"]
+[ext_resource type="Texture2D" uid="uid://dluq03vffrrj3" path="res://assets/sprites/xbow_16x16.png" id="2_xbow"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(28, 28)
+size = Vector2(16, 16)
 
 [node name="ProjectileThrower" type="Node2D"]
 script = ExtResource("1_thrower")
@@ -14,19 +15,17 @@ collision_layer = 1
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
-position = Vector2(0, -14)
+position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Visual" type="Polygon2D" parent="Body"]
-color = Color(0.35, 0.38, 0.45, 1)
-polygon = PackedVector2Array(-14, 0, 14, 0, 14, -28, -14, -28)
-
-[node name="Barrel" type="Polygon2D" parent="Body"]
-color = Color(0.55, 0.4, 0.25, 1)
-polygon = PackedVector2Array(10, -20, 26, -18, 26, -14, 10, -12)
+[node name="Visual" type="Sprite2D" parent="Body"]
+position = Vector2(0, -8)
+texture_filter = 1
+texture = ExtResource("2_xbow")
+flip_h = true
 
 [node name="Muzzle" type="Marker2D" parent="."]
-position = Vector2(28, -16)
+position = Vector2(12, -12)
 
 [node name="FireTimer" type="Timer" parent="."]
 wait_time = 1.25

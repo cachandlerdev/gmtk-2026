@@ -68,7 +68,7 @@ var _screen_shake_amount: float = 0.0
 # Exponent used for the shake strength. Use [2, 3]
 var _shake_power: float = 2
 
-# if needed. Coyote time not implemented right now
+## Grace frames after leaving the floor where a grounded jump still works.
 const COYOTE_FRAMES: int = 6
 const MAX_HEARTS: int = 3
 const LOW_HEALTH_THRESHOLD: int = 1
@@ -121,8 +121,9 @@ var _anim_state = Idle
 var _is_dashing: bool = false
 var _can_dash: bool = true
 
-# Keeps track of the jump count for double jumps
-var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
+# Remaining air jumps (does not include the grounded / coyote jump)
+var _num_of_air_jumps: int = MAX_NUM_OF_AIR_JUMPS
+var _coyote_frames_left: int = 0
 var _is_jumping: bool = false
 var _next_to_left_wall: bool = false
 var _next_to_right_wall: bool = false
@@ -241,13 +242,10 @@ func _physics_process(delta: float) -> void:
 		_is_clinging = false
 
 	_update_player_direction()
-
-	if is_on_floor():
-		_is_jumping = false
-
+	_update_jump_state()
 
 	# Handle player inputs
-	if Input.is_action_just_pressed("jump") and _num_of_jumps > 0 and not _surface_mods.blocks_jump:
+	if Input.is_action_just_pressed("jump") and _can_jump() and not _surface_mods.blocks_jump:
 		_is_jumping = true
 		_jump()
 	if Input.is_action_just_pressed("dash") and _can_dash and not PauseMenu.should_suppress_dash():
@@ -275,7 +273,6 @@ func _physics_process(delta: float) -> void:
 	_auto_loot_items()
 	_update_interact_prompts()
 	_sync_hover_aim_with_bow()
-	_update_jump_count()
 	_update_player_sprite()
 	_update_player_movement(delta)
 	_update_floor_surface_modifiers()
@@ -495,15 +492,26 @@ func _on_arrow_inventory_changed() -> void:
 	arrow_inventory_changed.emit()
 
 
-## Handles updating the player's jump count.
-func _update_jump_count() -> void:
-	# If you're next to a wall, you can always jump
-	if left_wall_ray_cast.is_colliding() or right_wall_ray_cast.is_colliding():
-		_num_of_jumps = max(_num_of_jumps, 1)
-
-	# Handle the double jump count
+## Refreshes air jumps / coyote on land, and ticks coyote while airborne.
+## Skips refresh while ascending from a jump so a lingering is_on_floor()
+## frame cannot re-grant coyote or air jumps.
+func _update_jump_state() -> void:
 	if is_on_floor():
-		_num_of_jumps = MAX_NUM_OF_AIR_JUMPS
+		if not _is_jumping or velocity.y >= 0.0:
+			_is_jumping = false
+			_num_of_air_jumps = MAX_NUM_OF_AIR_JUMPS
+			_coyote_frames_left = COYOTE_FRAMES
+	elif _coyote_frames_left > 0:
+		_coyote_frames_left -= 1
+
+
+## Grounded, coyote, wall, or remaining air jump.
+func _can_jump() -> bool:
+	if is_on_floor() or _coyote_frames_left > 0:
+		return true
+	if left_wall_ray_cast.is_colliding() or right_wall_ray_cast.is_colliding():
+		return true
+	return _num_of_air_jumps > 0
 
 
 ## A helper that says whether gravity should be applied
@@ -597,8 +605,11 @@ func _on_bow_arrow_fired(_arrow: Node, _charge_ratio: float) -> void:
 ## Handles jump related actions like regular jumps and wall jumps.
 ## This function assumes that the player can jump at this point in time.
 func _jump() -> void:
-	# We prioritize walljumps
-	if left_wall_ray_cast.is_colliding() and not is_on_floor():
+	var on_floor := is_on_floor()
+	var using_coyote := not on_floor and _coyote_frames_left > 0
+
+	# We prioritize walljumps (free — does not consume an air jump)
+	if left_wall_ray_cast.is_colliding() and not on_floor and not using_coyote:
 		_direction = 1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -608,8 +619,7 @@ func _jump() -> void:
 		animated_sprite.play("wall_jump")
 		_anim_state = WallJump
 
-	#elif right_wall_ray_cast.is_colliding() and not is_on_floor() and right_wall_ray_cast.get_collider() :
-	elif right_wall_ray_cast.is_colliding() and not is_on_floor():
+	elif right_wall_ray_cast.is_colliding() and not on_floor and not using_coyote:
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -619,11 +629,15 @@ func _jump() -> void:
 		animated_sprite.play("wall_jump")
 		_anim_state = WallJump
 	else:
-		# Regular jump
+		# Grounded / coyote jump does not consume an air jump.
+		# Only a true mid-air jump does.
+		if not on_floor and not using_coyote:
+			_num_of_air_jumps -= 1
 		animated_sprite.play("jump")
 		_anim_state = Jump
 		velocity.y = JUMP_VELOCITY
-	_num_of_jumps -= 1
+
+	_coyote_frames_left = 0
 	_is_clinging = false
 	GameMode.play_sound("player_jump", global_position)
 
