@@ -20,7 +20,8 @@ signal player_lost
 @export var show_cone: bool = true
 
 ## Global debug toggle shared by every cone. Off by default so cones don't show
-## in normal play; flip it with the "toggle_vision" action (F1).
+## in normal play; flip it with the "toggle_vision" action (F1). The toggle is
+## a development aid only — it's stripped from release builds (see input guard).
 static var globally_visible: bool = false
 
 var facing: int = 1
@@ -31,6 +32,9 @@ var _detection: float = 0.0   ## mirrored from the owner for the cone tint
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Dev-only cheat: never allow it in exported release builds.
+	if not OS.is_debug_build():
+		return
 	if event.is_action_pressed("toggle_vision"):
 		globally_visible = not globally_visible
 		# First cone to handle it flips the shared flag; stop here so the other

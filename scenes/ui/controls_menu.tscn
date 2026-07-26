@@ -1,0 +1,274 @@
+[gd_scene format=3 uid="uid://bvy0g6cjjkr14"]
+
+[ext_resource type="Script" path="res://scenes/ui/controls_menu.gd" id="1_controls"]
+
+[node name="ControlsMenu" type="CanvasLayer"]
+layer = 110
+process_mode = 3
+script = ExtResource("1_controls")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
+text = "Controls"
+horizontal_alignment = 1
+
+[node name="Header" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Header"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Action"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Header"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Keyboard / Mouse"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Header"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Controller"
+horizontal_alignment = 1
+
+[node name="Move" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Move"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Move"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Move"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A / D"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Move"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Stick / D-Pad"
+horizontal_alignment = 1
+
+[node name="Jump" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Jump"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Jump"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Jump"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Space"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Jump"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "A"
+horizontal_alignment = 1
+
+[node name="Dash" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Dash"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Dash"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Dash"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Shift"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Dash"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "B / LB"
+horizontal_alignment = 1
+
+[node name="Melee" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Melee"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Melee"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Melee"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Left Click"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Melee"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "X"
+horizontal_alignment = 1
+
+[node name="AimShoot" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/AimShoot"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Aim / Shoot"
+
+[node name="Kbm" type="Label" parent="Center/Menu/AimShoot"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Click"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/AimShoot"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "RT / RB"
+horizontal_alignment = 1
+
+[node name="AimDir" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/AimDir"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Aim Direction"
+
+[node name="Kbm" type="Label" parent="Center/Menu/AimDir"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mouse / W·S"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/AimDir"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Right Stick"
+horizontal_alignment = 1
+
+[node name="Interact" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Interact"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Interact"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Interact"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "E"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Interact"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Y"
+horizontal_alignment = 1
+
+[node name="CycleArrows" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/CycleArrows"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Cycle Arrows"
+
+[node name="Kbm" type="Label" parent="Center/Menu/CycleArrows"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Q / Scroll Wheel"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/CycleArrows"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "D-Pad Up / Down"
+horizontal_alignment = 1
+
+[node name="Pause" type="HBoxContainer" parent="Center/Menu"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Action" type="Label" parent="Center/Menu/Pause"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Pause"
+
+[node name="Kbm" type="Label" parent="Center/Menu/Pause"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Esc"
+horizontal_alignment = 1
+
+[node name="Controller" type="Label" parent="Center/Menu/Pause"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start"
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="Center/Menu"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back"

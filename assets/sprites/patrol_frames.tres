@@ -46,7 +46,7 @@ animations = [{
 "duration": 2.0,
 "texture": SubResource("a_strike")
 }],
-"loop": 0,
+"loop": false,
 "name": &"attack",
 "speed": 10.0
 }, {
@@ -60,7 +60,7 @@ animations = [{
 "duration": 4.0,
 "texture": SubResource("AtlasTexture_xdl35")
 }],
-"loop": 0,
+"loop": false,
 "name": &"death",
 "speed": 5.0
 }, {
@@ -68,7 +68,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("w0")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -82,7 +82,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("w2")
 }],
-"loop": 1,
+"loop": true,
 "name": &"walk",
 "speed": 8.0
 }]
