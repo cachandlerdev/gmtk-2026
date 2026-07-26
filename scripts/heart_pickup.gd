@@ -13,6 +13,7 @@ func try_loot(player: Node) -> bool:
 	if not player.has_method("try_heal"):
 		return false
 	if not player.try_heal(amount):
+		MessageFeed.show_message("Health is full.")
 		return false
 	queue_free()
 	return true

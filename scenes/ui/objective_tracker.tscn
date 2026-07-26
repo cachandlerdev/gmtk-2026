@@ -1,8 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgso6ricq5r3w"]
+[gd_scene format=3 uid="uid://dgso6ricq5r3w"]
 
 [ext_resource type="Script" uid="uid://cy62jmw1qqryy" path="res://scenes/ui/objective_tracker.gd" id="1_pe3pm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
 bg_color = Color(0.05, 0.05, 0.08, 0.78)
 border_width_left = 1
 border_width_top = 1
@@ -13,10 +17,6 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
 
 [node name="ObjectiveTracker" type="PanelContainer" unique_id=1212483230]
 offset_right = 1.0
@@ -25,7 +25,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 script = ExtResource("1_pe3pm")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=128907790]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 14
@@ -33,12 +33,12 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 10
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1415352212]
 layout_mode = 2
-theme_override_constants/separation = 4
 mouse_filter = 2
+theme_override_constants/separation = 4
 
-[node name="Title" type="Label" parent="Margin/VBox"]
+[node name="Title" type="Label" parent="Margin/VBox" unique_id=2134142999]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_type_variation = &"TitleLabel"
@@ -47,12 +47,8 @@ theme_override_font_sizes/font_size = 28
 text = "Objective"
 horizontal_alignment = 2
 
-[node name="Body" type="Label" parent="Margin/VBox"]
+[node name="Body" type="RichTextLabel" parent="Margin/VBox" unique_id=1218299136]
 layout_mode = 2
-size_flags_horizontal = 8
-theme_override_colors/font_color = Color(0.95, 0.93, 0.88, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 16
-text = "Find the count."
+text = "Test"
+fit_content = true
 horizontal_alignment = 2

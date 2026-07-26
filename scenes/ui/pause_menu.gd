@@ -24,7 +24,7 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if SettingsMenu.visible or ControlsMenu.visible:
 		return
-	if event.is_action_pressed("pause"):
+	if event.is_action_pressed("pause") and not GameMode.get_state() == GameMode.MainMenu:
 		_toggle()
 		get_viewport().set_input_as_handled()
 	elif visible and event.is_action_pressed("ui_cancel"):

@@ -1,6 +1,7 @@
 extends Control
 
-@onready var start_button: Button = $"CenterContainer/VBoxContainer/Start Game"
+#@onready var start_button: Button = $"CenterContainer/VBoxContainer/Start Game"
+@onready var start_button: Button = $"CenterContainer/HBoxContainer/Start Game"
 
 
 func _ready() -> void:
@@ -9,6 +10,7 @@ func _ready() -> void:
 	# to Stealth — so the menu has to do it itself.
 	GameMode.set_state(GameMode.MainMenu)
 	start_button.call_deferred("grab_focus")
+	$AnimationPlayer.play("fade_in")
 
 
 func _on_start_game_pressed() -> void:
