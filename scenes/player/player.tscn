@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bxi8mp02m55w4" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
 [ext_resource type="Texture2D" uid="uid://duelv24br3gqg" path="res://assets/sprites/bird.png" id="3_p47bc"]
 [ext_resource type="PackedScene" path="res://scenes/ui/arrows_hud.tscn" id="4_arrows"]
+[ext_resource type="PackedScene" uid="uid://ckeyshud00001" path="res://scenes/ui/keys_hud.tscn" id="5_keys"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cnsyf"]
 atlas = ExtResource("3_p47bc")
@@ -320,6 +321,8 @@ one_shot = true
 [node name="HeartsHUD" parent="." unique_id=1907220139 instance=ExtResource("3_hearts")]
 
 [node name="ArrowsHUD" parent="." unique_id=185083823 instance=ExtResource("4_arrows")]
+
+[node name="KeysHUD" parent="." instance=ExtResource("5_keys")]
 
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)

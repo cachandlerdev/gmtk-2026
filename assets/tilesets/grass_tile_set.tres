@@ -5,11 +5,23 @@
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8vdcu"]
 texture = ExtResource("1_ib1rd")
 0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -3.956891, -8, -8, 8, -8, 8, -4.6763268)
+0:0/0/physics_layer_0/polygon_0/one_way = true
 1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -3.956891, -8, -8, 8, -8, 8, -4.6763268)
+1:0/0/physics_layer_0/polygon_0/one_way = true
 2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -3.956891, -8, -8, 8, -8, 8, -4.6763268)
+2:0/0/physics_layer_0/polygon_0/one_way = true
 5:0/0 = 0
+5:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -1.0791512, 8, -1.0791512, 8, -8, -8, -8)
+5:0/0/physics_layer_0/polygon_0/one_way = true
 6:0/0 = 0
+6:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -1.0791512, 8, -1.0791512, 8, -8, -8, -8)
+6:0/0/physics_layer_0/polygon_0/one_way = true
 7:0/0 = 0
+7:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -1.0791512, 8, -1.0791512, 8, -8, -8, -8)
+7:0/0/physics_layer_0/polygon_0/one_way = true
 0:1/0 = 0
 1:1/0 = 0
 2:1/0 = 0
@@ -43,6 +55,7 @@ texture = ExtResource("1_ib1rd")
 2:7/0 = 0
 
 [resource]
+physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(0.011836315, 0.47182864, 1.92523e-07, 1)

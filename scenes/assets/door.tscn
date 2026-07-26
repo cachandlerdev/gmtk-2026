@@ -1,21 +1,37 @@
 [gd_scene format=3 uid="uid://70oqs2idl671"]
 
-[ext_resource type="Script" path="res://scripts/door.gd" id="1_door"]
+[ext_resource type="Script" uid="uid://drmk326kg74lb" path="res://scripts/door.gd" id="1_door"]
+[ext_resource type="Texture2D" uid="uid://brqpaqioxa5vt" path="res://assets/sprites/wooden_door_sheet.png" id="2_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
-size = Vector2(20, 80)
+size = Vector2(14, 80)
 
-[node name="Door" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interact"]
+size = Vector2(64, 96)
+
+[node name="Door" type="Node2D" unique_id=1832160132]
 script = ExtResource("1_door")
 
-[node name="Body" type="StaticBody2D" parent="."]
-collision_layer = 1
+[node name="Visual" type="Sprite2D" parent="." unique_id=1070061053]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("2_tex")
+centered = false
+offset = Vector2(-32, -48)
+hframes = 2
+
+[node name="Body" type="StaticBody2D" parent="." unique_id=1556411678]
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
-position = Vector2(0, -40)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body" unique_id=109923109]
+position = Vector2(-7, -40)
 shape = SubResource("RectangleShape2D_door")
 
-[node name="Visual" type="Polygon2D" parent="Body"]
-color = Color(0.45, 0.28, 0.18, 1)
-polygon = PackedVector2Array(-10, 0, 10, 0, 10, -80, -10, -80)
+[node name="InteractArea" type="Area2D" parent="." unique_id=1095327253]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea" unique_id=777924856]
+position = Vector2(-7, -48)
+shape = SubResource("RectangleShape2D_interact")

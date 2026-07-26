@@ -28,12 +28,12 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 ## before its detection meter starts to drain.
 @export var alert_linger: float = 1.5
 ## Detection meter fill rate per second at point-blank; scales down with range.
-@export var detection_fill_rate: float = 1.6
+@export var detection_fill_rate: float = 3.0
 ## Detection meter drain rate per second while the player is out of sight.
 @export var detection_decay_rate: float = 0.7
 ## Speeds used by the patrol_step / chase_step helpers the behaviour tree drives.
-@export var patrol_speed: float = 90.0
-@export var chase_speed: float = 130.0
+@export var patrol_speed: float = 115.0
+@export var chase_speed: float = 185.0
 ## Horizontal speed of the brief backward knockback applied when the enemy is hit.
 @export var knockback_speed: float = 150.0
 ## How long that knockback lasts, in seconds.
@@ -46,6 +46,13 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export var attack_windup: float = 0.35
 ## Delay before the enemy may swing again.
 @export var attack_cooldown: float = 1.0
+## How long the enemy stands still recovering after a swing lands, before it
+## resumes chasing/patrolling.
+@export var attack_recovery: float = 0.35
+
+@export_group("Loot")
+## Scenes to spawn at this enemy's position on death (e.g. key pickups). Assign per-instance in the editor.
+@export var loot_drops: Array[PackedScene] = []
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## Current awareness state (see the Awareness enum).
@@ -63,6 +70,11 @@ var _attack_cooldown_left: float = 0.0
 var _attacking: bool = false
 var _windup_left: float = 0.0
 var _knockback_left: float = 0.0
+## Keeps the attack animation on screen briefly through the strike (the attack
+## state itself ends the instant the blow lands).
+var _anim_lock_left: float = 0.0
+## Counts down a stand-still recovery pause after a swing lands.
+var _recover_left: float = 0.0
 
 @onready var _visual: Node2D = get_node_or_null("Visual")
 @onready var _ledge_ray: RayCast2D = get_node_or_null("LedgeRay")
@@ -86,25 +98,19 @@ func _physics_process(delta: float) -> void:
 	if _knockback_left > 0.0:
 		# Staggered: skip behaviour and let the knockback velocity carry it.
 		_knockback_left -= delta
+	elif _recover_left > 0.0:
+		# Recovery pause after a swing — hold position before resuming behaviour.
+		_recover_left -= delta
+		velocity.x = 0.0
 	elif _tree != null:
 		# A BeehaveTree child drives behaviour. It is set to MANUAL so we tick it
 		# here — after perception, before move_and_slide.
 		_tree.tick()
 	else:
 		_behaviour(delta)
-	
-	#var scratch_collision := KinematicCollision2D.new()
-	#var motion := velocity * delta
-	##if not test_move(transform, motion, scratch_collision):
-	##	move_and_collide(motion)
-	##else:
-	##	# Slide along whatever blocked us
-	##	move_and_collide(motion.slide(scratch_collision.get_normal()))
-	#var collision := move_and_collide(velocity * delta)
-	#if collision:
-	#	velocity = velocity.slide(collision.get_normal())
-	
+
 	move_and_slide()
+	_update_animation(delta)
 
 
 func _exit_tree() -> void:
@@ -152,7 +158,26 @@ func _on_death() -> void:
 ## Instant death (out of bounds, etc.). 
 func die() -> void:
 	_on_death()
+	_spawn_loot()
 	queue_free()
+
+
+## Instantiate editor-assigned loot scenes at this enemy's feet.
+func _spawn_loot() -> void:
+	if loot_drops.is_empty():
+		return
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	if parent == null:
+		return
+	for scene in loot_drops:
+		if scene == null:
+			continue
+		var drop: Node = scene.instantiate()
+		parent.add_child(drop)
+		if drop is Node2D:
+			(drop as Node2D).global_position = global_position
 
 
 # --- Damage ---------------------------------------------------------------
@@ -324,6 +349,8 @@ func attack_step(delta: float) -> bool:
 		return true
 	_attacking = false
 	_attack_cooldown_left = attack_cooldown
+	_anim_lock_left = 0.2   # hold the attack animation through the strike frame
+	_recover_left = attack_recovery   # stand still briefly after the swing
 	_strike()
 	return false
 
@@ -384,6 +411,31 @@ func _on_attack() -> void:
 		return
 	_visual.modulate = Color(1.6, 0.5, 0.4)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, 0.15)
+
+
+## Pick the animation on the Visual when it is an AnimatedSprite2D: attack during
+## a wind-up (held briefly through the strike), walk while moving on the ground,
+## idle otherwise. Missing animations fall back to idle, so a single-frame enemy
+## (the Count) just holds its one frame.
+func _update_animation(delta: float) -> void:
+	var spr := _visual as AnimatedSprite2D
+	if spr == null or spr.sprite_frames == null:
+		return
+	_anim_lock_left = maxf(0.0, _anim_lock_left - delta)
+	var want := &"idle"
+	if _attacking or _anim_lock_left > 0.0:
+		want = &"attack"
+	elif is_on_floor() and absf(velocity.x) > 5.0:
+		want = &"walk"
+	if not spr.sprite_frames.has_animation(want):
+		want = &"idle"
+	if not spr.sprite_frames.has_animation(want):
+		return
+	# Only (re)start on a change of animation. Looping clips (walk/idle) keep
+	# playing; a one-shot attack plays through and holds its last (strike) frame
+	# rather than restarting each frame while the attack state lingers.
+	if spr.animation != want:
+		spr.play(want)
 
 
 func _align_ledge_ray() -> void:
