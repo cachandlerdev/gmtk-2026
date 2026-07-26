@@ -15,6 +15,7 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	grow_vertical = Control.GROW_DIRECTION_END
+	$AnimationPlayer.play("fade_in")
 
 
 func set_objective(text: String) -> void:

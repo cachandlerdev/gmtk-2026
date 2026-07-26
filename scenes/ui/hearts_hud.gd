@@ -13,6 +13,7 @@ func _ready() -> void:
 	var player := get_parent()
 	if player != null and player.has_signal("health_changed"):
 		player.health_changed.connect(_on_health_changed)
+	$AnimationPlayer.play("fade_in")
 
 
 ## Clears and rebuilds the row to match `max_hearts`.

@@ -3,6 +3,43 @@
 [ext_resource type="PackedScene" uid="uid://cxtogyr5g2y5r" path="res://scenes/ui/visibility_indicator.tscn" id="1_0mwgc"]
 [ext_resource type="PackedScene" uid="uid://dgso6ricq5r3w" path="res://scenes/ui/objective_tracker.tscn" id="2_hqnrr"]
 
+[sub_resource type="Animation" id="Animation_hqnrr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HUD:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_bo48s"]
+resource_name = "fade_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HUD:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8qguk"]
+_data = {
+&"RESET": SubResource("Animation_hqnrr"),
+&"fade_in": SubResource("Animation_bo48s")
+}
+
 [node name="CanvasLayer" type="CanvasLayer" unique_id=311716904]
 
 [node name="HUD" type="Control" parent="." unique_id=1791053006]
@@ -31,12 +68,16 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -20.0
+offset_top = 75.0
 offset_right = 20.0
-offset_bottom = 40.0
+offset_bottom = 115.0
 grow_horizontal = 2
+scale = Vector2(0.66, 0.66)
 mouse_filter = 2
 alignment = 1
 
 [node name="VisibilityIndicator" parent="HUD/HBoxContainer" unique_id=1603064747 instance=ExtResource("1_0mwgc")]
-position = Vector2(0, 65)
-scale = Vector2(2, 2)
+layout_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1471455922]
+libraries/ = SubResource("AnimationLibrary_8qguk")
