@@ -194,7 +194,51 @@ func _draw() -> void:
 		return
 	var dir := _aim_direction()
 	var ratio := _charge / max_charge_time
-	var length := lerpf(34.0, 96.0, ratio)
+	#var length := lerpf(34.0, 96.0, ratio)
+	var length := lerpf(10.0, 30.0, ratio)
 	var col := Color(1.0, 1.0, 1.0, 0.85).lerp(Color(1.0, 0.55, 0.2, 0.95), ratio)
 	#draw_line(Vector2.ZERO, dir * length, col, 3.0)
 	#draw_circle(dir * length, 4.0, col)
+	#draw_circle(dir * length, 4.0, col)
+	var size: float = 10
+
+	# This was going to be a cool aim feature but I couldn't get it to work and 
+	# we have bigger issues
+	#    x
+	#        x
+	#    x
+	var points_list = []
+	if facing >= 0:
+		points_list = [Vector2(dir.x * length - (size/2), dir.y * length + (size/2)), 
+						Vector2(dir.x * length - (size/2), dir.y * length - (size/2)), 
+						Vector2(dir.x * length + (size/2), dir.y * length)]
+	else:
+		points_list = [Vector2(dir.x * length + (size/2), dir.y * length + (size/2)), 
+						Vector2(dir.x * length + (size/2), dir.y * length - (size/2)), 
+						Vector2(dir.x * length - (size/2), dir.y * length)]
+	var rot_angle = clamp(-_aim_angle, -20, 20)
+	if facing < 0:
+		rot_angle *= -1
+	#var rot_angle = deg_to_rad(-_aim_angle)
+	var rotation_matrix = [[cos(rot_angle), -1 * sin(rot_angle)], 
+						   [sin(rot_angle), cos(rot_angle)]]
+	var transformed_points = []
+	for point in points_list:
+		# [a b] [x] = [ax + by]
+		# [c d] [y] = [cx + dy]
+		var a = rotation_matrix[0][0]
+		var b = rotation_matrix[0][1]
+		var c = rotation_matrix[1][0]
+		var d = rotation_matrix[1][1]
+		var x = point[0]
+		var y = point[1]
+		var transformed_x = a * x + b * y
+		var transformed_y = c * x + d * y
+		var transformed_point = Vector2(transformed_x, transformed_y)
+		transformed_points.append(transformed_point)
+
+	var packed_transformed_points = PackedVector2Array(transformed_points)
+	#get_parent().draw_colored_polygon(packed_transformed_points, col)
+	#draw_colored_polygon(packed_transformed_points, col)
+
+	#draw_arc(get_global_mouse_position(), 50, -PI, PI, 200, col, 10)

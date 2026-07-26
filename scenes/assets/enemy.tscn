@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://p5ogpg8fo875" path="res://scripts/enemy_base.gd" id="1_enemy"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
 [ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
-[ext_resource type="SpriteFrames" uid="uid://bptrolframes01" path="res://assets/sprites/patrol_frames.tres" id="4_frames"]
+[ext_resource type="SpriteFrames" uid="uid://dgu8iqp8tybwu" path="res://assets/sprites/patrol_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(18, 30)
@@ -20,7 +20,7 @@ attack_windup = 0.4
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=307105698]
 position = Vector2(0, 6)
 sprite_frames = ExtResource("4_frames")
-animation = &"idle"
+animation = &"walk"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498682953]
@@ -46,7 +46,7 @@ shape = SubResource("Shape_hit")
 
 [node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
 enabled = false
-blackboard = NodePath("@Node@367671")
+blackboard = NodePath("@Node@20070")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

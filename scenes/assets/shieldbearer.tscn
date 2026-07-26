@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cshieldbearer0scn"]
+[gd_scene format=3 uid="uid://d0k1b4mo45a22"]
 
-[ext_resource type="Script" path="res://scripts/shieldbearer.gd" id="1_shield"]
+[ext_resource type="Script" uid="uid://di4q4asvrv05p" path="res://scripts/shieldbearer.gd" id="1_shield"]
 [ext_resource type="PackedScene" uid="uid://taik04v2aqhd" path="res://scenes/assets/vision_cone.tscn" id="2_vision"]
-[ext_resource type="PackedScene" uid="uid://cguardbrain0scn" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
-[ext_resource type="SpriteFrames" uid="uid://bsbframes00001" path="res://assets/sprites/shieldbearer_frames.tres" id="4_frames"]
+[ext_resource type="PackedScene" uid="uid://u5gcqa86dm70" path="res://scenes/ai/guard_brain.tscn" id="3_brain"]
+[ext_resource type="SpriteFrames" uid="uid://b14glvgjoem53" path="res://assets/sprites/shieldbearer_frames.tres" id="4_frames"]
 
 [sub_resource type="RectangleShape2D" id="Shape_body"]
 size = Vector2(18, 30)
@@ -11,41 +11,41 @@ size = Vector2(18, 30)
 [sub_resource type="RectangleShape2D" id="Shape_hit"]
 size = Vector2(26, 32)
 
-[node name="Shieldbearer" type="CharacterBody2D"]
+[node name="Shieldbearer" type="CharacterBody2D" unique_id=1659630430]
 collision_layer = 16
-collision_mask = 1
 script = ExtResource("1_shield")
 patrol_speed = 75.0
 chase_speed = 135.0
 attack_windup = 0.5
 
-[node name="Visual" type="AnimatedSprite2D" parent="."]
+[node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1413428675]
 position = Vector2(0, 10)
 sprite_frames = ExtResource("4_frames")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1019774138]
 position = Vector2(0, 11)
 shape = SubResource("Shape_body")
 
-[node name="LedgeRay" type="RayCast2D" parent="."]
+[node name="LedgeRay" type="RayCast2D" parent="." unique_id=1268845205]
 position = Vector2(18, 0)
 target_position = Vector2(0, 40)
-collision_mask = 1
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=1269114465]
 collision_layer = 0
 collision_mask = 7
-monitoring = true
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=860149572]
 position = Vector2(0, 10)
 shape = SubResource("Shape_hit")
 
-[node name="VisionCone" parent="." instance=ExtResource("2_vision")]
+[node name="VisionCone" parent="." unique_id=1901872785 instance=ExtResource("2_vision")]
 
-[node name="BeehaveTree" parent="." instance=ExtResource("3_brain")]
+[node name="BeehaveTree" parent="." unique_id=370914248 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
+enabled = false
+blackboard = NodePath("@Node@141822")
+actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

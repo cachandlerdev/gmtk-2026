@@ -27,6 +27,8 @@ signal key_count_changed(count: int)
 @export var MAX_NUM_OF_AIR_JUMPS: int = 1
 ## How much gravity gets applied while hover aiming.
 @export var HOVER_AIM_GRAVITY_FACTOR: float = 0.25
+## How much gravity gets applied when clinging to walls
+@export var WALL_CLING_FACTOR: float = 0.2
 
 @export_group("Combat")
 ## How long knockback lasts when taking damage
@@ -105,7 +107,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var keys_hud = $KeysHUD
 @onready var bow = $Bow
 
-enum {Idle, Run, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
+enum {Idle, Clinging, Run, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
 
 # Helps us keep track of the animation state
 var _anim_state = Idle
@@ -117,6 +119,9 @@ var _can_dash: bool = true
 # Keeps track of the jump count for double jumps
 var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
 var _is_jumping: bool = false
+var _next_to_left_wall: bool = false
+var _next_to_right_wall: bool = false
+var _is_clinging: bool = false
 
 # The direction the player is currently moving in
 var _direction: float = 1.0
@@ -196,6 +201,16 @@ func _physics_process(delta: float) -> void:
 		velocity.y = get_gravity().y
 		return
 
+	if left_wall_ray_cast.is_colliding():
+		_next_to_left_wall = true
+		_next_to_right_wall = false
+	elif right_wall_ray_cast.is_colliding():
+		_next_to_left_wall = false
+		_next_to_right_wall = true
+	else:
+		_next_to_left_wall = false
+		_next_to_right_wall = false
+
 	# Take care of gravity
 	if should_we_apply_gravity():
 		if _is_hover_aiming or _is_dive_hovering:
@@ -206,11 +221,19 @@ func _physics_process(delta: float) -> void:
 				velocity.y = 0
 			else:
 				velocity.y = max(velocity.y + get_gravity().y * delta * actual_gravity_factor, velocity.y)
+			_is_clinging = false
+		elif ((_next_to_left_wall and _direction < 0) or (_next_to_right_wall and _direction > 0)) and not _is_dive_attacking and not is_on_floor() and velocity.y > 0:
+			_is_clinging = true
+			print("clinging")
+			velocity += get_gravity() * delta * GRAVITY_FACTOR * WALL_CLING_FACTOR
 		else:
+			_is_clinging = false
 			var actual_dive_factor: float = 1
 			if _is_dive_attacking:
 				actual_dive_factor = DIVE_FACTOR
 			velocity += get_gravity() * delta * GRAVITY_FACTOR * actual_dive_factor
+	else:
+		_is_clinging = false
 
 	_update_player_direction()
 
@@ -537,7 +560,8 @@ func _jump() -> void:
 		animated_sprite.play("wall_jump")
 		_anim_state = WallJump
 
-	elif right_wall_ray_cast.is_colliding() and not is_on_floor() and right_wall_ray_cast.get_collider() :
+	#elif right_wall_ray_cast.is_colliding() and not is_on_floor() and right_wall_ray_cast.get_collider() :
+	elif right_wall_ray_cast.is_colliding() and not is_on_floor():
 		_direction = -1
 		_is_wall_jumping = true
 		wall_jump_timer.start()
@@ -553,6 +577,7 @@ func _jump() -> void:
 		_anim_state = Jump
 		velocity.y = JUMP_VELOCITY
 	_num_of_jumps -= 1
+	_is_clinging = false
 	GameMode.play_sound("player_jump", global_position)
 
 
@@ -583,6 +608,10 @@ func _update_player_sprite() -> void:
 		else:
 			animated_sprite.play("aim_bow_down")
 			_anim_state = AimBowDown
+	elif _is_clinging:
+		_anim_state = Clinging
+		animated_sprite.play("clinging")
+		animated_sprite.flip_h = not animated_sprite.flip_h
 	elif _player_wants_to_move and is_on_floor() and not _is_dashing and not _is_dead and not _is_jumping and not _on_dive_cooldown and not _is_melee_attacking:
 		_anim_state = Run
 		animated_sprite.play("run")
@@ -667,6 +696,9 @@ func _update_player_movement(delta: float) -> void:
 		velocity.x = max(0, velocity.x)
 	if right_enemy_ray_cast.is_colliding():
 		velocity.x = min(0, velocity.x)
+	
+	if _is_clinging:
+		velocity.y = max(velocity.y, 0)
 	
 	move_and_slide()
 	_push_colliding_objects() # Maybe we make it so we need to press a button to push objects instead?

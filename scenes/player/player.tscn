@@ -19,6 +19,10 @@ region = Rect2(32, 96, 32, 32)
 atlas = ExtResource("3_p47bc")
 region = Rect2(0, 96, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvlxm"]
+atlas = ExtResource("3_p47bc")
+region = Rect2(0, 32, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_p47bc"]
 atlas = ExtResource("3_p47bc")
 region = Rect2(0, 0, 32, 32)
@@ -123,6 +127,14 @@ animations = [{
 }],
 "loop": 1,
 "name": &"aim_bow_up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kvlxm")
+}],
+"loop": 1,
+"name": &"clinging",
 "speed": 5.0
 }, {
 "frames": [{
@@ -250,13 +262,14 @@ aim_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
-zoom = Vector2(2, 2)
+zoom = Vector2(1.7, 1.7)
+process_callback = 0
 position_smoothing_enabled = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=187761564]
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_viskr")
-animation = &"dive_end"
+animation = &"clinging"
 autoplay = "idle"
 
 [node name="TempSprite" type="Polygon2D" parent="." unique_id=1734986798]
@@ -322,7 +335,7 @@ one_shot = true
 
 [node name="ArrowsHUD" parent="." unique_id=185083823 instance=ExtResource("4_arrows")]
 
-[node name="KeysHUD" parent="." instance=ExtResource("5_keys")]
+[node name="KeysHUD" parent="." unique_id=748817123 instance=ExtResource("5_keys")]
 
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
