@@ -89,6 +89,8 @@ var _recover_left: float = 0.0
 
 func _ready() -> void:
 	add_to_group("enemy")
+	# Layer 6 (character_barrier): invisible map walls block characters only.
+	collision_mask |= 32
 	_health = max_health
 	_align_ledge_ray()
 	_ready_enemy()
