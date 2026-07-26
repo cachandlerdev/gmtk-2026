@@ -1,6 +1,117 @@
 [gd_scene format=3 uid="uid://d3bwgw1cq6ryh"]
 
 [ext_resource type="Script" uid="uid://crr27daij2odd" path="res://scenes/ui/main_menu.gd" id="1_sl1te"]
+[ext_resource type="Texture2D" uid="uid://8oyq0adfemup" path="res://assets/ui/title_background.png" id="2_1g8jr"]
+[ext_resource type="Texture2D" uid="uid://0hc4wtwhi32h" path="res://assets/ui/title_text.png" id="3_m1kxf"]
+
+[sub_resource type="Animation" id="Animation_1g8jr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.09019608, 0.1254902, 0.21960784, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Outline:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Text:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../CenterContainer:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_m1kxf"]
+resource_name = "fade_in"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0.09019608, 0.1254902, 0.21960784, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Outline:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Text:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.5, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../CenterContainer:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.5, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x2yvf"]
+_data = {
+&"RESET": SubResource("Animation_1g8jr"),
+&"fade_in": SubResource("Animation_m1kxf")
+}
 
 [node name="MainMenu" type="Control" unique_id=525694652]
 layout_mode = 3
@@ -11,47 +122,78 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sl1te")
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1809059936]
+[node name="Dim" type="ColorRect" parent="." unique_id=2089879541]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.09019608, 0.1254902, 0.21960784, 1)
 
-[node name="Label" type="Label" parent="CenterContainer" unique_id=28140727]
+[node name="Outline" type="TextureRect" parent="." unique_id=1563756539]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_1g8jr")
+
+[node name="Text" type="TextureRect" parent="." unique_id=1928590724]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -205.20801
+offset_top = 100.0
+offset_right = 205.20874
+offset_bottom = 297.0
+grow_horizontal = 2
+texture = ExtResource("3_m1kxf")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1809059936]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -213.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer" unique_id=834146411]
 layout_mode = 2
 offset_transform_enabled = true
-offset_transform_position = Vector2(0, -200)
-theme_type_variation = &"TitleLabel"
-theme_override_font_sizes/font_size = 48
-text = "Game Title"
-horizontal_alignment = 1
+theme_override_constants/separation = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=884909270]
-layout_mode = 2
-
-[node name="Start Game" type="Button" parent="CenterContainer/VBoxContainer" unique_id=586542926]
+[node name="Start Game" type="Button" parent="CenterContainer/HBoxContainer" unique_id=586542926]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Start"
 
-[node name="Controls" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="Controls" type="Button" parent="CenterContainer/HBoxContainer" unique_id=424128805]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Controls"
 
-[node name="Settings" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="Settings" type="Button" parent="CenterContainer/HBoxContainer" unique_id=1771071254]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Settings"
 
-[node name="Quit Game" type="Button" parent="CenterContainer/VBoxContainer" unique_id=2033349739]
+[node name="Quit Game" type="Button" parent="CenterContainer/HBoxContainer" unique_id=2033349739]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Quit"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Start Game" to="." method="_on_start_game_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Controls" to="." method="_on_controls_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit Game" to="." method="_on_quit_game_pressed"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=938423791]
+root_node = NodePath("../Dim")
+libraries/ = SubResource("AnimationLibrary_x2yvf")
+
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Start Game" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Controls" to="." method="_on_controls_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/Quit Game" to="." method="_on_quit_game_pressed"]

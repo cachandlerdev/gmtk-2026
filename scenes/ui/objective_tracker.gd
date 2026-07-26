@@ -4,7 +4,7 @@ extends PanelContainer
 
 const MARGIN := 16.0
 
-@onready var _body: Label = $Margin/VBox/Body
+@onready var _body: RichTextLabel = $Margin/VBox/Body
 
 var _last_text := ""
 var _override_text := ""

@@ -319,9 +319,6 @@ position = Vector2(-252, -33)
 [node name="HeartPickup" parent="." unique_id=1100163075 instance=ExtResource("4_6jffa")]
 position = Vector2(2374, -57)
 
-[node name="HeartPickup2" parent="." unique_id=545186402 instance=ExtResource("4_6jffa")]
-position = Vector2(758, -40)
-
 [node name="Archer" parent="." unique_id=1649133593 instance=ExtResource("5_jcy27")]
 position = Vector2(2674, -87)
 
@@ -332,7 +329,7 @@ position = Vector2(2567, 36)
 position = Vector2(2686, 41)
 
 [node name="ProjectileThrower" parent="." unique_id=1351769032 instance=ExtResource("8_77k6j")]
-position = Vector2(3782, -739)
+position = Vector2(3781, -739)
 scale = Vector2(-1, 1)
 
 [node name="HeartPickup3" parent="." unique_id=854574932 instance=ExtResource("4_6jffa")]
@@ -356,41 +353,73 @@ scale = Vector2(0.5, 0.5)
 targets = Array[NodePath]([NodePath("../Door")])
 
 [node name="ArrowPickupBouncing" parent="." unique_id=136717254 instance=ExtResource("13_ey2yj")]
-position = Vector2(821, -41)
+position = Vector2(1567, -52)
 
 [node name="ArrowPickupPiercing" parent="." unique_id=493964058 instance=ExtResource("14_2iuaq")]
-position = Vector2(1591, -53)
+position = Vector2(2067, -53)
 
 [node name="TutorialCheckpoints" type="Node2D" parent="." unique_id=666253271]
 
 [node name="CP_Move" parent="TutorialCheckpoints" unique_id=1722067196 instance=ExtResource("15_tutcp")]
-position = Vector2(-252, -33)
-objective_text = "Move with A/D and jump with Space."
+position = Vector2(-94, -36)
+objective_text = "Jumping [Space]"
+toast_message = "Press [Space] to jump. Press again to double jump."
+
+[node name="CP_Move2" parent="TutorialCheckpoints" unique_id=1146671657 instance=ExtResource("15_tutcp")]
+position = Vector2(-252, -39)
+objective_text = "Moving: [A]/[D]"
+toast_message = "Welcome! Press [A], [D] to move."
 
 [node name="CP_Spikes" parent="TutorialCheckpoints" unique_id=1881805474 instance=ExtResource("15_tutcp")]
-position = Vector2(200, -40)
-objective_text = "Jump over the spikes. Don't touch them."
+position = Vector2(131, -40)
+objective_text = "Spikes"
+toast_message = "Spies can be painful."
 
 [node name="CP_Arrows" parent="TutorialCheckpoints" unique_id=1365051616 instance=ExtResource("15_tutcp")]
-position = Vector2(700, -40)
-objective_text = "Pick up arrows. Hold Right Mouse to aim, release to shoot. Use the double jump and dash jump to move across the platforms"
+position = Vector2(1611, -49)
+objective_text = "Shooting [Right Mouse]"
+toast_message = "Hold [Right Mouse] to draw the bow."
+
+[node name="CP_Arrows3" parent="TutorialCheckpoints" unique_id=1098294365 instance=ExtResource("15_tutcp")]
+position = Vector2(877, -52)
+objective_text = "Melee & Dive [Left Mouse]"
+toast_message = "Press [Left Mouse] to melee attack. Press in the air for a dive attack."
+
+[node name="CP_Arrows2" parent="TutorialCheckpoints" unique_id=183053937 instance=ExtResource("15_tutcp")]
+position = Vector2(564, -40)
+objective_text = "Dashing [Shift]"
+toast_message = "Press [Shift] to dash."
 
 [node name="CP_SpecialArrow" parent="TutorialCheckpoints" unique_id=366876912 instance=ExtResource("15_tutcp")]
-position = Vector2(1500, -40)
-objective_text = "Special arrows have unique effects. Try them out."
+position = Vector2(2008, -50)
+objective_text = "Arrow Types [Scroll]"
+toast_message = "Switch arrow types with [Scroll]. Special arrows have unique effects."
 
 [node name="CP_Combat" parent="TutorialCheckpoints" unique_id=2022169605 instance=ExtResource("15_tutcp")]
 position = Vector2(2350, -40)
-objective_text = "Clear the guards ahead. Stay out of their vision cones. Use the stomp attack while in air "
+objective_text = "Combat"
+toast_message = "Clear the guards ahead."
 
 [node name="CP_Lever" parent="TutorialCheckpoints" unique_id=1981246808 instance=ExtResource("15_tutcp")]
 position = Vector2(3000, -40)
-objective_text = "Pull the lever (E) to open the door."
+objective_text = "Lever [E]"
+toast_message = "Pull the lever (E) to open the door."
 
 [node name="CP_Count" parent="TutorialCheckpoints" unique_id=566450716 instance=ExtResource("15_tutcp")]
 position = Vector2(4000, -500)
-objective_text = "Assassinate the Count."
+objective_text = "Count"
+toast_message = "Assasinate the count."
+
+[node name="CP_Count2" parent="TutorialCheckpoints" unique_id=1336213164 instance=ExtResource("15_tutcp")]
+position = Vector2(3327, -486)
+scale = Vector2(3.48, 1)
+objective_text = "Turrets"
+toast_message = "Turrets can be painful."
 
 [node name="CP_Escape" parent="TutorialCheckpoints" unique_id=298757230 instance=ExtResource("15_tutcp")]
-position = Vector2(4600, -700)
-objective_text = "Reach the exit to escape."
+position = Vector2(4731, -544)
+objective_text = "Escape!"
+toast_message = "After killing the count, reach the exit to escape."
+
+[node name="Enemy2" parent="." unique_id=2101422832 instance=ExtResource("7_bmrm0")]
+position = Vector2(1159, -70)

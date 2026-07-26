@@ -10,10 +10,16 @@ extends Node
 ## DESIGNERS: append your level's scene path here. A level is "complete" when its
 ## objective (the Count, in group "objective") is killed — see level.gd — so a
 ## level needs a Count to be finishable for now.
+#@export var levels: Array[String] = [
+#	"res://scenes/levels/level_1_courtyard.tscn",
+#	"res://scenes/levels/level_2_gallery.tscn",
+#	"res://scenes/levels/level_3_throne.tscn",
+#]
+
 @export var levels: Array[String] = [
-	"res://scenes/levels/level_1_courtyard.tscn",
-	"res://scenes/levels/level_2_gallery.tscn",
-	"res://scenes/levels/level_3_throne.tscn",
+	"res://scenes/levels/tutorial_level.tscn",
+	"res://scenes/levels/castle_level.tscn",
+	"res://scenes/levels/tower_level.tscn",
 ]
 
 const MAIN_MENU := "res://scenes/levels/main_menu_level.tscn"

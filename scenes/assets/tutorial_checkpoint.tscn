@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://cjn4tk418xti7"]
 
-[ext_resource type="Script" path="res://scripts/tutorial_checkpoint.gd" id="1_checkpoint"]
+[ext_resource type="Script" uid="uid://d2qehie6ufpo8" path="res://scripts/tutorial_checkpoint.gd" id="1_checkpoint"]
 
 [sub_resource type="RectangleShape2D" id="Shape_checkpoint"]
 size = Vector2(48, 128)
 
-[node name="TutorialCheckpoint" type="Area2D"]
+[node name="TutorialCheckpoint" type="Area2D" unique_id=1146671657]
 collision_layer = 0
-collision_mask = 1
 monitorable = false
 script = ExtResource("1_checkpoint")
+toast_message = "Objective updated!"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=17206844]
 shape = SubResource("Shape_checkpoint")
