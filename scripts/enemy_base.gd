@@ -51,7 +51,7 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export var attack_recovery: float = 0.35
 
 @export_group("Loot")
-## Scenes to spawn at this enemy's position on death (e.g. key pickups). Assign per-instance in the editor.
+## Scenes to spawn at this enemy's position on death (keys, hearts, arrow pickups, ...). Assign per-instance in the editor.
 @export var loot_drops: Array[PackedScene] = []
 
 var facing: int = 1          ## 1 = right, -1 = left
