@@ -19,6 +19,8 @@
 [ext_resource type="PackedScene" uid="uid://bf434gvd0age" path="res://scenes/assets/exit.tscn" id="17_ted63"]
 [ext_resource type="PackedScene" uid="uid://cxdyos48ioqts" path="res://scenes/assets/heart_pickup.tscn" id="18_6fcps"]
 [ext_resource type="PackedScene" uid="uid://edsig0u0xqkc" path="res://scenes/assets/bridge.tscn" id="18_ted63"]
+[ext_resource type="PackedScene" uid="uid://d2omxwyqm3ide" path="res://scenes/assets/arrow_pickup_bouncing.tscn" id="20_omoaa"]
+[ext_resource type="PackedScene" uid="uid://d2omxwyqm3idd" path="res://scenes/assets/arrow_pickup_piercing.tscn" id="21_4xi05"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ec2h"]
 texture = ExtResource("2_cqmx6")
@@ -783,3 +785,18 @@ starts_activated = true
 position = Vector2(3443, -593)
 scale = Vector2(0.5, 0.5)
 targets = Array[NodePath]([NodePath("../Bridge")])
+
+[node name="ArrowPickupBouncing" parent="." unique_id=2041491070 instance=ExtResource("20_omoaa")]
+position = Vector2(484, -116)
+
+[node name="ArrowPickupPiercing" parent="." unique_id=1226329423 instance=ExtResource("21_4xi05")]
+position = Vector2(338, 218)
+
+[node name="ArrowPickupPiercing2" parent="." unique_id=1201806877 instance=ExtResource("21_4xi05")]
+position = Vector2(878, -655)
+
+[node name="ArrowPickupPiercing3" parent="." unique_id=1929382212 instance=ExtResource("21_4xi05")]
+position = Vector2(864, -1277)
+
+[node name="ArrowPickupBouncing2" parent="." unique_id=951311734 instance=ExtResource("20_omoaa")]
+position = Vector2(-118, -1232)
