@@ -15,6 +15,23 @@ extends Node
 @export var alarm_raised_music_index: int = 8
 
 
+@onready var melee_slash = $SFX/MeleeSlash
+@onready var shield_block = $SFX/ShieldBlock
+@onready var bow_draw = $SFX/BowDraw
+@onready var bow_release = $SFX/BowRelease
+@onready var arrow_hit = $SFX/ArrowHit
+@onready var arrow_break = $SFX/ArrowBreak
+@onready var arrow_collect = $SFX/ArrowCollect
+@onready var arrow_bounce = $SFX/ArrowBounce
+@onready var dodge = $SFX/Dodge
+@onready var arrow_hit_flesh = $SFX/ArrowHitFlesh
+@onready var dive_attack = $SFX/DiveAttack
+@onready var shing = $SFX/Shing
+@onready var player_takes_damage = $SFX/PlayerTakesDamage
+@onready var player_takes_damage_music = $SFX/PlayerTakesDamageMusic
+@onready var player_jump = $SFX/PlayerJump
+
+
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}
 var _game_mode_state := Stealth
 var _num_of_alert_guards: int = 0
@@ -60,24 +77,24 @@ func set_state(new_state) -> void:
 				can_change = true
 		Battle:
 			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
-				print("TODO: Battle stage")
+				print("Battle stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(battle_music_index)
 				can_change = true
 		NearDeath:
 			if not player._is_dead and _game_mode_state != AlarmRaised and _game_mode_state != Escape:
-				print("TODO: Near Death stage")
+				print("Near Death stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(near_death_music_index)
 				can_change = true
 		AlarmRaised:
 			if not player._is_dead:
-				print("TODO: Alarm Raised stage")
+				print("Alarm Raised stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(alarm_raised_music_index)
 				can_change = true
 		Escape:
 			# We don't check AlarmRaised here so that if the count is killed 
 			# after the alarm is raised, it updates to say that the count is dead.
 			if not player._is_dead and _game_mode_state != Escape:
-				print("TODO: Escape stage")
+				print("Escape stage")
 				MusicPlayer.get_stream_playback().switch_to_clip(escape_music_index)
 				can_change = true
 		Victory:
@@ -85,12 +102,13 @@ func set_state(new_state) -> void:
 			MusicPlayer.get_stream_playback().switch_to_clip(victory_music_index)
 			can_change = true
 		Defeat:
-			print("TODO: Defeat stage")
+			print("Defeat stage")
 			_num_of_alert_guards = 0
 			MusicPlayer.get_stream_playback().switch_to_clip(defeat_music_index)
 			can_change = true
+			#await get_tree().create_timer(1).timeout
 		MainMenu:
-			print("TODO: Main Menu stage")
+			print("Main Menu stage")
 			MusicPlayer.get_stream_playback().switch_to_clip(main_menu_music_index)
 			can_change = true
 
@@ -123,3 +141,16 @@ func remove_watching_guard() -> void:
 	_num_of_alert_guards -= 1
 	if _num_of_alert_guards == 0 and _game_mode_state == Battle:
 		set_state(Stealth)
+
+
+## Plays a sound effect
+## Credit to https://forum.godotengine.org/t/playing-sound-fx/57980/6
+func play_sound(key, position: Vector2 = Vector2(0, 0)) -> void:
+	var sound = get(key)
+	if sound is AudioStreamPlayer2D:
+		sound.global_position = position
+		sound.play()
+	elif sound is AudioStreamPlayer:
+		sound.play()
+	else:
+		print("Sound " + key + " not found!")

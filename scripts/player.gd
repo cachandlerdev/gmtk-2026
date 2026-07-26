@@ -13,14 +13,14 @@ signal key_count_changed(count: int)
 ## Custom gravity multiplier to improve player movement
 @export var GRAVITY_FACTOR: float = 2
 ## How much faster the player moves while dashing. Separate for air or else op.
-@export var GROUND_DASH_FACTOR: float = 2.5
+@export var GROUND_DASH_FACTOR: float = 2
 @export var AIR_DASH_FACTOR: float = 2.0
 ## The impact of inertia. The higher this value, the more control the player has
 @export var INERTIA_FACTOR: float = 2000
 ## How much faster the player moves while performing a melee attack.
 @export var MELEE_THRUST_VELOCITY: float = 1.15
 ## How much the player gets launched vertically performing a melee attack.
-@export var MELEE_JUMP_AMOUNT: float = 3500
+@export var MELEE_JUMP_AMOUNT: float = 1500
 ## How fast the player dives downwards for a dive attack
 @export var DIVE_FACTOR: float = 8
 ## How many air jumps the player gets
@@ -40,7 +40,7 @@ signal key_count_changed(count: int)
 ## How long you can't move after diving
 @export var DIVE_COOLDOWN: float = 1
 ## How much of an effect knockback has
-@export var KNOCKBACK_FACTOR: float = 1
+@export var KNOCKBACK_FACTOR: float = 1.5
 
 
 @export_group("Arrows")
@@ -93,6 +93,8 @@ const LOW_HEALTH_THRESHOLD: int = 1
 
 @onready var left_wall_ray_cast = $LeftWallRayCast
 @onready var right_wall_ray_cast = $RightWallRayCast
+@onready var left_enemy_ray_cast = $LeftEnemyRayCast
+@onready var right_enemy_ray_cast = $RightEnemyRayCast
 @onready var left_attack_ray_cast = $LeftAttackRayCast # melee
 @onready var right_attack_ray_cast = $RightAttackRayCast # melee
 @onready var dive_collider = $DiveCollider
@@ -103,7 +105,7 @@ const LOW_HEALTH_THRESHOLD: int = 1
 @onready var keys_hud = $KeysHUD
 @onready var bow = $Bow
 
-enum {Idle, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
+enum {Idle, Run, Jump, WallJump, Melee, Dash, DiveStart, DiveEnd, AimBowDown, AimBowSide, AimBowUp}
 
 # Helps us keep track of the animation state
 var _anim_state = Idle
@@ -114,6 +116,7 @@ var _can_dash: bool = true
 
 # Keeps track of the jump count for double jumps
 var _num_of_jumps: int = MAX_NUM_OF_AIR_JUMPS
+var _is_jumping: bool = false
 
 # The direction the player is currently moving in
 var _direction: float = 1.0
@@ -133,9 +136,9 @@ var _on_dive_cooldown: bool = false
 # Needed to prevent aiming direction from forcibly moving the character
 var _player_wants_to_move: bool = false
 var _is_aiming: bool = false
-# A threshold value used for the difference between the mouse and the player 
+# A threshold value used for the degree angle difference between the mouse and the player 
 # position to see if we're aiming sideways
-var _aim_side_threshold: float = 100
+var _aim_side_threshold: float = 20
 # Handles temporary hovering while aiming to shot
 var _is_hover_aiming: bool = false
 var _can_hover_aim: bool = true
@@ -190,6 +193,7 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	if _is_dead:
+		velocity.y = get_gravity().y
 		return
 
 	# Take care of gravity
@@ -210,8 +214,13 @@ func _physics_process(delta: float) -> void:
 
 	_update_player_direction()
 
+	if is_on_floor():
+		_is_jumping = false
+
+
 	# Handle player inputs
 	if Input.is_action_just_pressed("jump") and _num_of_jumps > 0 and not _surface_mods.blocks_jump:
+		_is_jumping = true
 		_jump()
 	if Input.is_action_just_pressed("dash") and _can_dash:
 		animated_sprite.play("dash")
@@ -278,6 +287,8 @@ func _update_player_direction() -> void:
 		if _direction != 0:
 			_player_wants_to_move = true
 			_looking_direction = _direction
+		else:
+			_player_wants_to_move = false
 		
 
 
@@ -287,8 +298,11 @@ func take_hit(source: Node = null) -> void:
 		return
 
 	_hearts = maxi(_hearts - 1, 0)
+	add_screen_shake(0.3)
 	var source_name: String = str(source.name) if source else "unknown"
 	print("Player hit by %s — hearts left: %d" % [source_name, _hearts])
+	GameMode.play_sound("player_takes_damage", global_position)
+	GameMode.play_sound("player_takes_damage_music", global_position)
 
 	health_changed.emit(_hearts, MAX_HEARTS)
 	_flash_hurt()
@@ -318,9 +332,9 @@ func die() -> void:
 		return
 	_is_dead = true
 	died.emit()
-	collision.disabled = true
-	set_physics_process(false)
 	GameMode.set_state(GameMode.Defeat)
+	collision.set_deferred("disabled", true)
+	set_physics_process(false)
 
 
 func _check_out_of_bounds() -> void:
@@ -426,6 +440,7 @@ func melee_attack() -> void:
 
 ## Fly downwards and attack. This starts the attack by hovering the player for a sec
 func start_dive_attack() -> void:
+	GameMode.play_sound("shing", global_position)
 	_is_dive_hovering = true
 	_direction = 0
 	animated_sprite.play("dive_start")
@@ -436,8 +451,6 @@ func start_dive_attack() -> void:
 ## Start the actual dive attack
 func dive_downwards() -> void:
 	invulnerability_timer.start()
-	animated_sprite.play("dive_end")
-	_anim_state = DiveEnd
 	_is_dive_attacking = true
 	_can_melee_attack = false
 	dive_update_timer.start()
@@ -449,6 +462,8 @@ func dive_downwards() -> void:
 func aim() -> void:
 	if bow._can_shoot and arrow_inventory.has_any():
 		_is_aiming = true
+		GameMode.play_sound("bow_draw")
+
 
 
 ## Handles releasing the aim/shoot button.
@@ -461,6 +476,7 @@ func stop_aiming() -> void:
 ## Reduced gravity while drawing in the air.
 func _hover_aim() -> void:
 	_is_hover_aiming = true
+	GameMode.play_sound("shing", global_position)
 	if velocity.y < 0.0:
 		velocity.y = 0.0
 	# Normal end is full draw / release / fire. If nothing happens the hover aim will time out
@@ -521,11 +537,12 @@ func _jump() -> void:
 		_anim_state = WallJump
 	else:
 		# Regular jump
-
+		print("jump")
 		animated_sprite.play("jump")
 		_anim_state = Jump
 		velocity.y = JUMP_VELOCITY
 	_num_of_jumps -= 1
+	GameMode.play_sound("player_jump", global_position)
 
 
 ## Update the player sprite. Handles flipping and animations
@@ -542,27 +559,28 @@ func _update_player_sprite() -> void:
 		# get mouse y relative to player y
 		var mouse_location := get_global_mouse_position()
 		var player_location := global_position
+		var x_diff: float = abs(mouse_location.x - player_location.x)
 		var y_diff: float = player_location.y - mouse_location.y
+		var angle_diff = atan2(y_diff, x_diff)
 
-		print("abs_start")
-		print(y_diff)
-		print(_aim_side_threshold)
-		#if abs(y_diff < _aim_side_threshold):
-		#	animated_sprite.play("aim_bow_side")
-		#	_anim_state = AimBowSide
-		#elif y_diff < 0:
-		#	# Mouse above player
-		#	animated_sprite.play("aim_bow_up")
-		#	_anim_state = AimBowUp
-		#else:
-		#	animated_sprite.play("aim_bow_down")
-		#	_anim_state = AimBowDown
+		if abs(angle_diff) < deg_to_rad(_aim_side_threshold):
+			animated_sprite.play("aim_bow_side")
+			_anim_state = AimBowSide
+		elif y_diff > 0:
+			animated_sprite.play("aim_bow_up")
+			_anim_state = AimBowUp
+		else:
+			animated_sprite.play("aim_bow_down")
+			_anim_state = AimBowDown
+	elif _player_wants_to_move and is_on_floor() and not _is_dashing and not _is_dead and not _is_jumping and not _on_dive_cooldown and not _is_melee_attacking:
+		_anim_state = Run
+		animated_sprite.play("run")
+	
 	
 	# rip, this is why I should have made a state enum instead of bool flags
-	if (not _is_aiming and not _is_dashing and not _is_dead and 
-		not _is_dive_attacking and not _is_dive_hovering and 
-		not _is_melee_attacking) and not _anim_state == Idle:
-
+	if (not _is_aiming and not _is_dashing and not _is_dead and not _is_jumping and  
+		not _is_dive_attacking and not _is_dive_hovering and not _player_wants_to_move and
+		not _is_melee_attacking and not _is_wall_jumping and not _on_dive_cooldown) and is_on_floor() and not _anim_state == Idle:
 		animated_sprite.play("idle")
 		_anim_state = Idle
 
@@ -583,7 +601,7 @@ func _update_player_movement(delta: float) -> void:
 	if _on_dive_cooldown:
 		velocity = Vector2(0, 0)
 		return
-
+	
 	# Move and account for the dash
 	var actual_direction = _direction
 	if _is_knocked_back:
@@ -609,7 +627,7 @@ func _update_player_movement(delta: float) -> void:
 		actual_knockback_factor = -1 * KNOCKBACK_FACTOR
 	
 	var target_velocity = 0
-	if _player_wants_to_move or _is_melee_attacking or _is_dashing:
+	if _player_wants_to_move or _is_melee_attacking or _is_dashing or _is_knocked_back:
 		target_velocity = (
 			actual_direction * SPEED * actual_dash_factor * actual_melee_factor * _surface_mods.speed_factor * actual_knockback_factor
 		)
@@ -632,6 +650,12 @@ func _update_player_movement(delta: float) -> void:
 	
 	if _is_dive_hovering or _is_dive_attacking:
 		velocity.x = 0
+	
+	# Stop enemies from feeling like paperweights
+	if left_enemy_ray_cast.is_colliding():
+		velocity.x = max(0, velocity.x)
+	if right_enemy_ray_cast.is_colliding():
+		velocity.x = min(0, velocity.x)
 	
 	move_and_slide()
 	_push_colliding_objects() # Maybe we make it so we need to press a button to push objects instead?
@@ -663,6 +687,7 @@ func _push_colliding_objects() -> void:
 
 ## Let the player dash forward
 func _dash() -> void:
+	GameMode.play_sound("dodge", global_position)
 	_can_dash = false
 	_is_dashing = true
 	dash_duration_timer.start()
@@ -693,6 +718,7 @@ func _on_melee_duration_timer_timeout() -> void:
 			if other is EnemyBase:
 				other.take_hit(self, DIVE_MELEE_DAMAGE)
 		add_screen_shake(DIVE_ATTACK_SCREEN_SHAKE)
+		GameMode.play_sound("dive_attack", global_position)
 	else:
 		# Now is when it should hit the enemy
 		if _looking_direction > 0 and right_attack_ray_cast.is_colliding():
@@ -706,9 +732,12 @@ func _on_melee_duration_timer_timeout() -> void:
 			if other is EnemyBase:
 				other.take_hit(self, MELEE_DAMAGE)
 		add_screen_shake(MELEE_ATTACK_SCREEN_SHAKE)
+		GameMode.play_sound("melee_slash", global_position)
 
 	_is_melee_attacking = false
 	_is_dive_attacking = false
+	animated_sprite.play("idle")
+	_anim_state = Idle
 
 	melee_cooldown_timer.start()
 
@@ -733,6 +762,8 @@ func _on_hover_aim_cooldown_timer_timeout() -> void:
 func _on_dive_update_timer_timeout() -> void:
 	if is_on_floor():
 		_on_melee_duration_timer_timeout()
+		animated_sprite.play("dive_end")
+		_anim_state = DiveEnd
 		_on_dive_cooldown = true
 		await get_tree().create_timer(DIVE_COOLDOWN).timeout
 		_on_dive_cooldown = false
