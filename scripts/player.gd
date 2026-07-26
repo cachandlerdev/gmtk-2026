@@ -53,7 +53,7 @@ signal key_count_changed(count: int)
 # credit to https://kidscancode.org/godot_recipes/4.x/2d/screen_shake/index.html
 @export_group("Screen Shake")
 @export var MELEE_ATTACK_SCREEN_SHAKE: float = 0.1
-@export var DIVE_ATTACK_SCREEN_SHAKE: float = 0.3
+@export var DIVE_ATTACK_SCREEN_SHAKE: float = 0.2
 @export var DASH_SCREEN_SHAKE: float = 0.2
 
 ## How quickly shaking stops [0, 1]

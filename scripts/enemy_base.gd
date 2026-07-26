@@ -53,6 +53,7 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export_group("Loot")
 ## Scenes to spawn at this enemy's position on death (keys, hearts, arrow pickups, ...). Assign per-instance in the editor.
 @export var loot_drops: Array[PackedScene] = []
+@export var DEATH_DURATION: float = 0.5
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## Current awareness state (see the Awareness enum).
@@ -150,6 +151,7 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
+	_visual.play("death")
 	if is_alerted:
 		is_alerted = false
 		GameMode.remove_watching_guard()
@@ -159,6 +161,11 @@ func _on_death() -> void:
 func die() -> void:
 	_on_death()
 	_spawn_loot()
+	set_physics_process(false)
+	$CollisionShape2D.disabled = true
+	# Yeah sorry I'm not doing all of the checks and putting it in the existing 
+	# system because it's 1am and the deadline is in 9 hours
+	await get_tree().create_timer(DEATH_DURATION).timeout
 	queue_free()
 
 

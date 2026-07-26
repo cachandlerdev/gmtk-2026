@@ -21,7 +21,7 @@ attack_windup = 0.5
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=1413428675]
 position = Vector2(0, 10)
 sprite_frames = ExtResource("4_frames")
-animation = &"idle"
+animation = &"death"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1019774138]
@@ -45,7 +45,7 @@ shape = SubResource("Shape_hit")
 
 [node name="BeehaveTree" parent="." unique_id=370914248 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
 enabled = false
-blackboard = NodePath("@Node@141822")
+blackboard = NodePath("@Node@274421")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

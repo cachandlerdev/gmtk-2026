@@ -19,6 +19,18 @@ region = Rect2(40, 64, 40, 32)
 atlas = ExtResource("5_betck")
 region = Rect2(80, 64, 40, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_tnbij"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ipimd"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdl35"]
+atlas = ExtResource("6_khpgo")
+region = Rect2(64, 128, 32, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_3nx23"]
 atlas = ExtResource("6_khpgo")
 region = Rect2(0, 96, 32, 32)
@@ -50,6 +62,20 @@ animations = [{
 "loop": 0,
 "name": &"attack",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tnbij")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ipimd")
+}, {
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_xdl35")
+}],
+"loop": 0,
+"name": &"death",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -90,7 +116,7 @@ attack_cooldown = 2.0
 [node name="Visual" type="AnimatedSprite2D" parent="." unique_id=7603010]
 position = Vector2(0, 6)
 sprite_frames = SubResource("SpriteFrames_c5ll8")
-animation = &"attack"
+animation = &"death"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=599658116]
@@ -115,7 +141,7 @@ view_distance = 410.0
 
 [node name="BeehaveTree" parent="." unique_id=669277539 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
 enabled = false
-blackboard = NodePath("@Node@159449")
+blackboard = NodePath("@Node@273600")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

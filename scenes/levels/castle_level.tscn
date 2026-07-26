@@ -604,10 +604,9 @@ position = Vector2(-913, -513)
 fall_death_y = 1300.0
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1701362968]
-scale = Vector2(0.75, 0.75)
 
 [node name="Shieldbearer5" parent="Enemies" unique_id=21137453 instance=ExtResource("5_oeoca")]
-position = Vector2(3307, -716)
+position = Vector2(3346, -544)
 
 [node name="Enemy" parent="Enemies" unique_id=245799776 instance=ExtResource("4_oeoca")]
 position = Vector2(2308, 357)
@@ -619,40 +618,40 @@ position = Vector2(991, 420)
 position = Vector2(89, 392)
 
 [node name="Enemy6" parent="Enemies" unique_id=2051259058 instance=ExtResource("4_oeoca")]
-position = Vector2(1131, 1128)
+position = Vector2(1307, 588)
 
 [node name="Shieldbearer" parent="Enemies" unique_id=208872871 instance=ExtResource("5_oeoca")]
-position = Vector2(1810, 805)
+position = Vector2(1768, 475)
 
 [node name="Shieldbearer2" parent="Enemies" unique_id=196389973 instance=ExtResource("5_oeoca")]
 position = Vector2(1155, 417)
 
 [node name="Shieldbearer3" parent="Enemies" unique_id=984218049 instance=ExtResource("5_oeoca")]
-position = Vector2(741, 420)
+position = Vector2(740, 464)
 
 [node name="Shieldbearer4" parent="Enemies" unique_id=525207979 instance=ExtResource("5_oeoca")]
-position = Vector2(1043, 1124)
+position = Vector2(1057, 827)
 
 [node name="Archer" parent="Enemies" unique_id=1707734568 instance=ExtResource("9_6q7bl")]
-position = Vector2(1151, -1721)
+position = Vector2(1187, -1386)
 
 [node name="Archer2" parent="Enemies" unique_id=444933615 instance=ExtResource("9_6q7bl")]
-position = Vector2(931, -1642)
+position = Vector2(876, -1300)
 
 [node name="Archer3" parent="Enemies" unique_id=378892374 instance=ExtResource("9_6q7bl")]
-position = Vector2(1376, -1640)
+position = Vector2(1297, -1400)
 
 [node name="Archer4" parent="Enemies" unique_id=561811664 instance=ExtResource("9_6q7bl")]
-position = Vector2(2148, -1738)
+position = Vector2(2656, -1303)
 
 [node name="Archer5" parent="Enemies" unique_id=1042932866 instance=ExtResource("9_6q7bl")]
-position = Vector2(1623, -1834)
+position = Vector2(2105, -1380)
 
 [node name="Archer6" parent="Enemies" unique_id=1339650945 instance=ExtResource("9_6q7bl")]
-position = Vector2(2896, -1832)
+position = Vector2(3085, -1295)
 
 [node name="Archer7" parent="Enemies" unique_id=2026695660 instance=ExtResource("9_6q7bl")]
-position = Vector2(3752, -1720)
+position = Vector2(3340, -1254)
 
 [node name="Archer8" parent="Enemies" unique_id=557055404 instance=ExtResource("9_6q7bl")]
 position = Vector2(2147, -902)
@@ -664,7 +663,7 @@ position = Vector2(2595, -1079)
 position = Vector2(3330, -985)
 
 [node name="Archer11" parent="Enemies" unique_id=1226818038 instance=ExtResource("9_6q7bl")]
-position = Vector2(3578, -1066)
+position = Vector2(3284, -782)
 
 [node name="Archer12" parent="Enemies" unique_id=521791900 instance=ExtResource("9_6q7bl")]
 position = Vector2(1257.6664, -809)
