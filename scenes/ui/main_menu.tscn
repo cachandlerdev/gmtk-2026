@@ -17,7 +17,8 @@ offset_left = 493.0
 offset_top = 89.0
 offset_right = 659.0
 offset_bottom = 134.0
-theme_override_font_sizes/font_size = 32
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
 text = "Game Title"
 horizontal_alignment = 1
 

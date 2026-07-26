@@ -25,7 +25,13 @@ region = Rect2(64, 32, 32, 32)
 
 [resource]
 animations = [{
-"frames": [{"duration": 4.0, "texture": SubResource("a_windup")}, {"duration": 2.0, "texture": SubResource("a_strike")}],
+"frames": [{
+"duration": 4.0,
+"texture": SubResource("a_windup")
+}, {
+"duration": 2.0,
+"texture": SubResource("a_strike")
+}],
 "loop": false,
 "name": &"attack",
 "speed": 10.0
@@ -34,7 +40,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("w0")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -48,7 +54,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("w2")
 }],
-"loop": 1,
+"loop": true,
 "name": &"walk",
 "speed": 8.0
 }]

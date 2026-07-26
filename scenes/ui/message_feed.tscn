@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://dvlk5nb1r0ujo"]
+
+[ext_resource type="Script" path="res://scenes/ui/message_feed.gd" id="1_feed"]
+[ext_resource type="Theme" uid="uid://bgamefontstheme1" path="res://assets/ui/game_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.05, 0.05, 0.08, 0.78)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.18)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+
+[node name="MessageFeed" type="CanvasLayer"]
+layer = 50
+script = ExtResource("1_feed")
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -96.0
+offset_right = 280.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="Panel" type="PanelContainer" parent="Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Label" type="Label" parent="Margin/Panel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.93, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "Message"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
