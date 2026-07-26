@@ -30,4 +30,5 @@ func _on_body_entered(body: Node2D) -> void:
 	_spent = true
 	if body.has_method("take_hit"):
 		body.take_hit(self)
+	GameMode.play_sound("arrow_hit")
 	queue_free()
