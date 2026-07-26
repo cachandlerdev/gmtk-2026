@@ -200,10 +200,10 @@ func try_hit_enemy(_enemy: Node = null, allow_pierce: bool = true) -> bool:
 		return false
 	if allow_pierce and pierces_remaining > 0:
 		pierces_remaining -= 1
-		GameMode.play_sound("arrow_hit_flesh")
+		GameMode.play_sound("arrow_hit_flesh", global_position)
 		return true
 	_drop()
-	GameMode.play_sound("arrow_hit_flesh")
+	GameMode.play_sound("arrow_hit_flesh", global_position)
 
 	return true
 

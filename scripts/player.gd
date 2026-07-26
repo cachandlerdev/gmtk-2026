@@ -11,10 +11,10 @@ signal key_count_changed(count: int)
 ## Controls jump strength. The smaller the number, the higher the player jumps.
 @export var JUMP_VELOCITY: float = -550.0
 ## Custom gravity multiplier to improve player movement
-@export var GRAVITY_FACTOR: float = 2
+@export var GRAVITY_FACTOR: float = 2.2
 ## How much faster the player moves while dashing. Separate for air or else op.
-@export var GROUND_DASH_FACTOR: float = 2
-@export var AIR_DASH_FACTOR: float = 2.0
+@export var GROUND_DASH_FACTOR: float = 1.7
+@export var AIR_DASH_FACTOR: float = 1.6
 ## The impact of inertia. The higher this value, the more control the player has
 @export var INERTIA_FACTOR: float = 2000
 ## How much faster the player moves while performing a melee attack.
@@ -53,7 +53,7 @@ signal key_count_changed(count: int)
 # credit to https://kidscancode.org/godot_recipes/4.x/2d/screen_shake/index.html
 @export_group("Screen Shake")
 @export var MELEE_ATTACK_SCREEN_SHAKE: float = 0.1
-@export var DIVE_ATTACK_SCREEN_SHAKE: float = 0.3
+@export var DIVE_ATTACK_SCREEN_SHAKE: float = 0.2
 @export var DASH_SCREEN_SHAKE: float = 0.2
 
 ## How quickly shaking stops [0, 1]
@@ -572,7 +572,6 @@ func _jump() -> void:
 		_anim_state = WallJump
 	else:
 		# Regular jump
-		print("jump")
 		animated_sprite.play("jump")
 		_anim_state = Jump
 		velocity.y = JUMP_VELOCITY

@@ -1,13 +1,74 @@
 [gd_scene format=3 uid="uid://dd3q43h2sercg"]
 
-[ext_resource type="Script" path="res://scenes/ui/level_complete_menu.gd" id="1_lcm"]
+[ext_resource type="Script" uid="uid://5e8lknso6vwg" path="res://scenes/ui/level_complete_menu.gd" id="1_lcm"]
 
-[node name="LevelCompleteMenu" type="CanvasLayer"]
+[sub_resource type="Animation" id="Animation_82v4c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Dim:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0.6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Center:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_5p6n4"]
+resource_name = "fade_in"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Dim:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Center:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w8tpa"]
+_data = {
+&"RESET": SubResource("Animation_82v4c"),
+&"fade_in": SubResource("Animation_5p6n4")
+}
+
+[node name="LevelCompleteMenu" type="CanvasLayer" unique_id=457582514]
 process_mode = 3
 layer = 100
 script = ExtResource("1_lcm")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=547324652]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,35 +76,39 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.6)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=70752676]
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Menu" type="VBoxContainer" parent="Center"]
+[node name="Menu" type="VBoxContainer" parent="Center" unique_id=1144268009]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Title" type="Label" parent="Center/Menu"]
+[node name="Title" type="Label" parent="Center/Menu" unique_id=313096]
 layout_mode = 2
 theme_type_variation = &"TitleLabel"
 theme_override_font_sizes/font_size = 48
-text = "The Count is Dead"
+text = "The Count has fallen!"
 horizontal_alignment = 1
 
-[node name="NextButton" type="Button" parent="Center/Menu"]
+[node name="NextButton" type="Button" parent="Center/Menu" unique_id=990531696]
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "Next Level"
 
-[node name="RestartButton" type="Button" parent="Center/Menu"]
+[node name="RestartButton" type="Button" parent="Center/Menu" unique_id=1614142194]
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "Restart Level"
 
-[node name="MainMenuButton" type="Button" parent="Center/Menu"]
+[node name="MainMenuButton" type="Button" parent="Center/Menu" unique_id=1738361809]
 custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 text = "Main Menu"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=625267517]
+libraries/ = SubResource("AnimationLibrary_w8tpa")

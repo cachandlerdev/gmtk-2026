@@ -12,6 +12,7 @@ size = Vector2(18, 30)
 size = Vector2(22, 32)
 
 [node name="Enemy" type="CharacterBody2D" unique_id=245799776]
+z_index = 2
 collision_layer = 16
 script = ExtResource("1_enemy")
 attack_windup = 0.4
@@ -31,6 +32,7 @@ position = Vector2(20, 0)
 target_position = Vector2(0, 34)
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=2002285091]
+visible = false
 collision_layer = 0
 collision_mask = 7
 monitorable = false
@@ -45,7 +47,7 @@ shape = SubResource("Shape_hit")
 
 [node name="BeehaveTree" parent="." unique_id=944862359 node_paths=PackedStringArray("blackboard", "actor") instance=ExtResource("3_brain")]
 enabled = false
-blackboard = NodePath("@Node@197413")
+blackboard = NodePath("@Node@263855")
 actor = NodePath("..")
 
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

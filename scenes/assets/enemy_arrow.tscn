@@ -1,22 +1,22 @@
 [gd_scene format=3 uid="uid://djirlu3ps34p6"]
 
-[ext_resource type="Script" path="res://scripts/projectile.gd" id="1_projectile"]
+[ext_resource type="Script" uid="uid://betstilai3nwb" path="res://scripts/projectile.gd" id="1_projectile"]
+[ext_resource type="Texture2D" uid="uid://b5j3k2txr5a42" path="res://assets/sprites/arrow_fire_16x16.png" id="2_7irxk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arrow"]
-size = Vector2(18, 5)
+size = Vector2(20, 5)
 
-[node name="EnemyArrow" type="Area2D"]
+[node name="EnemyArrow" type="Area2D" unique_id=1685278175]
 collision_layer = 4
 collision_mask = 3
-monitoring = true
-monitorable = true
 script = ExtResource("1_projectile")
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(0.82, 0.6, 0.3, 1)
-polygon = PackedVector2Array(-9, -2, 5, -1.5, 10, 0, 5, 1.5, -9, 2, -7, 0)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1496728644]
+rotation = 2.352152
+texture = ExtResource("2_7irxk")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=769435042]
+position = Vector2(1, 0)
 shape = SubResource("RectangleShape2D_arrow")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

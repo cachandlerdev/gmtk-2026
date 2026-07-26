@@ -3,18 +3,18 @@ extends Node
 
 @export_group("Music")
 # TODO: Change for multiple music tracks. Not the prettiest system but it'll work
-# TODO: Add a filler clip
 @export var main_menu_music_index: int = 0
 @export var battle_music_index: int = 1
 @export var near_death_music_index: int = 2
 @export var victory_music_index: int = 3
 @export var defeat_music_index: int = 4
 @export var escape_music_index: int = 5
-@export var exploration_music_index: int = 6 # outside, probably harp?
+@export var exploration_music_index: int = 6 # outside, probably harp? nah not happening
 @export var stealth_music_index: int = 7
 @export var alarm_raised_music_index: int = 8
 
 
+# trust, this is definitely the most efficient way to handle sound effects
 @onready var melee_slash = $SFX/MeleeSlash
 @onready var shield_block = $SFX/ShieldBlock
 @onready var bow_draw = $SFX/BowDraw
@@ -30,6 +30,11 @@ extends Node
 @onready var player_takes_damage = $SFX/PlayerTakesDamage
 @onready var player_takes_damage_music = $SFX/PlayerTakesDamageMusic
 @onready var player_jump = $SFX/PlayerJump
+@onready var melee_damage = $SFX/MeleeDamage
+@onready var enemy_death = $SFX/EnemyDeath
+@onready var count_bark = $SFX/CountBark
+@onready var enemy_sword_melee = $SFX/EnemySwordMelee
+@onready var shield_bash = $SFX/ShieldBash
 
 
 enum {MainMenu, Battle, NearDeath, AlarmRaised, Escape, Victory, Defeat, Exploration, Stealth}

@@ -19,6 +19,9 @@ extends CharacterBody2D
 ## filling) → ALERTED (full chase). Drives the behaviour tree.
 enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 
+# Only enable this on the base class
+@export var use_base_melee_sound: bool = true
+
 @export var max_health: int = 2
 @export var gravity_factor: float = 1.0
 ## If true, merely touching the player damages them. Off by default so the
@@ -53,6 +56,7 @@ enum Awareness { UNAWARE, SUSPICIOUS, ALERTED }
 @export_group("Loot")
 ## Scenes to spawn at this enemy's position on death (keys, hearts, arrow pickups, ...). Assign per-instance in the editor.
 @export var loot_drops: Array[PackedScene] = []
+@export var DEATH_DURATION: float = 0.5
 
 var facing: int = 1          ## 1 = right, -1 = left
 ## Current awareness state (see the Awareness enum).
@@ -150,6 +154,7 @@ func _on_hit_blocked(_source: Node = null) -> void:
 
 ## Called just before the enemy is freed.
 func _on_death() -> void:
+	_visual.play("death")
 	if is_alerted:
 		is_alerted = false
 		GameMode.remove_watching_guard()
@@ -159,6 +164,11 @@ func _on_death() -> void:
 func die() -> void:
 	_on_death()
 	_spawn_loot()
+	set_physics_process(false)
+	$CollisionShape2D.set_deferred("disabled", true)
+	# Yeah sorry I'm not doing all of the checks and putting it in the existing 
+	# system because it's 1am and the deadline is in 9 hours
+	await get_tree().create_timer(DEATH_DURATION).timeout
 	queue_free()
 
 
@@ -185,13 +195,18 @@ func _spawn_loot() -> void:
 ## Damageable interface. `source` is the projectile/attacker; may be null.
 func take_hit(source: Node = null, damage: int = 1) -> void:
 	if not _can_be_hit(source):
+		GameMode.play_sound("shield_block", global_position)
 		_on_hit_blocked(source)
 		return
 	cancel_attack()          # a hit staggers the enemy, cancelling any wind-up
 	_apply_knockback(source)
+	var player = get_tree().get_first_node_in_group("player")
 	_health -= damage
+	player.add_screen_shake(0.125)
+	GameMode.play_sound("melee_damage", global_position)
 	_flash()
 	if _health <= 0:
+		GameMode.play_sound("enemy_death", global_position)
 		die()
 
 
@@ -403,6 +418,10 @@ func _on_attack_windup() -> void:
 		return
 	_visual.modulate = Color(1.7, 1.4, 0.5)
 	create_tween().tween_property(_visual, "modulate", Color.WHITE, attack_windup)
+	# hacky but don't question it :)
+	if use_base_melee_sound:
+		await get_tree().create_timer(attack_windup).timeout
+		GameMode.play_sound("enemy_sword_melee")
 
 
 ## Strike feedback hook — override for an animation. Defaults to a brief tint.

@@ -11,17 +11,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sl1te")
 
-[node name="Label" type="Label" parent="." unique_id=28140727]
-layout_mode = 0
-offset_left = 493.0
-offset_top = 89.0
-offset_right = 659.0
-offset_bottom = 134.0
-theme_type_variation = &"TitleLabel"
-theme_override_font_sizes/font_size = 48
-text = "Game Title"
-horizontal_alignment = 1
-
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1809059936]
 layout_mode = 1
 anchors_preset = 15
@@ -29,6 +18,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="CenterContainer" unique_id=28140727]
+layout_mode = 2
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, -200)
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 48
+text = "Game Title"
+horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=884909270]
 layout_mode = 2

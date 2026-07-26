@@ -39,6 +39,7 @@ func complete_level() -> void:
 		_go_to(VICTORY_SCREEN)
 	else:
 		# Freeze the level and let the player choose to advance.
+		await get_tree().create_timer(2.5).timeout
 		get_tree().paused = true
 		LevelCompleteMenu.show_menu()
 

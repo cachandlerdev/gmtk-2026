@@ -262,7 +262,7 @@ aim_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=161087710]
 position = Vector2(0, -13)
-zoom = Vector2(1.7, 1.7)
+zoom = Vector2(1.75, 1.75)
 process_callback = 0
 position_smoothing_enabled = true
 
