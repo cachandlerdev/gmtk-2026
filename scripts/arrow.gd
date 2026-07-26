@@ -36,6 +36,8 @@ const SPRITE_ANGLE_OFFSET := 3.0 * PI / 4.0
 var pierces_remaining: int = 0
 ## Which inventory slot this arrow returns to when looted.
 var arrow_type: Type = Type.BASIC
+## True when released at full charge. Used for shield-pierce and similar gates.
+var full_draw: bool = false
 
 var _bounces: int = 0
 var _stopped: bool = false
@@ -63,7 +65,7 @@ func _ready() -> void:
 ## is in the tree (bow does this right after add_child).
 func apply_type(type: Type, charge_ratio: float = 0.0) -> void:
 	arrow_type = type
-	var full_draw := is_equal_approx(charge_ratio, 1.0)
+	full_draw = is_equal_approx(charge_ratio, 1.0)
 	match type:
 		Type.BASIC:
 			lifetime = 6.0
