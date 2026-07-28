@@ -53,9 +53,56 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="VisibilityIndicator" type="AnimatedSprite2D" unique_id=1603064747]
+[sub_resource type="Animation" id="Animation_bcafi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_u7fof"]
+resource_name = "fade_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0cchw"]
+_data = {
+&"RESET": SubResource("Animation_bcafi"),
+&"fade_in": SubResource("Animation_u7fof")
+}
+
+[node name="Control" type="Control" unique_id=596484921]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_hope5")
+
+[node name="VisibilityIndicator" type="AnimatedSprite2D" parent="." unique_id=1603064747]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_c5ll8")
 animation = &"close_eye"
 autoplay = "close_eye"
-script = ExtResource("1_hope5")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1376502864]
+libraries/ = SubResource("AnimationLibrary_0cchw")

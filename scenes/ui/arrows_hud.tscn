@@ -1,18 +1,56 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://dwwd7dwbd4jc5"]
 
-[ext_resource type="Script" path="res://scenes/ui/arrows_hud.gd" id="1_arrows"]
+[ext_resource type="Script" uid="uid://cfvgrjbk17nqv" path="res://scenes/ui/arrows_hud.gd" id="1_arrows"]
 [ext_resource type="Texture2D" uid="uid://dyfkisgyv3lem" path="res://assets/sprites/arrow_16x16.png" id="2_basic"]
 [ext_resource type="Texture2D" uid="uid://cjdtor00wn3o4" path="res://assets/sprites/arrow_piercing_16x16.png" id="3_pierce"]
 [ext_resource type="Texture2D" uid="uid://b0makld8osljr" path="res://assets/sprites/arrow_bouncing_16x16.png" id="4_bounce"]
 
-[node name="ArrowsHUD" type="CanvasLayer"]
+[sub_resource type="Animation" id="Animation_qbyqi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Margin:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_o4bmv"]
+resource_name = "fade_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Margin:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mpgl5"]
+_data = {
+&"RESET": SubResource("Animation_qbyqi"),
+&"fade_in": SubResource("Animation_o4bmv")
+}
+
+[node name="ArrowsHUD" type="CanvasLayer" unique_id=765142329]
 layer = 10
 script = ExtResource("1_arrows")
 basic_texture = ExtResource("2_basic")
 piercing_texture = ExtResource("3_pierce")
 bouncing_texture = ExtResource("4_bounce")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=255638183]
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -22,6 +60,16 @@ offset_right = 200.0
 offset_bottom = -16.0
 grow_vertical = 0
 
-[node name="Types" type="VBoxContainer" parent="Margin"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin" unique_id=1230225161]
+layout_mode = 2
+
+[node name="Types" type="VBoxContainer" parent="Margin/VBoxContainer" unique_id=1512364651]
 layout_mode = 2
 theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="Margin/VBoxContainer" unique_id=739275137]
+layout_mode = 2
+text = "Arrow type"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=597335114]
+libraries/ = SubResource("AnimationLibrary_mpgl5")

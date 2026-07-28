@@ -7,7 +7,8 @@ extends CanvasLayer
 @export var icon_size: Vector2 = Vector2(22, 22)
 @export var highlight_color: Color = Color(1, 0.85, 0.35, 1)
 
-@onready var _types: VBoxContainer = $Margin/Types
+@onready var _types: VBoxContainer = $Margin/VBoxContainer/Types
+@onready var text: Label = $Margin/VBoxContainer/Label
 
 var _inventory: ArrowInventory
 ## Arrow.Type -> HBoxContainers holding that type's icons
@@ -16,12 +17,17 @@ var _rows: Dictionary = {}
 var _outline_cache: Dictionary = {}
 
 
+func _process(delta: float):
+	text.text = _inventory.type_name(_inventory.selected) + " Arrow"
+
+
 func setup(inventory: ArrowInventory) -> void:
 	_inventory = inventory
 	if not _inventory.changed.is_connected(_refresh):
 		_inventory.changed.connect(_refresh)
 	_build_rows()
 	_refresh()
+	$AnimationPlayer.play("fade_in")
 
 
 func _build_rows() -> void:

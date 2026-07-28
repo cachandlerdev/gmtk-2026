@@ -618,6 +618,7 @@ func _jump() -> void:
 		velocity.x = JUMP_VELOCITY
 		animated_sprite.play("wall_jump")
 		_anim_state = WallJump
+		_num_of_air_jumps = 1
 
 	elif right_wall_ray_cast.is_colliding() and not on_floor and not using_coyote:
 		_direction = -1
@@ -628,6 +629,7 @@ func _jump() -> void:
 		velocity.x = _direction * JUMP_VELOCITY
 		animated_sprite.play("wall_jump")
 		_anim_state = WallJump
+		_num_of_air_jumps = 1
 	else:
 		# Grounded / coyote jump does not consume an air jump.
 		# Only a true mid-air jump does.
