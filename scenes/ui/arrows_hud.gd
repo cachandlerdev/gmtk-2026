@@ -8,12 +8,17 @@ extends CanvasLayer
 @export var highlight_color: Color = Color(1, 0.85, 0.35, 1)
 
 @onready var _types: VBoxContainer = $Margin/VBoxContainer/Types
+@onready var text: Label = $Margin/VBoxContainer/Label
 
 var _inventory: ArrowInventory
 ## Arrow.Type -> HBoxContainers holding that type's icons
 var _rows: Dictionary = {}
 ## source Texture2D -> baked outlined ImageTexture (HUD-only copies)
 var _outline_cache: Dictionary = {}
+
+
+func _process(delta: float):
+	text.text = _inventory.type_name(_inventory.selected) + " Arrow"
 
 
 func setup(inventory: ArrowInventory) -> void:

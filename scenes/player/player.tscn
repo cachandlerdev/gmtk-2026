@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://db51jt005nv26" path="res://scenes/player/bow.tscn" id="2_dovo2"]
 [ext_resource type="PackedScene" uid="uid://bxi8mp02m55w4" path="res://scenes/ui/hearts_hud.tscn" id="3_hearts"]
 [ext_resource type="Texture2D" uid="uid://duelv24br3gqg" path="res://assets/sprites/bird.png" id="3_p47bc"]
-[ext_resource type="PackedScene" path="res://scenes/ui/arrows_hud.tscn" id="4_arrows"]
+[ext_resource type="PackedScene" uid="uid://dwwd7dwbd4jc5" path="res://scenes/ui/arrows_hud.tscn" id="4_arrows"]
 [ext_resource type="PackedScene" uid="uid://ckeyshud00001" path="res://scenes/ui/keys_hud.tscn" id="5_keys"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cnsyf"]
@@ -343,7 +343,6 @@ one_shot = true
 [node name="RightWallRayCast" type="RayCast2D" parent="." unique_id=1247435798]
 position = Vector2(0, -13)
 target_position = Vector2(15, 0)
-collision_mask = 1
 
 [node name="RightEnemyRayCast" type="RayCast2D" parent="." unique_id=2067216317]
 position = Vector2(0, -13)
@@ -354,7 +353,6 @@ collide_with_areas = true
 [node name="LeftWallRayCast" type="RayCast2D" parent="." unique_id=314751323]
 position = Vector2(0, -13)
 target_position = Vector2(-15, 0)
-collision_mask = 1
 
 [node name="LeftEnemyRayCast" type="RayCast2D" parent="." unique_id=972659502]
 position = Vector2(0, -13)
@@ -373,7 +371,6 @@ position = Vector2(0, -13)
 target_position = Vector2(-35, 0)
 collision_mask = 17
 hit_from_inside = true
-collide_with_areas = true
 
 [node name="InteractRange" type="Area2D" parent="." unique_id=1206856106]
 position = Vector2(0, -14)
@@ -384,13 +381,13 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractRange" unique_id=367867143]
 shape = SubResource("CircleShape2D_interact")
 
-[node name="InteractPromptRange" type="Area2D" parent="."]
+[node name="InteractPromptRange" type="Area2D" parent="." unique_id=336161694]
 position = Vector2(0, -14)
 collision_layer = 0
 collision_mask = 8
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractPromptRange"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractPromptRange" unique_id=1783686574]
 shape = SubResource("CircleShape2D_interact_prompt")
 
 [node name="DiveCollider" type="Area2D" parent="." unique_id=1806610364]
